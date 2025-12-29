@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de XP Avançado | RFL•★•REAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --bg-dark: #050505;
+            --surface: rgba(20, 20, 20, 0.9);
+            --border: rgba(212, 175, 55, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; 
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a, #050505);
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            position: fixed; top: 20px; left: 20px;
+            color: var(--gold); text-decoration: none;
+            font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 2px; display: flex; align-items: center; gap: 10px;
+            z-index: 100; transition: 0.3s;
+        }
+        .back-btn:hover { color: #fff; transform: translateX(-5px); }
+
+        .container { max-width: 900px; margin: 80px auto; padding: 20px; animation: fadeIn 1s ease; }
+
+        .header { text-align: center; margin-bottom: 60px; }
+        .header h1 { font-size: 2.5rem; letter-spacing: 8px; text-transform: uppercase; }
+        .header span { color: var(--gold); }
+
+        /* Estilo das Seções */
+        .level-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-section::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--gold);
+        }
+
+        .level-tag {
+            display: inline-block;
+            background: var(--gold);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h2 { margin-bottom: 20px; font-size: 1.4rem; letter-spacing: 2px; }
+
+        .xp-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .xp-info h3 { font-size: 1rem; color: var(--gold); }
+        .xp-info p { font-size: 0.85rem; color: #aaa; }
+
+        .xp-value {
+            font-weight: 800;
+            color: #fff;
+            font-size: 0.9rem;
+            text-align: right;
+            min-width: 100px;
+        }
+
+        .pro-tip {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            border: 1px dashed var(--gold);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <a href="javascript:history.back()" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Voltar ao Hub
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>SISTEMA DE <span>XP</span></h1>
+            <p style="color: #555; letter-spacing: 5px; font-size: 0.7rem;">DO RECRUTA AO GENERAL</p>
+        </div>
+
+        <div class="level-section">
+            <span class="level-tag">Nível: Básico</span>
+            <h2>Rotina de Manutenção</h2>
+            
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Interação com Pets</h3>
+                    <p>Alimentar, dar água e carinho em seus pets.</p>
+                </div>
+                <div class="xp-value">+50 XP / Pet</div>
+            </div>
+
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Mergulho Diário</h3>
+                    <p>Pular na piscina de qualquer apartamento 2x.</p>
+                </div>
+                <div class="xp-value">+15 XP</div>
+            </div>
+
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Coleta de Diamantes</h3>
+                    <p>Pegar os 10 diamantes em suas casas (até 70 casas).</p>
+                </div>
+                <div class="xp-value">+20 XP / Casa</div>
+            </div>
+
+            <div class="pro-tip">
+                <strong>DICA RFL:</strong> Use o recurso "Construir" para criar itens. Retirar o item pronto da máquina também gera XP de graça!
+            </div>
+        </div>
+
+        <div class="level-section">
+            <span class="level-tag" style="background: #aaa;">Nível: Intermediário</span>
+            <h2>Atividades Sociais</h2>
+            
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Avaliação de Apartamentos</h3>
+                    <p>Votar com 5 estrelas em apartamentos públicos.</p>
+                </div>
+                <div class="xp-value">+15 XP / Voto</div>
+            </div>
+
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Egito Adventure</h3>
+                    <p>Abrir o Grande Baú após coletar as 5 chaves.</p>
+                </div>
+                <div class="xp-value">+200 XP</div>
+            </div>
+
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Conversação</h3>
+                    <p>Enviar mensagens em salas públicas (limite diário).</p>
+                </div>
+                <div class="xp-value">+10 a +50 XP</div>
+            </div>
+        </div>
+
+        <div class="level-section">
+            <span class="level-tag" style="background: #fff; color: #000;">Nível: Avançado</span>
+            <h2>Estratégia de Elite (Grind)</h2>
+            
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Trabalho em Dupla (Trade)</h3>
+                    <p>Pedir e servir na Cafeteria ou Bar usando diamantes.</p>
+                </div>
+                <div class="xp-value">Sem Limite Estrito</div>
+            </div>
+
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Concurso de Moda</h3>
+                    <p>Participar e votar nos níveis do concurso.</p>
+                </div>
+                <div class="xp-value">XP Variável</div>
+            </div>
+
+            <div class="xp-item">
+                <div class="xp-info">
+                    <h3>Presentear Itens</h3>
+                    <p>Enviar presentes para amigos ou contas secundárias.</p>
+                </div>
+                <div class="xp-value">XP por Valor</div>
+            </div>
+
+            <div class="pro-tip" style="border-color: #fff;">
+                <strong>ESTRATÉGIA DE GUERRA:</strong> O "Trade" na Cafeteria é a forma mais rápida de subir de nível. Combine horários com outros membros da <strong>RFL</strong> para um ajudar o outro.
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
