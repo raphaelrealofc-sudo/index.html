@@ -16,7 +16,6 @@
 
         body, html { height: 100%; background-color: var(--bg-dark); overflow: hidden; }
 
-        /* BACKGROUND COM GRADIENTE E TEXTURA */
         .hero-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -48,7 +47,6 @@
 
         .logo-main span { color: var(--gold); }
 
-        /* A FRASE SOLICITADA */
         .tagline {
             font-size: clamp(0.7rem, 2.5vw, 1rem);
             color: var(--gold);
@@ -65,11 +63,28 @@
             color: #555;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 60px;
+            margin-bottom: 20px; /* Reduzi para dar espaço à nova frase */
             animation: fadeIn 2s ease-in;
         }
 
-        /* BOTÃO DE ACESSO */
+        /* --- FRASE DISCRETA E PULSANTE --- */
+        .pulse-avakin {
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.6;
+            animation: pulse-text 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-text {
+            0% { opacity: 0.3; text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
+            50% { opacity: 0.8; text-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+            100% { opacity: 0.3; text-shadow: 0 0 0px rgba(212, 175, 55, 0); }
+        }
+
         .enter-btn {
             padding: 20px 50px;
             background: transparent;
@@ -92,7 +107,6 @@
             transform: translateY(-5px);
         }
 
-        /* BARRA DE CARREGAMENTO */
         .loading-container {
             position: absolute;
             bottom: 60px;
@@ -130,6 +144,8 @@
     <p class="tagline">Recruitment & Family Organization.</p>
     
     <p class="subtitle">Premium Management System</p>
+
+    <p class="pulse-avakin">Avakin Life Family</p>
 
     <a href="feed.html" class="enter-btn">Entrar</a>
 
