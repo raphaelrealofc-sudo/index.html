@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Conformidade | RFL System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --bg-dark: #050505;
+            --surface: rgba(255, 255, 255, 0.02);
+            --border: rgba(212, 175, 55, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; 
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a, #050505);
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            position: fixed; top: 20px; left: 20px;
+            color: var(--gold); text-decoration: none;
+            font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 2px; display: flex; align-items: center; gap: 10px;
+            z-index: 100;
+        }
+
+        .container { max-width: 850px; margin: 80px auto; padding: 20px; animation: fadeIn 1s ease; }
+
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 2.2rem; letter-spacing: 5px; text-transform: uppercase; }
+        .header span { color: var(--gold); }
+
+        .intro-text {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+            padding: 0 50px;
+        }
+
+        .rules-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .rule-item {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .rule-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            background: rgba(212, 175, 55, 0.02);
+        }
+
+        .rule-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .rule-header i {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .rule-header h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rule-item p {
+            font-size: 0.9rem;
+            color: #aaa;
+            padding-left: 35px;
+        }
+
+        .footer-note {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <a href="javascript:history.back()" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Painel de Controle
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>CONFORMIDADE DE <span>ELITE</span></h1>
+            <div style="width: 50px; height: 2px; background: var(--gold); margin: 15px auto;"></div>
+        </div>
+
+        <p class="intro-text">
+            Para garantir a melhor experiência e crescimento dentro do nosso ecossistema, todas as famílias cadastradas devem seguir os protocolos abaixo para manter sua certificação de "Família Ativa".
+        </p>
+
+        <div class="rules-grid">
+            
+            <div class="rule-item">
+                <div class="rule-header">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <h3>Integração de Novos Membros</h3>
+                </div>
+                <p>Cada novo membro deve passar por um processo de recepção claro. É obrigatório fornecer o Manual de XP e explicar a hierarquia da família nas primeiras 24 horas.</p>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-header">
+                    <i class="fa-solid fa-handshake-angle"></i>
+                    <h3>Suporte e Engajamento</h3>
+                </div>
+                <p>Líderes devem promover interações semanais. O objetivo do site é agregar valor; famílias que não interagem ou não ajudam seus membros no "Trade" perdem destaque no ranking.</p>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-header">
+                    <i class="fa-solid fa-id-card"></i>
+                    <h3>Padronização de Identidade</h3>
+                </div>
+                <p>Para melhor organização no jogo, a família deve exigir o uso da Tag oficial. Isso facilita a identificação por nossos moderadores e fortalece a marca da família.</p>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-header">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Transparência de Metas</h3>
+                </div>
+                <p>As regras de pontuação devem ser visíveis para todos. Membros precisam saber exatamente como contribuir para o crescimento coletivo da organização.</p>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-header">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Ambiente Ético</h3>
+                </div>
+                <p>Proibido qualquer tipo de toxicidade ou desrespeito. Nosso hub foca na união estratégica. Famílias com comportamento inadequado serão removidas do sistema.</p>
+            </div>
+
+        </div>
+
+        <div class="footer-note">
+            Protocolos atualizados via RFL Terminal • 2025
+        </div>
+    </div>
+
+</body>
+</html>
