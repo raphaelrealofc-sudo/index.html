@@ -83,7 +83,7 @@
             gap: 12px;
             padding: 12px;
             border-radius: 10px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             transition: 0.3s;
             cursor: pointer;
             border: 1px solid transparent;
@@ -120,57 +120,25 @@
 
         /* --- CHAT FLUTUANTE --- */
         .chat-toggle {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 60px;
-            height: 60px;
-            background: var(--gold);
-            color: #000;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            z-index: 1000;
-            transition: 0.3s;
-            animation: pulse-glow 2s infinite ease-in-out;
+            position: fixed; bottom: 25px; right: 25px;
+            width: 60px; height: 60px; background: var(--gold);
+            color: #000; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); z-index: 1000;
         }
 
         .chat-window {
-            position: fixed;
-            bottom: 95px;
-            right: 25px;
-            width: 320px;
-            height: 450px;
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid var(--gold);
-            border-radius: 15px;
-            backdrop-filter: blur(15px);
-            display: none; 
-            flex-direction: column;
+            position: fixed; bottom: 95px; right: 25px;
+            width: 320px; height: 450px; background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--gold); border-radius: 15px;
+            backdrop-filter: blur(15px); display: none; flex-direction: column;
             z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .chat-header {
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-        }
+        .chat-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -181,25 +149,31 @@
 </header>
 
 <div class="main-grid">
-    <div class="rank-item" onclick="window.location.href='regras.html'">
-    <div class="rank-icon"><i class="fa-solid fa-chart-line"></i></div>
-    <div class="rank-info">
-        <span class="name">Regras de Elite</span>
-        <span class="desc">O que exigimos</span>
-    </div>
-</div>
+    <aside class="hierarchy-sidebar">
+        <div class="pulse-title"><span class="pulse-dot"></span> MENU FAMILY</div>
+
+        <div class="rank-item" onclick="window.location.href='nossahistoria.html'">
+            <div class="rank-icon"><i class="fa-solid fa-gem"></i></div>
+            <div class="rank-info">
+                <span class="name">Nossa História</span>
+                <span class="desc">Conheça o Legado</span>
+            </div>
+        </div>
 
         <div class="rank-item" onclick="window.location.href='guiadepontos.html'">
-    <div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div>
-    <div class="rank-info">
-        <span class="name">Guia de Pontos</span>
-        <span class="desc">Como subir no Rank</span>
-    </div>
-</div>
+            <div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div>
+            <div class="rank-info">
+                <span class="name">Guia de Pontos</span>
+                <span class="desc">Como subir no Rank</span>
+            </div>
+        </div>
 
-        <div class="rank-item" onclick="filtrarFeed('Regras')">
-            <div class="rank-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <div class="rank-info"><span class="name">Regras de Elite</span><span class="desc">O que exigimos</span></div>
+        <div class="rank-item" onclick="window.location.href='regras.html'">
+            <div class="rank-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="rank-info">
+                <span class="name">Regras de Elite</span>
+                <span class="desc">Conformidade RFL</span>
+            </div>
         </div>
 
         <div class="rank-item" onclick="filtrarFeed('Fotos')">
@@ -209,7 +183,7 @@
 
         <div class="rank-item" onclick="filtrarFeed('Entrar')">
             <div class="rank-icon"><i class="fa-solid fa-handshake"></i></div>
-            <div class="rank-info"><span class="name">Quero Entrar</span><span class="desc">Alistamento Aberto</span></div>
+            <div class="rank-info"><span class="name">Quero Entrar</span><span class="desc">Alistamento</span></div>
         </div>
 
         <div class="rank-item" onclick="filtrarFeed('Suporte')">
@@ -236,32 +210,22 @@
         <i class="fa-solid fa-xmark" onclick="toggleChat()" style="cursor:pointer; opacity: 0.5;"></i>
     </div>
     <div class="chat-messages">
-        <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
-            <p style="color: #888; font-size: 0.75rem;">Servidor: <b style="color: #4caf50;">Online</b></p>
-            <p style="color: #888; font-size: 0.75rem; margin-top: 5px;">Acesso: <b style="color: var(--gold);">Visitante</b></p>
-        </div>
         <p style="font-size: 0.65rem; color: #555;">[SYSTEM] Terminal RFL pronto.</p>
     </div>
 </div>
 
 <script>
-    // 1. Controle do Chat
     function toggleChat() {
         const chat = document.getElementById('chatWindow');
         chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    // 2. Conteúdos do Menu
     const conteudos = {
-        "Historia": "📖 **SOBRE NÓS:** A RFL•★•REAL é mais que uma família, é um império focado em dominar os rankings do Avakin Life com elegância e estratégia. Nossa união é nossa maior força.",
-        "Pontos": "⚔️ **COMO PONTUAR:** Para ajudar a família, foque nos eventos diários da Praça Liberty e no Egito. Membros ativos garantem bônus e promoções internas.",
-        "Regras": "📜 **REGRAS DE OURO:** <br>1. Respeito mútuo acima de tudo.<br>2. Uso obrigatório da Tag no nome.<br>3. Participação ativa nos eventos de Guerra.",
         "Fotos": "✨ **GALERIA:** Nossas melhores edits estão disponíveis no Instagram oficial.",
         "Entrar": "📝 **ALISTAMENTO:** Estamos recrutando jogadores nível 30+.",
         "Suporte": "🤝 **AJUDA:** Fale com um Rank Manager online."
     };
 
-    // 3. Função de Filtro
     function filtrarFeed(categoria) {
         const mural = document.getElementById('mural');
         mural.innerHTML = `
