@@ -123,6 +123,34 @@
     background: var(--gold);
     transition: 0.4s;
 }
+        /* Efeito Pulsante para o Título do Menu */
+.pulse-title {
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+    0% { opacity: 0.6; text-shadow: 0 0 5px rgba(212, 175, 55, 0); }
+    50% { opacity: 1; text-shadow: 0 0 15px rgba(212, 175, 55, 0.6); }
+    100% { opacity: 0.6; text-shadow: 0 0 5px rgba(212, 175, 55, 0); }
+}
+
+/* Pequeno ponto indicador pulsante ao lado do nome */
+.pulse-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--gold);
+    border-radius: 50%;
+    display: inline-block;
+}
     </style>
 </head>
 <body>
@@ -133,10 +161,13 @@
 </header>
 
 <div class="main-grid">
-   <aside class="hierarchy-sidebar">
-    <div class="h-title">Hierarquia de Elite</div>
+  <aside class="hierarchy-sidebar">
+    <div class="pulse-title">
+        <span class="pulse-dot"></span>
+        MENU FAMILY
+    </div>
     
-    <div class="rank-item" title="Dono da Tag e Fundador">
+    <div class="rank-item" onclick="verDetalhes('Owner')">
         <div class="rank-icon"><i class="fa-solid fa-gem"></i></div>
         <div class="rank-info">
             <span class="name">Owner / Founder</span>
@@ -144,7 +175,7 @@
         </div>
     </div>
 
-    <div class="rank-item" title="Responsável por liderar a pontuação nos eventos">
+    <div class="rank-item" onclick="verDetalhes('War')">
         <div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div>
         <div class="rank-info">
             <span class="name">Pro Player (War)</span>
@@ -152,7 +183,7 @@
         </div>
     </div>
 
-    <div class="rank-item" title="Monitora os pontos e atividades dos membros">
+    <div class="rank-item" onclick="verDetalhes('Rank')">
         <div class="rank-icon"><i class="fa-solid fa-chart-line"></i></div>
         <div class="rank-info">
             <span class="name">Rank Manager</span>
@@ -160,7 +191,7 @@
         </div>
     </div>
 
-    <div class="rank-item" title="Cria edições e gerencia o Instagram da família">
+    <div class="rank-item" onclick="verDetalhes('Editor')">
         <div class="rank-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
         <div class="rank-info">
             <span class="name">Editor / Designer</span>
@@ -168,7 +199,7 @@
         </div>
     </div>
 
-    <div class="rank-item" title="Busca novos talentos nos servidores">
+    <div class="rank-item" onclick="verDetalhes('Scouter')">
         <div class="rank-icon"><i class="fa-solid fa-handshake"></i></div>
         <div class="rank-info">
             <span class="name">Scouter</span>
@@ -176,7 +207,7 @@
         </div>
     </div>
 
-    <div class="rank-item" title="Membro com a Tag confirmada">
+    <div class="rank-item" onclick="verDetalhes('Member')">
         <div class="rank-icon"><i class="fa-solid fa-medal"></i></div>
         <div class="rank-info">
             <span class="name">Official Member</span>
@@ -184,7 +215,7 @@
         </div>
     </div>
 
-    <div class="rank-item" style="opacity: 0.6;">
+    <div class="rank-item" style="opacity: 0.6;" onclick="verDetalhes('Trainee')">
         <div class="rank-icon"><i class="fa-solid fa-user-tag"></i></div>
         <div class="rank-info">
             <span class="name">Trainee</span>
@@ -192,17 +223,6 @@
         </div>
     </div>
 </aside>
-
-    <main class="feed-area">
-        <div style="margin-bottom: 25px; font-weight: 600; color: var(--gold); letter-spacing: 1px;">MURAL DA FAMÍLIA</div>
-        <div class="post-card">
-            <p style="font-size: 0.9rem; color: #888;">Nenhuma nova ordem do comando nas últimas 24h.</p>
-        </div>
-    </main>
-
-    <aside class="chat-sidebar">
-        <div style="padding: 20px; font-size: 0.7rem; color: var(--gold); font-weight: 700;">COMUNICAÇÃO RÁPIDA</div>
-    </aside>
 </div>
 
 </body>
