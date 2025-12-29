@@ -37,47 +37,11 @@
 
         .logo { font-weight: 700; letter-spacing: 5px; color: var(--gold); }
 
-      .main-grid {
-    display: grid;
-    grid-template-columns: 260px 1fr; /* Removi os 300px da direita */
-    height: calc(100vh - 60px);
-}
-
-/* Estilo do Botão Flutuante que ficará no canto */
-.chat-toggle {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    background: var(--gold);
-    color: #000;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-    z-index: 1000;
-    transition: 0.3s;
-}
-
-/* Estilo da Janela do Chat (escondida por padrão) */
-.chat-window {
-    position: fixed;
-    bottom: 95px;
-    right: 25px;
-    width: 320px;
-    height: 450px;
-    background: rgba(10, 10, 10, 0.95);
-    border: 1px solid var(--gold);
-    border-radius: 15px;
-    backdrop-filter: blur(15px);
-    display: none; 
-    flex-direction: column;
-    z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
+        .main-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            height: calc(100vh - 60px);
+        }
 
         /* --- BARRA LATERAL ESQUERDA --- */
         .hierarchy-sidebar {
@@ -139,7 +103,6 @@
         }
 
         .rank-item:hover .rank-icon { border-color: var(--gold); color: #fff; background: var(--gold); }
-
         .rank-info .name { font-size: 0.85rem; font-weight: 600; display: block; }
         .rank-info .desc { font-size: 0.65rem; color: #555; text-transform: uppercase; }
 
@@ -155,11 +118,57 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* --- CHAT DIREITO --- */
-        .chat-sidebar { border-left: 1px solid var(--border); background: rgba(0,0,0,0.3); padding: 20px; }
+        /* --- CHAT FLUTUANTE --- */
+        .chat-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: var(--gold);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            z-index: 1000;
+            transition: 0.3s;
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 320px;
+            height: 450px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--gold);
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            display: none; 
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .chat-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
@@ -208,37 +217,12 @@
 
     <main class="feed-area" id="mural">
         <div style="margin-bottom: 25px; font-weight: 600; color: var(--gold); letter-spacing: 1px; font-size: 0.8rem;">MURAL OPERACIONAL</div>
-        
         <div class="post-card">
             <p style="color: #ccc;">Seja bem-vindo ao Hub Oficial da <b>RFL•★•REAL</b>. <br><br>Selecione uma opção no menu ao lado para navegar pelo nosso sistema de suporte e informações.</p>
         </div>
     </main>
-
-    
 </div>
 
-<script>
-    const conteudos = {
-        "Historia": "📖 **SOBRE NÓS:** A RFL•★•REAL é mais que uma família, é um império focado em dominar os rankings do Avakin Life com elegância e estratégia. Nossa união é nossa maior força.",
-        "Pontos": "⚔️ **COMO PONTUAR:** Para ajudar a família, foque nos eventos diários da Praça Liberty e no Egito. Membros ativos garantem bônus e promoções internas.",
-        "Regras": "📜 **REGRAS DE OURO:** <br>1. Respeito mútuo acima de tudo.<br>2. Uso obrigatório da Tag no nome.<br>3. Participação ativa nos eventos de Guerra.",
-        "Fotos": "✨ **GALERIA:** Nossas melhores edits estão disponíveis no Instagram oficial. Quer que sua foto apareça aqui? Marque nosso @ no Instagram!",
-        "Entrar": "📝 **ALISTAMENTO:** Estamos recrutando jogadores nível 30+. Se você busca uma família organizada e competitiva, fale com um de nossos generais no jogo ou via DM.",
-        "Suporte": "🤝 **AJUDA:** Se você já é membro e tem dúvidas sobre o ranking ou cargos, envie uma mensagem no nosso grupo oficial ou procure o Rank Manager online."
-    };
-
-    function filtrarFeed(categoria) {
-        const mural = document.getElementById('mural');
-        mural.innerHTML = `
-            <div style="margin-bottom: 25px; font-weight: 600; color: var(--gold); letter-spacing: 1px; font-size: 0.8rem;">
-                SESSÃO: ${categoria.toUpperCase()}
-            </div>
-            <div class="post-card" style="border-left: 3px solid var(--gold);">
-                <p style="line-height: 1.8; color: #fff;">${conteudos[categoria]}</p>
-                <button onclick="location.reload()" style="margin-top: 25px; background:none; border:none; color:var(--gold); cursor:pointer; font-size:0.7rem; text-decoration:underline; text-transform:uppercase; letter-spacing:1px;">← Voltar ao Início</button>
-            </div>
-        `;
-    }
 <div class="chat-toggle" onclick="toggleChat()">
     <i class="fa-solid fa-comment-dots"></i>
 </div>
@@ -258,10 +242,34 @@
 </div>
 
 <script>
-    // Função para abrir e fechar o chat
+    // 1. Controle do Chat
     function toggleChat() {
         const chat = document.getElementById('chatWindow');
         chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    // 2. Conteúdos do Menu
+    const conteudos = {
+        "Historia": "📖 **SOBRE NÓS:** A RFL•★•REAL é mais que uma família, é um império focado em dominar os rankings do Avakin Life com elegância e estratégia. Nossa união é nossa maior força.",
+        "Pontos": "⚔️ **COMO PONTUAR:** Para ajudar a família, foque nos eventos diários da Praça Liberty e no Egito. Membros ativos garantem bônus e promoções internas.",
+        "Regras": "📜 **REGRAS DE OURO:** <br>1. Respeito mútuo acima de tudo.<br>2. Uso obrigatório da Tag no nome.<br>3. Participação ativa nos eventos de Guerra.",
+        "Fotos": "✨ **GALERIA:** Nossas melhores edits estão disponíveis no Instagram oficial.",
+        "Entrar": "📝 **ALISTAMENTO:** Estamos recrutando jogadores nível 30+.",
+        "Suporte": "🤝 **AJUDA:** Fale com um Rank Manager online."
+    };
+
+    // 3. Função de Filtro
+    function filtrarFeed(categoria) {
+        const mural = document.getElementById('mural');
+        mural.innerHTML = `
+            <div style="margin-bottom: 25px; font-weight: 600; color: var(--gold); letter-spacing: 1px; font-size: 0.8rem;">
+                SESSÃO: ${categoria.toUpperCase()}
+            </div>
+            <div class="post-card" style="border-left: 3px solid var(--gold);">
+                <p style="line-height: 1.8; color: #fff;">${conteudos[categoria]}</p>
+                <button onclick="location.reload()" style="margin-top: 25px; background:none; border:none; color:var(--gold); cursor:pointer; font-size:0.7rem; text-decoration:underline; text-transform:uppercase; letter-spacing:1px;">← Voltar ao Início</button>
+            </div>
+        `;
     }
 </script>
 
