@@ -111,6 +111,18 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        .rank-icon {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.rank-item:hover .rank-icon {
+    border-color: var(--gold);
+    color: #fff;
+    background: var(--gold);
+    transition: 0.4s;
+}
     </style>
 </head>
 <body>
