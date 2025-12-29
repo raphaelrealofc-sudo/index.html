@@ -5,287 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RFL•★•REAL | Premium Family Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #d4af37;
-            --bg: #050505;
-            --glass: rgba(20, 20, 20, 0.7);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --bg-dark: #050505;
+            --surface: rgba(20, 20, 20, 0.6);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         
         body { 
-            background-color: var(--bg); 
-            color: var(--text-main); 
+            background-color: var(--bg-dark); 
+            color: #fff; 
             overflow: hidden;
             background-image: radial-gradient(circle at 50% -20%, #1a1a1a, #050505);
         }
 
-        /* --- NAVEGAÇÃO SUPERIOR --- */
-        nav {
-            height: 70px;
+        header {
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
+            padding: 0 30px;
+            background: rgba(0,0,0,0.9);
             border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(20px);
-            background: rgba(0,0,0,0.5);
-        }
-
-        .logo { font-weight: 700; letter-spacing: 4px; color: var(--accent); font-size: 1.2rem; }
-
-        /* --- ESTRUTURA PRINCIPAL --- */
-        .app-container {
-            display: grid;
-            grid-template-columns: 280px 1fr 320px;
-            height: calc(100vh - 70px);
-        }
-
-        /* --- BARRA LATERAL ESQUERDA --- */
-        .sidebar-left {
-            padding: 20px;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .menu-item {
-            padding: 12px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-dim);
-            font-weight: 500;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            background: var(--glass);
-            color: var(--text-main);
-            border: 1px solid var(--border);
-        }
-
-        .menu-item i { width: 20px; color: var(--accent); }
-
-        /* --- FEED CENTRAL --- */
-        main { 
-            padding: 30px; 
-            overflow-y: auto; 
-            scrollbar-width: thin;
-        }
-
-        .create-post {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 18px;
-            margin-bottom: 30px;
-        }
-
-        textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: white;
-            resize: none;
-            outline: none;
-            font-size: 1rem;
-            margin-bottom: 15px;
-        }
-
-        .btn-post {
-            background: var(--accent);
-            color: black;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 100px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .btn-post:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
-
-        .post-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 25px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-
-        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .avatar-circle { width: 45px; height: 45px; border-radius: 50%; background: #222; border: 1px solid var(--accent); }
-
-        /* --- CHAT E RANKING (DIREITA) --- */
-        .sidebar-right {
-            background: rgba(10, 10, 10, 0.5);
-            border-left: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header { padding: 20px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 0.9rem; }
-        
-        #chat-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-
-        .chat-bubble {
-            background: var(--glass);
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            border: 1px solid var(--border);
-        }
-
-        .chat-input-container { padding: 20px; border-top: 1px solid var(--border); }
-        .chat-input-container input {
-            width: 100%;
-            background: #111;
-            border: 1px solid var(--border);
-            padding: 12px;
-            border-radius: 12px;
-            color: white;
-            outline: none;
-        }
-
-        /* --- MODAL DE ELITE --- */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(10px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
         }
 
-        .modal-content {
-            background: #0f0f0f;
-            border: 1px solid var(--accent);
-            padding: 40px;
-            border-radius: 24px;
-            width: 500px;
-            max-height: 80vh;
+        .logo { font-weight: 700; letter-spacing: 5px; color: var(--gold); }
+
+        /* --- NOVO LAYOUT COM 3 COLUNAS --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr 300px;
+            height: calc(100vh - 60px);
+        }
+
+        /* --- BARRA DE HIERARQUIA (ESQUERDA) --- */
+        .hierarchy-sidebar {
+            background: rgba(10, 10, 10, 0.8);
+            border-right: 1px solid var(--border);
+            padding: 20px;
             overflow-y: auto;
         }
 
-        /* Notificação Toast */
-        #toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: black;
-            padding: 12px 30px;
-            border-radius: 50px;
+        .h-title {
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
             font-weight: 700;
-            display: none;
-            animation: slideUp 0.4s forwards;
+            text-transform: uppercase;
+            opacity: 0.8;
         }
 
-        @keyframes slideUp { from { bottom: -50px; } to { bottom: 30px; } }
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .rank-item:hover {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+
+        .rank-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            color: var(--gold);
+            font-size: 1rem;
+        }
+
+        .rank-info .name { font-size: 0.85rem; font-weight: 600; display: block; }
+        .rank-info .desc { font-size: 0.65rem; color: #555; text-transform: uppercase; }
+
+        /* --- FEED CENTRAL --- */
+        .feed-area { padding: 30px; overflow-y: auto; }
+        .post-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* --- CHAT DIREITO --- */
+        .chat-sidebar { border-left: 1px solid var(--border); background: rgba(0,0,0,0.3); }
+
+        /* Estilização da Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<nav>
+<header>
     <div class="logo">RFL•★•REAL</div>
-    <div style="font-size: 0.8rem; color: var(--text-dim);">DASHBOARD OPERACIONAL</div>
-</nav>
+    <div style="font-size: 0.7rem; opacity: 0.5;">SISTEMA DE GESTÃO DE ELITE</div>
+</header>
 
-<div class="app-container">
-    <aside class="sidebar-left">
-        <div class="menu-item active"><i class="fa-solid fa-house"></i> Feed Global</div>
-        <div class="menu-item" onclick="mostrarFamilias()"><i class="fa-solid fa-shield-halved"></i> Famílias</div>
-        <div class="menu-item"><i class="fa-solid fa-trophy"></i> Ranking Semanal</div>
-        <div class="menu-item"><i class="fa-solid fa-gear"></i> Definições</div>
-    </aside>
-
-    <main id="main-content">
-        <div class="create-post">
-            <textarea id="post-input" placeholder="No que você está pensando, Líder?"></textarea>
-            <div style="display: flex; justify-content: flex-end;">
-                <button class="btn-post" onclick="criarPost()">Publicar no Mural</button>
+<div class="main-grid">
+    <aside class="hierarchy-sidebar">
+        <div class="h-title">Estrutura de Comando</div>
+        
+        <div class="rank-item">
+            <div class="rank-icon"><i class="fa-solid fa-crown"></i></div>
+            <div class="rank-info">
+                <span class="name">Líder Supremo</span>
+                <span class="desc">Fundador RFL</span>
             </div>
         </div>
 
-        <div id="posts-container">
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="avatar-circle"></div>
-                    <div>
-                        <div style="font-weight: 600; font-size: 0.9rem;">RFL•★•REAL</div>
-                        <div style="font-size: 0.7rem; color: var(--text-dim);">Acabou de publicar</div>
-                    </div>
-                </div>
-                <p style="font-size: 0.95rem; line-height: 1.6; color: #ddd;">
-                    Seja bem-vindo ao novo Hub de Competição de Famílias. Aqui a organização é o nosso maior poder.
-                </p>
+        <div class="rank-item">
+            <div class="rank-icon"><i class="fa-solid fa-jet-fighter-up"></i></div>
+            <div class="rank-info">
+                <span class="name">General de Guerra</span>
+                <span class="desc">Estratégia e Pontos</span>
             </div>
+        </div>
+
+        <div class="rank-item">
+            <div class="rank-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+            <div class="rank-info">
+                <span class="name">Analista de Metas</span>
+                <span class="desc">Controle de Ranking</span>
+            </div>
+        </div>
+
+        <div class="rank-item">
+            <div class="rank-icon"><i class="fa-solid fa-camera-retro"></i></div>
+            <div class="rank-info">
+                <span class="name">Social Media</span>
+                <span class="desc">Marketing & Instagram</span>
+            </div>
+        </div>
+
+        <div class="rank-item">
+            <div class="rank-icon"><i class="fa-solid fa-user-plus"></i></div>
+            <div class="rank-info">
+                <span class="name">Recrutador Elite</span>
+                <span class="desc">RH & Admissões</span>
+            </div>
+        </div>
+
+        <div class="rank-item">
+            <div class="rank-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="rank-info">
+                <span class="name">Membro Oficial</span>
+                <span class="desc">Tropa de Elite</span>
+            </div>
+        </div>
+
+        <div class="rank-item" style="opacity: 0.5;">
+            <div class="rank-icon"><i class="fa-solid fa-user-clock"></i></div>
+            <div class="rank-info">
+                <span class="name">Recruta</span>
+                <span class="desc">Período de Teste</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="feed-area">
+        <div style="margin-bottom: 25px; font-weight: 600; color: var(--gold); letter-spacing: 1px;">MURAL DA FAMÍLIA</div>
+        <div class="post-card">
+            <p style="font-size: 0.9rem; color: #888;">Nenhuma nova ordem do comando nas últimas 24h.</p>
         </div>
     </main>
 
-    <aside class="sidebar-right">
-        <div class="chat-header">COORDENAÇÃO DE GUERRA</div>
-        <div id="chat-content">
-            <div class="chat-bubble"><b>Sistema:</b> Conexão segura estabelecida.</div>
-        </div>
-        <div class="chat-input-container">
-            <input type="text" id="chat-field" placeholder="Enviar mensagem rápida..." onkeypress="checkEnter(event)">
-        </div>
+    <aside class="chat-sidebar">
+        <div style="padding: 20px; font-size: 0.7rem; color: var(--gold); font-weight: 700;">COMUNICAÇÃO RÁPIDA</div>
     </aside>
 </div>
-
-<div id="toast">NOVO MEMBRO ACEITO NA FAMÍLIA!</div>
-
-<script>
-    function criarPost() {
-        const input = document.getElementById('post-input');
-        if(!input.value) return;
-        
-        const container = document.getElementById('posts-container');
-        const card = document.createElement('div');
-        card.className = 'post-card';
-        card.innerHTML = `
-            <div class="post-header">
-                <div class="avatar-circle"></div>
-                <div>
-                    <div style="font-weight: 600; font-size: 0.9rem;">RFL•★•REAL</div>
-                    <div style="font-size: 0.7rem; color: var(--text-dim);">Agora mesmo</div>
-                </div>
-            </div>
-            <p style="font-size: 0.95rem; line-height: 1.6; color: #ddd;">${input.value}</p>
-        `;
-        container.prepend(card);
-        input.value = "";
-    }
-
-    function checkEnter(e) {
-        if(e.key === 'Enter') {
-            const input = document.getElementById('chat-field');
-            const box = document.getElementById('chat-content');
-            const msg = document.createElement('div');
-            msg.className = 'chat-bubble';
-            msg.innerHTML = `<b>RFL:</b> ${input.value}`;
-            box.appendChild(msg);
-            box.scrollTop = box.scrollHeight;
-            input.value = "";
-        }
-    }
-</script>
 
 </body>
 </html>
