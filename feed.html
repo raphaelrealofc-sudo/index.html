@@ -37,11 +37,47 @@
 
         .logo { font-weight: 700; letter-spacing: 5px; color: var(--gold); }
 
-        .main-grid {
-            display: grid;
-            grid-template-columns: 260px 1fr 300px;
-            height: calc(100vh - 60px);
-        }
+      .main-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr; /* Removi os 300px da direita */
+    height: calc(100vh - 60px);
+}
+
+/* Estilo do Botão Flutuante que ficará no canto */
+.chat-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: var(--gold);
+    color: #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+/* Estilo da Janela do Chat (escondida por padrão) */
+.chat-window {
+    position: fixed;
+    bottom: 95px;
+    right: 25px;
+    width: 320px;
+    height: 450px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid var(--gold);
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    display: none; 
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
 
         /* --- BARRA LATERAL ESQUERDA --- */
         .hierarchy-sidebar {
@@ -178,13 +214,7 @@
         </div>
     </main>
 
-    <aside class="chat-sidebar">
-        <div style="font-size: 0.7rem; color: var(--gold); font-weight: 700; letter-spacing: 1px;">STATUS DO SISTEMA</div>
-        <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid var(--border);">
-            <p style="font-size: 0.75rem; color: #888;">Servidor: <b>Online</b></p>
-            <p style="font-size: 0.75rem; color: #888; margin-top: 5px;">Acesso: <b>Visitante</b></p>
-        </div>
-    </aside>
+    
 </div>
 
 <script>
@@ -208,6 +238,30 @@
                 <button onclick="location.reload()" style="margin-top: 25px; background:none; border:none; color:var(--gold); cursor:pointer; font-size:0.7rem; text-decoration:underline; text-transform:uppercase; letter-spacing:1px;">← Voltar ao Início</button>
             </div>
         `;
+    }
+<div class="chat-toggle" onclick="toggleChat()">
+    <i class="fa-solid fa-comment-dots"></i>
+</div>
+
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <span style="font-size: 0.7rem; color: var(--gold); font-weight: 700; letter-spacing: 1px;">STATUS DO SISTEMA</span>
+        <i class="fa-solid fa-xmark" onclick="toggleChat()" style="cursor:pointer; opacity: 0.5;"></i>
+    </div>
+    <div class="chat-messages">
+        <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+            <p style="color: #888; font-size: 0.75rem;">Servidor: <b style="color: #4caf50;">Online</b></p>
+            <p style="color: #888; font-size: 0.75rem; margin-top: 5px;">Acesso: <b style="color: var(--gold);">Visitante</b></p>
+        </div>
+        <p style="font-size: 0.65rem; color: #555;">[SYSTEM] Terminal RFL pronto.</p>
+    </div>
+</div>
+
+<script>
+    // Função para abrir e fechar o chat
+    function toggleChat() {
+        const chat = document.getElementById('chatWindow');
+        chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
     }
 </script>
 
