@@ -3,103 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RFL•★•REAL | Feed</title>
+    <title>RFL•★•REAL | Avakin Family Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root { --gold: #d4af37; --dark: #050505; --card: #111; --border: #222; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: #000; color: #fff; overflow: hidden; }
-        
-        header { padding: 15px; text-align: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
-        h1 { font-size: 1.5rem; letter-spacing: 5px; }
 
-        .container { display: grid; grid-template-columns: 80px 1fr 300px; height: calc(100vh - 65px); }
+        /* HEADER & LAYOUT */
+        header { padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); background: #000; z-index: 100; position: relative; }
+        h1 { font-size: 1.5rem; letter-spacing: 5px; color: var(--gold); }
+        .container { display: grid; grid-template-columns: 280px 1fr 300px; height: calc(100vh - 65px); }
 
-        /* Sidebar Esquerda */
-        .sidebar { border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding-top: 20px; gap: 25px; }
-        .nav-icon { font-size: 1.3rem; color: #444; cursor: pointer; transition: 0.3s; }
-        .nav-icon:hover { color: #fff; }
+        /* BARRA LATERAL (FAMÍLIAS) */
+        .left-panel { background: #080808; border-right: 1px solid var(--border); overflow-y: auto; padding: 15px; }
+        .family-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; text-align: center; }
+        .family-card:hover { border-color: var(--gold); transform: scale(1.02); }
+        .family-card b { display: block; color: var(--gold); margin-bottom: 5px; }
+        .btn-join { background: var(--gold); color: #000; border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.7rem; cursor: pointer; margin-top: 10px; }
 
-        /* Centro (Posts) */
-        main { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; background: #050505; }
-        .create-post { width: 100%; max-width: 500px; background: #111; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; }
+        /* FEED CENTRAL */
+        main { padding: 20px; overflow-y: auto; background: radial-gradient(circle at top, #111, #000); }
+        .post-input { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 20px; }
         textarea { width: 100%; background: transparent; border: none; color: #fff; resize: none; outline: none; margin-bottom: 10px; }
-        .post-button { background: #fff; color: #000; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; float: right; }
-        .post-card { background: #111; border-radius: 15px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; width: 100%; max-width: 500px; }
+        .post-card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 15px; border-left: 5px solid var(--gold); }
 
-        /* Chat Direita */
-        .chat-area { display: flex; flex-direction: column; height: 100%; background: #080808; border-left: 1px solid #222; }
-        .chat-header { padding: 15px; border-bottom: 1px solid #222; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-        #chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .message { background: #151515; padding: 10px; border-radius: 10px; font-size: 0.85rem; border: 1px solid #222; }
-        .message b { color: #fff; display: block; margin-bottom: 2px; }
-        .chat-input-area { padding: 15px; border-top: 1px solid #222; display: flex; gap: 5px; }
-        .chat-input-area input { flex: 1; background: #111; border: 1px solid #333; border-radius: 5px; color: #fff; padding: 8px; outline: none; }
-        .chat-send { background: none; border: none; color: #fff; cursor: pointer; font-size: 1.2rem; }
+        /* CHAT E NOTIFICAÇÕES (DIREITA) */
+        .right-panel { display: flex; flex-direction: column; background: #080808; border-left: 1px solid var(--border); }
+        #chat-box { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.85rem; }
+        .msg { background: #151515; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .msg b { color: var(--gold); }
+        .chat-input { padding: 10px; border-top: 1px solid var(--border); display: flex; gap: 5px; }
+        .chat-input input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; }
+
+        /* MODAIS (JANELAS) */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
+        .modal-content { background: #0a0a0a; margin: 5% auto; padding: 25px; border: 1px solid var(--gold); width: 90%; max-width: 550px; border-radius: 20px; max-height: 80vh; overflow-y: auto; }
+        .member-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .member-item { background: #111; padding: 10px; border-radius: 8px; border: 1px solid #222; font-size: 0.8rem; }
+        .member-item.leader { border-color: var(--gold); }
+
+        /* NOTIFICAÇÃO TOAST */
+        #toast { position: fixed; top: 20px; right: -400px; background: var(--gold); color: #000; padding: 15px 25px; border-radius: 8px; font-weight: bold; transition: 0.5s; z-index: 9999; }
     </style>
 </head>
 <body>
 
-<header><h1>RFL•★•REAL</h1></header>
+<div id="toast">NOVO MEMBRO ACEITO!</div>
+
+<header><h1>AVAKIN FAMILY HUB</h1></header>
 
 <div class="container">
-    <aside class="sidebar">
-        <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
-        <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
+    <aside class="left-panel">
+        <h3 style="color: var(--gold); font-size: 0.9rem; margin-bottom: 15px;">FAMÍLIAS ATIVAS</h3>
+        
+        <div class="family-card" onclick="verDetalhes('RFL•★•REAL')">
+            <b>RFL•★•REAL</b>
+            <span style="font-size: 0.7rem; color: #666;">Status: Recrutando Elite</span><br>
+            <button class="btn-join" onclick="event.stopPropagation(); abrirAlistamento('RFL•★•REAL')">ALISTAR-SE</button>
+        </div>
+
+        <div class="family-card" onclick="verDetalhes('DARK KINGS')">
+            <b>DARK KINGS</b>
+            <span style="font-size: 0.7rem; color: #666;">Status: Vagas Limitadas</span><br>
+            <button class="btn-join" onclick="event.stopPropagation(); abrirAlistamento('DARK KINGS')">ALISTAR-SE</button>
+        </div>
     </aside>
 
     <main>
-        <div class="create-post">
-            <textarea id="post-text" placeholder="No que você está pensando?" rows="3"></textarea>
-            <button class="post-button" onclick="publicarPost()">POSTAR</button>
+        <div class="post-input">
+            <textarea id="post-txt" placeholder="Poste uma conquista da sua família..." rows="3"></textarea>
+            <button onclick="postar()" style="background: var(--gold); border:none; padding: 7px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; float: right;">POSTAR</button>
             <div style="clear: both;"></div>
         </div>
-        <div id="post-list"></div>
+        <div id="feed-lista">
+            <div class="post-card"><b>Líder RFL</b><p>A competição de famílias começou! Todos para a Praça Liberty.</p></div>
+        </div>
     </main>
 
-    <aside class="chat-area">
-        <div class="chat-header"><i class="fa-solid fa-earth-americas"></i> GLOBAL CHAT</div>
-        <div id="chat-messages">
-            <div class="message"><b>Sistema</b> Bem-vindo ao Chat Global, RFL•★•REAL!</div>
+    <aside class="right-panel">
+        <div style="padding: 15px; border-bottom: 1px solid var(--border); font-size: 0.8rem; font-weight: bold;">CHAT ESTRATÉGICO</div>
+        <div id="chat-box">
+            <div class="msg"><b>Sistema:</b> Bem-vindo, RFL•★•REAL.</div>
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Digite uma mensagem...">
-            <button class="chat-send" onclick="enviarChat()"><i class="fa-solid fa-paper-plane"></i></button>
+        <div class="chat-input">
+            <input type="text" id="chat-in" placeholder="Mensagem...">
+            <button onclick="enviarChat()" style="background:none; border:none; color:var(--gold); cursor:pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        <div id="recentes" style="padding: 15px; font-size: 0.7rem; color: #555;">
+            <h4 style="color: #888; margin-bottom: 5px;">ATIVIDADE RECENTE</h4>
         </div>
     </aside>
 </div>
 
+<div id="modalDetalhes" class="modal">
+    <div class="modal-content">
+        <h2 id="det-nome" style="color: var(--gold);"></h2>
+        <p id="det-lema" style="font-style: italic; font-size: 0.8rem; margin-bottom: 20px;"></p>
+        <div class="member-grid" id="det-membros"></div>
+        <button onclick="fecharModais()" style="width: 100%; margin-top: 20px; background: none; border: 1px solid #333; color: #fff; padding: 10px; cursor: pointer;">Fechar</button>
+    </div>
+</div>
+
+<div id="modalAlist" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <h2 style="color: var(--gold);">ALISTAMENTO</h2>
+        <input type="text" id="ali-nick" placeholder="Seu Nick no Avakin" style="width:100%; padding:10px; margin-top:10px; background:#000; border:1px solid #333; color:#fff;">
+        <input type="text" id="ali-insta" placeholder="Seu @Instagram" style="width:100%; padding:10px; margin-top:10px; background:#000; border:1px solid #333; color:#fff;">
+        <button onclick="finalizarAlistamento()" style="width: 100%; margin-top: 20px; background: var(--gold); border: none; padding: 10px; font-weight:bold; cursor: pointer;">ENVIAR PARA LÍDERES</button>
+        <button onclick="fecharModais()" style="width: 100%; margin-top: 10px; background: none; border: none; color: #555; cursor: pointer;">Cancelar</button>
+    </div>
+</div>
+
 <script>
-    // Função do Chat
-    function enviarChat() {
-        const input = document.getElementById('chat-input');
-        const box = document.getElementById('chat-messages');
-        if(input.value.trim() !== "") {
-            const msg = document.createElement('div');
-            msg.className = 'message';
-            msg.innerHTML = `<b>RFL•★•REAL</b> ${input.value}`;
-            box.appendChild(msg);
-            box.scrollTop = box.scrollHeight;
-            input.value = "";
+    // DADOS DAS FAMÍLIAS
+    const familias = {
+        "RFL•★•REAL": {
+            lema: "Dominando o Avakin Life com honra e glória.",
+            membros: [
+                {n: "RFL•★•REAL", c: "LÍDER SUPREMO", id: "RFL-001", ig: "@rfl_real"},
+                {n: "Vitin_Elite", c: "Membro", id: "AVK-992", ig: "@vitin_avk"}
+            ]
+        },
+        "DARK KINGS": {
+            lema: "A escuridão é o nosso império.",
+            membros: [
+                {n: "Dark_Boss", c: "Líder", id: "DRK-666", ig: "@darkboss"}
+            ]
         }
+    };
+
+    let familiaAtualRecrutando = "";
+
+    // FUNÇÕES DE INTERAÇÃO
+    function verDetalhes(nome) {
+        const f = familias[nome];
+        document.getElementById('det-nome').innerText = nome;
+        document.getElementById('det-lema').innerText = f.lema;
+        const grid = document.getElementById('det-membros');
+        grid.innerHTML = "";
+        f.membros.forEach(m => {
+            grid.innerHTML += `<div class="member-item ${m.c.includes('Líder')?'leader':''}">
+                <b>${m.n}</b><br><small>${m.c}</small><br>
+                <span style="font-size:0.6rem; color:#888;">ID: ${m.id} | IG: ${m.ig}</span>
+            </div>`;
+        });
+        document.getElementById('modalDetalhes').style.display = 'block';
     }
 
-    // Atalho Enter para o Chat
-    document.getElementById('chat-input').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') enviarChat();
-    });
+    function abrirAlistamento(nome) {
+        familiaAtualRecrutando = nome;
+        document.getElementById('modalAlist').style.display = 'block';
+    }
 
-    // Função de Postar
-    function publicarPost() {
-        const txt = document.getElementById('post-text');
-        const list = document.getElementById('post-list');
-        if(txt.value.trim() !== "") {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-            card.innerHTML = `<b>RFL•★•REAL</b><p style="margin-top:10px">${txt.value}</p>`;
-            list.prepend(card);
-            txt.value = "";
-        }
+    function fecharModais() {
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    }
+
+    function finalizarAlistamento() {
+        const nick = document.getElementById('ali-nick').value;
+        if(!nick) return alert("Digite seu nick!");
+        
+        // Simula notificação para os líderes (Em um site real, isso iria para um Webhook)
+        alert(`Solicitação enviada para os líderes da ${familiaAtualRecrutando}!`);
+        
+        // Simula a notificação pública após ser aceito
+        setTimeout(() => {
+            mostrarToast(nick, familiaAtualRecrutando);
+        }, 3000);
+        
+        fecharModais();
+    }
+
+    function mostrarToast(nick, familia) {
+        const t = document.getElementById('toast');
+        t.innerText = `🎖️ ${nick} ACABOU DE ENTRAR NA ${familia}!`;
+        t.style.right = "20px";
+        
+        const rec = document.getElementById('recentes');
+        rec.innerHTML += `<div>✅ ${nick} entrou na ${familia}</div>`;
+
+        setTimeout(() => { t.style.right = "-400px"; }, 5000);
+    }
+
+    function postar() {
+        const val = document.getElementById('post-txt').value;
+        if(!val) return;
+        const p = document.createElement('div');
+        p.className = 'post-card';
+        p.innerHTML = `<b>RFL•★•REAL</b><p>${val}</p>`;
+        document.getElementById('feed-lista').prepend(p);
+        document.getElementById('post-txt').value = "";
+    }
+
+    function enviarChat() {
+        const i = document.getElementById('chat-in');
+        if(!i.value) return;
+        const m = document.createElement('div');
+        m.className = 'msg';
+        m.innerHTML = `<b>RFL•★•REAL:</b> ${i.value}`;
+        document.getElementById('chat-box').appendChild(m);
+        document.getElementById('chat-box').scrollTop = 9999;
+        i.value = "";
     }
 </script>
+
 </body>
 </html>
