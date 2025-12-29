@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFL•★•REAL | Feed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #000; color: #fff; overflow-x: hidden; }
+
+        /* Header Luxo */
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        /* Estrutura em Grid */
+        .container {
+            display: grid;
+            grid-template-columns: 80px 1fr 300px;
+            height: calc(100vh - 80px);
+        }
+
+        /* Menu Lateral */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            gap: 30px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-icon { font-size: 1.5rem; color: #666; cursor: pointer; transition: 0.3s; }
+        .nav-icon:hover { color: #fff; transform: scale(1.2); }
+
+        /* Área de Posts */
+        main {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .post {
+            width: 100%;
+            max-width: 500px;
+            background: #111;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .post-img { width: 100%; height: 300px; background: #222; }
+        .post-content { padding: 15px; }
+
+        /* Chat Lateral */
+        .chat-area {
+            padding: 20px;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            background: #080808;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RFL•★•REAL</h1>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="nav-icon"><i class="fa-solid fa-house"></i></div>
+            <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
+            <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+        </aside>
+
+        <main>
+            <div class="post">
+                <div class="post-img"></div>
+                <div class="post-content">
+                    <p>Bem-vindo ao novo império, RFL•★•REAL.</p>
+                </div>
+            </div>
+        </main>
+
+        <aside class="chat-area">
+            <h3>Global Chat</h3>
+            <p style="color: #444; margin-top: 20px;">Conectando ao servidor...</p>
+        </aside>
+    </div>
+
+</body>
+</html>
