@@ -191,9 +191,10 @@
                 <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
                 <video controls class="post-media"><source src="seu-video.mp4" type="video/mp4"></video>
                 <div class="post-interactions">
-                    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span>Curtir</span></button>
-                    <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> <span>Comentar</span></button>
-                </div>
+    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span>Curtir</span></button>
+    <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> <span>Comentar</span></button>
+    <button class="interaction-btn" onclick="compartilharPost(this)"><i class="fa-solid fa-share"></i> <span>Compartilhar</span></button>
+</div>
                 <div class="comments-section">
                     <div class="comment-input-wrapper">
                         <input type="text" placeholder="Escreva um comentário...">
@@ -222,6 +223,8 @@
     function publicarPost() {
         const text = document.getElementById('postText').value;
         if (!text.trim()) return;
+        
+        // Código corrigido abaixo (removido comentário interno e divs duplicadas)
         const novoPost = `
             <div class="post-card">
                 <div class="post-header">
@@ -232,6 +235,7 @@
                 <div class="post-interactions">
                     <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> Curtir</button>
                     <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> Comentar</button>
+                    <button class="interaction-btn" onclick="compartilharPost(this)"><i class="fa-solid fa-share"></i> Compartilhar</button>
                 </div>
                 <div class="comments-section">
                     <div class="comment-input-wrapper">
@@ -241,8 +245,10 @@
                     <div class="comments-list" style="margin-top:10px;"></div>
                 </div>
             </div>`;
+            
         document.getElementById('postsContainer').insertAdjacentHTML('afterbegin', novoPost);
         document.getElementById('postText').value = "";
+        document.getElementById("postText").style.height = "40px"; // Resetar altura
     }
 
     // FUNÇÃO CHAT
@@ -274,22 +280,52 @@
 
     function toggleLike(btn) {
         const icon = btn.querySelector('i');
-        icon.classList.toggle('fa-regular'); icon.classList.toggle('fa-solid');
+        icon.classList.toggle('fa-regular'); 
+        icon.classList.toggle('fa-solid');
         btn.style.color = icon.classList.contains('fa-solid') ? "var(--gold)" : "rgba(255,255,255,0.7)";
     }
 
     // AUTO-AJUSTE TEXTAREA
     document.getElementById("postText").addEventListener("input", function() {
-        this.style.height = "auto"; this.style.height = (this.scrollHeight) + "px";
+        this.style.height = "auto"; 
+        this.style.height = (this.scrollHeight) + "px";
     });
 
     // ENTER KEY
     document.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             if (e.target.id === 'chatInput') sendMessage();
-            if (e.target.placeholder === "Escreva um comentário...") enviarComentario(e.target.parentElement.querySelector('.send-comment-btn'));
+            if (e.target.placeholder === "Escreva um comentário...") {
+                enviarComentario(e.target.parentElement.querySelector('.send-comment-btn'));
+            }
         }
     });
+
+    // FUNÇÃO COMPARTILHAR
+    function compartilharPost(btn) {
+        const postCard = btn.closest('.post-card');
+        const postContent = postCard.querySelector('.post-content').innerText;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Post de RFL•★•REAL',
+                text: postContent,
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link do mural copiado para a área de transferência!");
+        }
+        
+        const span = btn.querySelector('span');
+        const originalText = span.innerText;
+        span.innerText = "Copiado!";
+        btn.style.color = "var(--gold)";
+        setTimeout(() => {
+            span.innerText = originalText;
+            btn.style.color = "rgba(255,255,255,0.7)";
+        }, 2000);
+    }
 </script>
 </body>
 </html>
