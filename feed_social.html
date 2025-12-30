@@ -254,6 +254,27 @@
     70% { box-shadow: 0 0 0 6px rgba(69, 189, 98, 0); }
     100% { box-shadow: 0 0 0 0 rgba(69, 189, 98, 0); }
 }
+        .post-card.pinned {
+    border: 2px solid var(--gold) !important;
+    order: -1; /* Força o post a ir para o topo no flexbox/grid */
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+    box-shadow: 0 0 15px var(--gold-glow);
+}
+
+.pin-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: 0.3s;
+}
+
+.pin-btn.active {
+    color: var(--gold);
+}
     </style>
 </head>
 <body>
@@ -317,10 +338,16 @@
 
         <div id="postsContainer">
             <div class="post-card" style="border: 1px solid var(--gold);">
-                <div class="post-header">
-                    <div class="user-avatar"></div>
-                    <div class="user-info"><b>RFL•★•LÍDER</b></div>
-                </div>
+                // Dentro da sua função publicarPost(), mude a parte do post-header:
+<div class="post-header">
+    <div class="user-avatar"></div>
+    <div style="flex: 1;">
+        <b>RFL•★•REAL</b>
+    </div>
+    <button class="pin-btn" onclick="togglePin(this)" title="Fixar Post">
+        <i class="fa-solid fa-thumbtack"></i>
+    </button>
+</div>
                 <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
                 <video controls class="post-media"><source src="seu-video.mp4" type="video/mp4"></video>
                 <div class="post-interactions">
@@ -528,6 +555,28 @@
             post.querySelector('.post-media') ? post.style.display = 'block' : post.style.display = 'none';
         }
     });
+}
+    function togglePin(btn) {
+    const post = btn.closest('.post-card');
+    const container = document.getElementById('postsContainer');
+    
+    // Remove fixação de qualquer outro post (apenas um fixado por vez)
+    document.querySelectorAll('.post-card').forEach(p => {
+        if (p !== post) p.classList.remove('pinned');
+    });
+    document.querySelectorAll('.pin-btn').forEach(b => {
+        if (b !== btn) b.classList.remove('active');
+    });
+
+    // Alterna o estado do post atual
+    post.classList.toggle('pinned');
+    btn.classList.toggle('active');
+
+    // Se fixou, move para o topo da lista visualmente
+    if (post.classList.contains('pinned')) {
+        container.prepend(post);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 </script>
 </body>
