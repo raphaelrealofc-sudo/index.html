@@ -218,16 +218,31 @@
 </main>
 
     <aside class="chat-sidebar">
-        <div class="chat-title">LOG DE TRANSMISSÃO GLOBAL</div>
-        <div class="chat-history">
-            <div class="chat-msg"><b>[Membro_01]:</b> Salve família RFL!</div>
-            <div class="chat-msg"><b>[Admin_RFL]:</b> Recrutamento aberto na ala Norte.</div>
-            <div class="chat-msg"><b>[Player_Gold]:</b> Alguém pra subir rank hoje?</div>
+    <div class="chat-header">
+        <div class="chat-title">LOG DE TRANSMISSÃO</div>
+        <div class="chat-status"><span class="pulse-dot"></span> FREQUÊNCIA ATIVA</div>
+    </div>
+    
+    <div class="chat-tabs">
+        <div class="c-tab active" onclick="switchChat('global', this)">
+            <i class="fa-solid fa-earth-americas"></i> GLOBAL
         </div>
-        <div class="chat-input-area">
-            <input type="text" class="chat-input" placeholder="Enviar mensagem para o global...">
+        <div class="c-tab" onclick="switchChat('family', this)">
+            <i class="fa-solid fa-shield-halved"></i> FAMÍLIA
         </div>
-    </aside>
+    </div>
+
+    <div class="chat-history" id="chatWindow">
+        <div class="chat-msg"><b>[Membro_01]:</b> Salve família RFL!</div>
+        <div class="chat-msg family-msg"><b>[LÍDER]:</b> Reunião estratégica às 20h.</div>
+        <div class="chat-msg"><b>[Player_Gold]:</b> Alguém pra subir rank hoje?</div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" class="chat-input" id="chatInputField" placeholder="Transmitir para o global...">
+        <button class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</aside>
 </div>
     <script>
     function switchFeed(type, element) {
@@ -245,7 +260,26 @@
             console.log("Sistema RFL: Exibindo feed global completo...");
             // Aqui o código volta a mostrar tudo
         }
+    function switchChat(type, element) {
+    // 1. Alterna o visual das abas
+    document.querySelectorAll('.c-tab').forEach(t => t.classList.remove('active'));
+    element.classList.add('active');
+
+    const input = document.getElementById('chatInputField');
+    const chatWindow = document.getElementById('chatWindow');
+
+    // 2. Altera o comportamento do chat
+    if(type === 'family') {
+        input.placeholder = "Transmitir para a rede privada da FAMÍLIA...";
+        input.style.borderColor = "var(--gold)";
+        // Aqui futuramente você filtra as mensagens para mostrar só as da Família
+        console.log("Sistema RFL: Frequência Privada sintonizada.");
+    } else {
+        input.placeholder = "Transmitir para o global...";
+        input.style.borderColor = "rgba(255,255,255,0.1)";
+        console.log("Sistema RFL: Frequência Global sintonizada.");
     }
+}
 </script>
 
 </body>
