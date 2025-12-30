@@ -114,7 +114,26 @@
             flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 8px 15px; border-radius: 20px; color: white; outline: none;
         }
-        .send-comment-btn { background: none; border: none; color: var(--gold); cursor: pointer; }
+        .comment-like-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.7rem;
+    cursor: pointer;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.comment-like-btn:hover {
+    color: var(--gold);
+}
+
+.comment-like-btn i.fa-solid {
+    color: var(--gold);
+}
 
         /* --- CHAT LATERAL --- */
         .chat-sidebar { display: flex; flex-direction: column; background: rgba(0,0,0,0.2); border-left: 1px solid var(--border); }
