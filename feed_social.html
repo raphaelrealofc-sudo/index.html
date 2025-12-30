@@ -49,12 +49,8 @@
         }
 
         .pulse-dot {
-            height: 8px;
-            width: 8px;
-            background: var(--gold);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--gold);
-            animation: pulse 2s infinite;
+            height: 8px; width: 8px; background: var(--gold); border-radius: 50%;
+            box-shadow: 0 0 10px var(--gold); animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
@@ -64,130 +60,49 @@
         }
 
         .rank-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 10px;
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: 0.3s;
+            display: flex; align-items: center; gap: 15px; padding: 12px; margin-bottom: 10px;
+            background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid transparent;
+            cursor: pointer; transition: 0.3s;
         }
 
         .rank-item:hover {
-            background: rgba(212, 175, 55, 0.05);
-            border-color: var(--gold-glow);
-            transform: translateX(5px);
+            background: rgba(212, 175, 55, 0.05); border-color: var(--gold-glow); transform: translateX(5px);
         }
 
         .rank-icon {
-            width: 35px;
-            height: 35px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gold);
-            font-size: 0.9rem;
+            width: 35px; height: 35px; background: rgba(0,0,0,0.5); border: 1px solid var(--gold);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-size: 0.9rem;
         }
 
         .rank-info .name { display: block; font-size: 0.85rem; font-weight: 700; color: #fff; }
         .rank-info .desc { font-size: 0.65rem; color: #666; font-weight: 600; text-transform: uppercase; }
 
         /* --- FEED CENTRAL --- */
-        .feed-section {
-            overflow-y: auto;
-            padding: 20px;
-            scrollbar-width: thin;
-        }
+        .feed-section { overflow-y: auto; padding: 20px; scrollbar-width: thin; }
 
-        .post-creator {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
-        }
-
-        .post-input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 1.1rem;
-            outline: none;
-            margin-bottom: 15px;
-            resize: none;
-            font-family: inherit;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border);
-            padding-top: 15px;
-        }
-
-        .media-btn { color: var(--gold); cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: 0.3s; }
-        .btn-post {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 8px 25px;
-            border-radius: 20px;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-        }
-
-        .feed-tabs { display: flex; gap: 30px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-        .tab { font-size: 0.75rem; font-weight: 800; color: #555; cursor: pointer; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        .tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
-
-        .post-card { background: var(--surface); border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; animation: fadeIn 0.5s ease; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        .post-card { background: var(--surface); border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; }
         .post-header { padding: 15px; display: flex; align-items: center; gap: 10px; }
         .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); }
-        .username { font-weight: 700; font-size: 0.85rem; color: #fff; }
-        .time { font-size: 0.7rem; color: #555; }
         .post-content { padding: 0 15px 15px 15px; font-size: 0.9rem; color: #ccc; }
-        .post-media { width: 100%; max-height: 400px; object-fit: cover; }
-        .post-footer { padding: 12px 15px; display: flex; gap: 20px; border-top: 1px solid var(--border); }
-        .action-item { cursor: pointer; color: #555; transition: 0.3s; }
-        .action-item:hover { color: var(--gold); }
+        .post-media { width: 100%; max-height: 500px; object-fit: cover; background: #000; }
 
         /* --- CHAT LATERAL --- */
         .chat-sidebar { display: flex; flex-direction: column; background: rgba(0,0,0,0.2); border-left: 1px solid var(--border); }
         .chat-header { padding: 20px; border-bottom: 1px solid var(--border); }
         .chat-title { font-weight: 800; font-size: 0.7rem; letter-spacing: 2px; color: var(--gold); }
-        
-        .chat-tabs { display: flex; gap: 5px; padding: 10px; background: rgba(0,0,0,0.2); }
-        .c-tab { flex: 1; padding: 8px; font-size: 0.65rem; text-align: center; cursor: pointer; background: #111; color: #555; font-weight: 800; border: 1px solid #222; }
-        .c-tab.active { background: var(--gold); color: #000; border-color: var(--gold); }
-
         .chat-history { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .chat-msg { font-size: 0.8rem; line-height: 1.4; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
-        
-        .chat-msg b { color: var(--gold); margin-right: 5px; }
-        .family-msg { border-left: 2px solid var(--gold); background: rgba(212, 175, 55, 0.05); padding: 5px 8px; }
-
+        .chat-msg { font-size: 0.8rem; line-height: 1.4; border-left: 2px solid var(--gold); background: rgba(212, 175, 55, 0.05); padding: 5px 8px; }
+        .chat-msg b { color: var(--gold); }
         .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; outline: none; font-size: 0.8rem; }
+        .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; outline: none; }
         .chat-send-btn { background: var(--gold); border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; color: #000; }
     </style>
 </head>
 <body>
 
-<aside class="hierarchy-sidebar">
+<div class="app-container">
+    <aside class="hierarchy-sidebar">
         <div class="pulse-title"><div class="pulse-dot"></div> MENU FAMILY</div>
         <div class="rank-item" onclick="window.location.href='nossahistoria.html'"><div class="rank-icon"><i class="fa-solid fa-gem"></i></div><div class="rank-info"><span class="name">Nossa História</span><span class="desc">Conheça o Legado</span></div></div>
         <div class="rank-item" onclick="window.location.href='guiadepontos.html'"><div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div><div class="rank-info"><span class="name">Guia de Pontos</span><span class="desc">Como subir no Rank</span></div></div>
@@ -204,104 +119,46 @@
         <div class="rank-item" onclick="window.location.href='index.html'" style="margin-top: 30px; border-left: 2px solid var(--gold);"><div class="rank-icon"><i class="fa-solid fa-house"></i></div><div class="rank-info"><span class="name">Dashboard</span><span class="desc">Voltar ao Início</span></div></div>
     </aside>
 
-    <main class="feed-section" id="mainFeed">
-        <div class="post-creator">
-            <textarea id="postText" class="post-input" placeholder="O que está acontecendo no legado?"></textarea>
-            <div class="post-actions">
-                <div style="display: flex; gap: 15px;"><span class="media-btn"><i class="fa-solid fa-image"></i> FOTO</span><span class="media-btn"><i class="fa-solid fa-video"></i> VÍDEO</span></div>
-                <button class="btn-post" onclick="publishPost()">Publicar</button>
-            </div>
-        </div>
-
-        <div class="feed-tabs">
-            <div class="tab active" onclick="switchFeed('global', this)"><i class="fa-solid fa-earth-americas"></i> PARA TODOS</div>
-            <div class="tab" onclick="switchFeed('following', this)"><i class="fa-solid fa-user-check"></i> SEGUINDO</div>
-        </div>
-
+    <main class="feed-section">
         <div id="postsContainer">
             <div class="post-card">
                 <div class="post-header">
                     <div class="user-avatar" style="background: #222 url('https://via.placeholder.com/40') center/cover;"></div>
-                    <div class="user-info"><span class="username">RFL•★•LÍDER</span><span class="time">Há 10 minutos</span></div>
+                    <div class="user-info"><span class="username" style="font-weight:700">RFL•★•LÍDER</span></div>
                 </div>
-                <div class="post-content">Nova edit da família disponível! O legado continua pesado. 🔥</div>
-                <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=600" class="post-media">
-                <div class="post-footer"><div class="action-item active"><i class="fa-solid fa-heart"></i> 1.2k</div><div class="action-item"><i class="fa-solid fa-comment"></i> 84</div><div class="action-item"><i class="fa-solid fa-share-nodes"></i></div></div>
+                <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
+                <video controls class="post-media">
+                    <source src="seu-video.mp4" type="video/mp4">
+                    Seu navegador não suporta vídeos.
+                </video>
             </div>
         </div>
     </main>
 
     <aside class="chat-sidebar">
         <div class="chat-header"><div class="chat-title">SISTEMA DE TRANSMISSÃO</div></div>
-        <div class="chat-tabs">
-            <div class="c-tab active" id="tabGlobal" onclick="switchChat('global', this)">GLOBAL</div>
-            <div class="c-tab" id="tabFamily" onclick="switchChat('family', this)">FAMÍLIA</div>
-        </div>
         <div class="chat-history" id="chatWindow">
-            <div class="chat-msg"><b>[Membro_01]:</b> Salve família RFL!</div>
-            <div class="chat-msg family-msg"><b>[LÍDER]:</b> Reunião estratégica às 20h.</div>
+            <div class="chat-msg"><b>[SISTEMA]:</b> Bem-vindo ao canal da Família RFL.</div>
         </div>
         <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chatInputField" placeholder="Transmitir para o global...">
-            <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="text" class="chat-input" id="chatInput" placeholder="Sua mensagem...">
+            <button class="chat-send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </aside>
 </div>
 
 <script>
-    let currentChatType = 'global';
-
-    function switchFeed(type, element) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
-    }
-
-    function switchChat(type, element) {
-        currentChatType = type;
-        document.querySelectorAll('.c-tab').forEach(t => t.classList.remove('active'));
-        element.classList.add('active');
-        const input = document.getElementById('chatInputField');
-        input.placeholder = type === 'family' ? "Transmitir para a rede da FAMÍLIA..." : "Transmitir para o global...";
-        input.style.borderColor = type === 'family' ? "var(--gold)" : "#333";
-    }
-
-    function publishPost() {
-        const text = document.getElementById('postText').value;
-        if (!text.trim()) return;
-
-        const container = document.getElementById('postsContainer');
-        const newPost = document.createElement('div');
-        newPost.className = 'post-card';
-        newPost.innerHTML = `
-            <div class="post-header">
-                <div class="user-avatar" style="background: #333;"></div>
-                <div class="user-info"><span class="username">RFL•★•REAL</span><span class="time">Agora mesmo</span></div>
-            </div>
-            <div class="post-content">${text}</div>
-            <div class="post-footer"><div class="action-item"><i class="fa-solid fa-heart"></i> 0</div><div class="action-item"><i class="fa-solid fa-comment"></i> 0</div></div>
-        `;
-        container.prepend(newPost);
-        document.getElementById('postText').value = '';
-    }
-
-    function sendChatMessage() {
-        const input = document.getElementById('chatInputField');
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
         if (!input.value.trim()) return;
-
         const chatWindow = document.getElementById('chatWindow');
         const msg = document.createElement('div');
-        msg.className = currentChatType === 'family' ? 'chat-msg family-msg' : 'chat-msg';
+        msg.className = 'chat-msg';
         msg.innerHTML = `<b>[VOCÊ]:</b> ${input.value}`;
-        
         chatWindow.appendChild(msg);
         chatWindow.scrollTop = chatWindow.scrollHeight;
         input.value = '';
     }
-
-    // Permitir enviar mensagem com a tecla ENTER
-    document.getElementById('chatInputField').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') sendChatMessage();
-    });
 </script>
 </body>
 </html>
