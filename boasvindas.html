@@ -1,0 +1,58 @@
+<div id="welcome-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class="fa-solid fa-heart-pulse welcome-icon"></i>
+            <h2>Coração da RFL•★•REAL</h2>
+        </div>
+        
+        <div class="modal-body">
+            <p class="main-text">Você está no Hub Social da RFL, uma plataforma feita para conectar toda a comunidade.</p>
+            
+            <div class="live-stats">
+                <div class="stat-box">
+                    <span class="value">15</span>
+                    <span class="label">Famílias</span>
+                </div>
+                <div class="stat-box">
+                    <span class="value">142</span>
+                    <span class="label">Sem Família</span>
+                </div>
+                <div class="stat-box">
+                    <span class="value online">257</span>
+                    <span class="label">Online Agora</span>
+                </div>
+            </div>
+
+            <div class="site-features">
+                <div class="feature-item">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <p>Posts, fotos, vídeos e perfis de diversas famílias e membros.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-plane"></i>
+                    <p>Viaje no site, poste seu conteúdo e receba curtidas e comentários.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-comments"></i>
+                    <p>Converse com todos em tempo real através do <b>Chat Global</b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="closeWelcome()" class="modal-btn">OK, VAMOS COMEÇAR!</button>
+    </div>
+</div>
+
+<style>
+    /* Estilos permanecem os mesmos (veja resposta anterior) */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+    .modal-content { background: linear-gradient(145deg, rgba(20,20,20,0.9), rgba(5,5,5,1)); border: 1px solid rgba(212,175,55,0.5); padding: 40px; border-radius: 30px; text-align: center; max-width: 600px; width: 95%; }
+    .welcome-icon { font-size: 3.5rem; color: #d4af37; animation: heartbeat 1.5s infinite; }
+    .live-stats { display: flex; justify-content: space-around; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.05); }
+    .stat-box .value { font-size: 1.8rem; font-weight: bold; color: #fff; }
+    .stat-box .label { font-size: 0.7rem; color: #d4af37; text-transform: uppercase; }
+    .site-features { text-align: left; }
+    .feature-item { display: flex; gap: 15px; margin-bottom: 12px; color: #ccc; font-size: 0.9rem; }
+    .modal-btn { margin-top: 25px; padding: 15px 60px; background: #d4af37; color: #000; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+    @keyframes heartbeat { 0% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1); } }
+</style>
