@@ -135,6 +135,35 @@
             color: #fff;
             outline: none;
         }
+        .feed-tabs {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+}
+
+.tab {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #555;
+    cursor: pointer;
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.tab.active {
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 10px;
+    text-shadow: 0 0 10px var(--gold-glow);
+}
+
+.tab:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -150,34 +179,43 @@
     </aside>
 
     <main class="feed-section">
-        <div class="post-creator">
-            <textarea class="post-input" placeholder="O que está acontecendo no legado?"></textarea>
-            <div class="post-actions">
-                <div style="display: flex; gap: 15px;">
-                    <span class="media-btn"><i class="fa-solid fa-image"></i> Foto</span>
-                    <span class="media-btn"><i class="fa-solid fa-video"></i> Vídeo</span>
-                </div>
-                <button class="btn-post">Publicar</button>
+    <div class="post-creator">
+        <textarea class="post-input" placeholder="O que está acontecendo no legado?"></textarea>
+        <div class="post-actions">
+            <div style="display: flex; gap: 15px;">
+                <span class="media-btn"><i class="fa-solid fa-image"></i> Foto</span>
+                <span class="media-btn"><i class="fa-solid fa-video"></i> Vídeo</span>
             </div>
+            <button class="btn-post">Publicar</button>
         </div>
+    </div>
 
-        <div class="post-card">
-            <div class="post-header">
-                <div class="user-avatar" style="background: url('https://via.placeholder.com/40') center/cover;"></div>
-                <div class="user-info">
-                    <span class="username">RFL•★•LÍDER</span>
-                    <span class="time">Há 10 minutos</span>
-                </div>
-            </div>
-            <div class="post-content">Nova edit da família disponível! O legado continua pesado. 🔥</div>
-            <img src="https://via.placeholder.com/600x400/1a1a1a/d4af37?text=VIDEO+PREVIEW" class="post-media">
-            <div class="post-footer">
-                <div class="action-item active"><i class="fa-solid fa-heart"></i> 1.2k</div>
-                <div class="action-item"><i class="fa-solid fa-comment"></i> 84</div>
-                <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>
+    <div class="feed-tabs">
+        <div class="tab active" onclick="switchFeed('global', this)">
+            <i class="fa-solid fa-earth-americas"></i> Para Todos
+        </div>
+        <div class="tab" onclick="switchFeed('following', this)">
+            <i class="fa-solid fa-user-check"></i> Seguindo
+        </div>
+    </div>
+
+    <div class="post-card">
+        <div class="post-header">
+            <div class="user-avatar" style="background: url('https://via.placeholder.com/40') center/cover;"></div>
+            <div class="user-info">
+                <span class="username">RFL•★•LÍDER</span>
+                <span class="time">Há 10 minutos</span>
             </div>
         </div>
-    </main>
+        <div class="post-content">Nova edit da família disponível! O legado continua pesado. 🔥</div>
+        <img src="https://via.placeholder.com/600x400/1a1a1a/d4af37?text=VIDEO+PREVIEW" class="post-media">
+        <div class="post-footer">
+            <div class="action-item active"><i class="fa-solid fa-heart"></i> 1.2k</div>
+            <div class="action-item"><i class="fa-solid fa-comment"></i> 84</div>
+            <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>
+        </div>
+    </div>
+</main>
 
     <aside class="chat-sidebar">
         <div class="chat-title">LOG DE TRANSMISSÃO GLOBAL</div>
@@ -191,6 +229,24 @@
         </div>
     </aside>
 </div>
+    <script>
+    function switchFeed(type, element) {
+        // 1. Remove a classe 'active' de todas as abas para "apagar" o brilho
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        
+        // 2. Adiciona a classe 'active' apenas na aba que você clicou para ela "acender"
+        element.classList.add('active');
+
+        // 3. Lógica de Sistema (Log no console para teste)
+        if(type === 'following') {
+            console.log("Sistema RFL: Filtrando postagens de aliados...");
+            // Aqui futuramente o código vai esconder os posts globais
+        } else {
+            console.log("Sistema RFL: Exibindo feed global completo...");
+            // Aqui o código volta a mostrar tudo
+        }
+    }
+</script>
 
 </body>
 </html>
