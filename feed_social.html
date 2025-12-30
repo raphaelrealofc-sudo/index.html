@@ -145,6 +145,40 @@
         .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
         .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; outline: none; }
         .chat-send-btn { background: var(--gold); border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; color: #000; }
+        .feed-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.filter-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-btn.active {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold);
+}
+
+.filter-btn:hover:not(.active) {
+    color: #fff;
+}
     </style>
 </head>
 <body>
@@ -185,6 +219,11 @@
 </aside>
 
     <main class="feed-section">
+        <div class="feed-filters">
+    <button class="filter-btn active" onclick="filtrarFeed('todos', this)">GERAL</button>
+    <button class="filter-btn" onclick="filtrarFeed('ordens', this)"><i class="fa-solid fa-scroll"></i> ORDENS</button>
+    <button class="filter-btn" onclick="filtrarFeed('midia', this)"><i class="fa-solid fa-photo-film"></i> MÍDIA</button>
+</div>
         <div class="post-creator">
             <div class="user-status-input">
                 <img src="https://via.placeholder.com/40" class="user-avatar">
@@ -368,6 +407,25 @@
             btn.style.color = "rgba(255,255,255,0.7)";
         }, 2000);
     }
+    function filtrarFeed(categoria, btn) {
+    // Atualiza a aparência das abas
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const posts = document.querySelectorAll('.post-card');
+    
+    posts.forEach(post => {
+        if (categoria === 'todos') {
+            post.style.display = 'block';
+        } else if (categoria === 'ordens') {
+            // Mostra apenas posts com a classe 'pinned-post' ou que você definir como ordem
+            post.classList.contains('pinned-post') ? post.style.display = 'block' : post.style.display = 'none';
+        } else if (categoria === 'midia') {
+            // Mostra apenas posts que contêm imagem ou vídeo
+            post.querySelector('.post-media') ? post.style.display = 'block' : post.style.display = 'none';
+        }
+    });
+}
 </script>
 </body>
 </html>
