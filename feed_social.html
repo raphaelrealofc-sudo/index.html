@@ -446,25 +446,49 @@
         </div>
     </aside>
 </div>
+    <script>
+    // FUNÇÃO NOTIFICAÇÃO (TOAST)
+    function showToast(mensagem, icone = 'fa-check-circle') {
+        let container = document.querySelector('.notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'notification-container';
+            document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fa-solid ${icone}" style="color: var(--gold);"></i><span>${mensagem}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
 
-<script>
-    // FUNÇÃO POSTAR
+    // FUNÇÃO PUBLICAR POST (CORRIGIDA)
     function publicarPost() {
         const text = document.getElementById('postText').value;
         if (!text.trim()) return;
         
-        // Código corrigido abaixo (removido comentário interno e divs duplicadas)
+        // Definição do Horário
+        const agora = new Date();
+        const horario = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
         const novoPost = `
             <div class="post-card">
                 <div class="post-header">
                     <div class="user-avatar"></div>
-                    <div class="user-info"><b>RFL•★•REAL</b></div>
+                    <div class="user-info">
+                        <b>RFL•★•REAL</b>
+                        <span style="font-size: 0.65rem; color: #555; margin-left: 8px;">enviado às ${horario}</span>
+                    </div>
+                    <button class="pin-btn" onclick="togglePin(this)"><i class="fa-solid fa-thumbtack"></i></button>
                 </div>
                 <div class="post-content">${text}</div>
                 <div class="post-interactions">
-                    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> Curtir</button>
+                    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas</button>
                     <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> Comentar</button>
-                    <button class="interaction-btn" onclick="compartilharPost(this)"><i class="fa-solid fa-share"></i> Compartilhar</button>
+                    <button class="interaction-btn" onclick="compartilharPost(this)"><i class="fa-solid fa-share"></i> <span>Compartilhar</span></button>
                 </div>
                 <div class="comments-section">
                     <div class="comment-input-wrapper">
@@ -474,176 +498,51 @@
                     <div class="comments-list" style="margin-top:10px;"></div>
                 </div>
             </div>`;
-        <div class="user-info">
-    <b>RFL•★•REAL</b>
-    <span style="font-size: 0.65rem; color: #555; margin-left: 8px;">enviado às ${horario}</span>
-</div>
             
         document.getElementById('postsContainer').insertAdjacentHTML('afterbegin', novoPost);
         document.getElementById('postText').value = "";
-        document.getElementById("postText").style.height = "40px"; // Resetar altura
+        document.getElementById("postText").style.height = "40px";
+        
+        showToast('Missão publicada no Mural!', 'fa-paper-plane');
     }
 
-    // FUNÇÃO CHAT
-    function sendMessage() {
-        const input = document.getElementById('chatInput');
-        if (!input.value.trim()) return;
-        const msg = `<div class="chat-msg"><b>[VOCÊ]:</b> ${input.value}</div>`;
-        document.getElementById('chatWindow').innerHTML += msg;
-        input.value = '';
-        document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
-    }
-
-    // FUNÇÕES COMENTÁRIOS
-    function abrirComentarios(btn) {
-        const section = btn.closest('.post-card').querySelector('.comments-section');
-        section.style.display = (section.style.display === "block") ? "none" : "block";
-    }
-
-    function enviarComentario(btn) {
-    const input = btn.parentElement.querySelector('input');
-    const list = btn.parentElement.nextElementSibling;
-    
-    if (input.value.trim()) {
-        const novoComentario = `
-            <div style="margin-top:8px; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left: 2px solid rgba(212, 175, 55, 0.3);">
-                <b style="color:var(--gold); font-size:0.75rem;">RFL•★•REAL:</b>
-                <p style="margin:2px 0; font-size:0.85rem; color: #ccc;">${input.value}</p>
-                <button class="comment-like-btn" onclick="toggleLikeComentario(this)">
-                    <i class="fa-regular fa-heart"></i>
-                    <span class="c-like-count">0</span>
-                </button>
-            </div>`;
-            
-        list.innerHTML += novoComentario;
-        input.value = "";
-    }
-}
-
+    // FUNÇÃO CURTIR (COM TOAST)
     function toggleLike(btn) {
-    const icon = btn.querySelector('i');
-    const countSpan = btn.querySelector('.like-count');
-    let count = parseInt(countSpan.innerText);
+        const icon = btn.querySelector('i');
+        const countSpan = btn.querySelector('.like-count');
+        let count = parseInt(countSpan.innerText);
 
-    icon.classList.toggle('fa-regular'); 
-    icon.classList.toggle('fa-solid');
+        icon.classList.toggle('fa-regular'); 
+        icon.classList.toggle('fa-solid');
 
-    if (icon.classList.contains('fa-solid')) {
-        count++;
-        btn.style.color = "var(--gold)";
-    } else {
-        count--;
-        btn.style.color = "rgba(255,255,255,0.7)";
-    }
-    countSpan.innerText = count;
-}
-
-    // AUTO-AJUSTE TEXTAREA
-    document.getElementById("postText").addEventListener("input", function() {
-        this.style.height = "auto"; 
-        this.style.height = (this.scrollHeight) + "px";
-    });
-
-    // ENTER KEY
-    document.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            if (e.target.id === 'chatInput') sendMessage();
-            if (e.target.placeholder === "Escreva um comentário...") {
-                enviarComentario(e.target.parentElement.querySelector('.send-comment-btn'));
-            }
-        }
-    });
-
-    // FUNÇÃO COMPARTILHAR
-    function compartilharPost(btn) {
-        const postCard = btn.closest('.post-card');
-        const postContent = postCard.querySelector('.post-content').innerText;
-        
-        if (navigator.share) {
-            navigator.share({
-                title: 'Post de RFL•★•REAL',
-                text: postContent,
-                url: window.location.href
-            }).catch(console.error);
+        if (icon.classList.contains('fa-solid')) {
+            count++;
+            btn.style.color = "var(--gold)";
+            showToast('Você curtiu esta publicação!', 'fa-heart');
         } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link do mural copiado para a área de transferência!");
-        }
-        
-        const span = btn.querySelector('span');
-        const originalText = span.innerText;
-        span.innerText = "Copiado!";
-        btn.style.color = "var(--gold)";
-        setTimeout(() => {
-            span.innerText = originalText;
+            count--;
             btn.style.color = "rgba(255,255,255,0.7)";
-        }, 2000);
-    }
-    function filtrarFeed(categoria, btn) {
-    // Atualiza a aparência das abas
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const posts = document.querySelectorAll('.post-card');
-    
-    posts.forEach(post => {
-        if (categoria === 'todos') {
-            post.style.display = 'block';
-        } else if (categoria === 'ordens') {
-            // Mostra apenas posts com a classe 'pinned-post' ou que você definir como ordem
-            post.classList.contains('pinned-post') ? post.style.display = 'block' : post.style.display = 'none';
-        } else if (categoria === 'midia') {
-            // Mostra apenas posts que contêm imagem ou vídeo
-            post.querySelector('.post-media') ? post.style.display = 'block' : post.style.display = 'none';
         }
-    });
-}
+        countSpan.innerText = count;
+    }
+
+    // FUNÇÃO FIXAR
     function togglePin(btn) {
-    const post = btn.closest('.post-card');
-    const container = document.getElementById('postsContainer');
-    
-    // Remove fixação de qualquer outro post (apenas um fixado por vez)
-    document.querySelectorAll('.post-card').forEach(p => {
-        if (p !== post) p.classList.remove('pinned');
-    });
-    document.querySelectorAll('.pin-btn').forEach(b => {
-        if (b !== btn) b.classList.remove('active');
-    });
+        const post = btn.closest('.post-card');
+        const container = document.getElementById('postsContainer');
+        
+        document.querySelectorAll('.post-card').forEach(p => { if (p !== post) p.classList.remove('pinned'); });
+        document.querySelectorAll('.pin-btn').forEach(b => { if (b !== btn) b.classList.remove('active'); });
 
-    // Alterna o estado do post atual
-    post.classList.toggle('pinned');
-    btn.classList.toggle('active');
+        post.classList.toggle('pinned');
+        btn.classList.toggle('active');
 
-    // Se fixou, move para o topo da lista visualmente
-    if (post.classList.contains('pinned')) {
-        container.prepend(post);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-}
-    function showToast(mensagem, icone = 'fa-check-circle') {
-    // Cria o container se não existir
-    let container = document.querySelector('.notification-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'notification-container';
-        document.body.appendChild(container);
+        if (post.classList.contains('pinned')) {
+            container.prepend(post);
+            showToast('Post fixado no topo!', 'fa-thumbtack');
+        }
     }
 
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = `
-        <i class="fa-solid ${icone}" style="color: var(--gold);"></i>
-        <span>${mensagem}</span>
-    `;
-
-    container.appendChild(toast);
-
-    // Remove automaticamente após 3 segundos
-    setTimeout(() => {
-        toast.classList.add('fade-out');
-        setTimeout(() => toast.remove(), 500);
-    }, 3000);
-}
 </script>
 </body>
 </html>
