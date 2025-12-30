@@ -90,7 +90,16 @@
         .post-header { padding: 15px; display: flex; align-items: center; gap: 10px; }
         .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); }
         .post-content { padding: 0 15px 15px 15px; font-size: 0.9rem; color: #ccc; }
-        .post-media { width: 100%; max-height: 500px; object-fit: cover; background: #000; }
+        .post-media { 
+    width: 100%; 
+    max-height: 550px; 
+    object-fit: contain; /* Ajusta o vídeo sem cortar as bordas */
+    background: #000;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
 
         /* --- CHAT LATERAL --- */
         .chat-sidebar { display: flex; flex-direction: column; background: rgba(0,0,0,0.2); border-left: 1px solid var(--border); }
@@ -134,6 +143,30 @@
 
     <main class="feed-section">
         <div id="postsContainer">
+            <div class="post-creator">
+    <div class="user-status-input">
+        <div class="user-thumb" style="background: url('https://via.placeholder.com/40') center/cover;"></div>
+        <input type="text" placeholder="O que você gostaria de fazer hoje, RFL•★•REAL?" id="postText">
+    </div>
+    
+    <div class="post-actions">
+        <div class="action-btn" onclick="document.getElementById('fileInput').click()">
+            <i class="fa-solid fa-image" style="color: #45bd62;"></i>
+            <span>Foto</span>
+        </div>
+        <div class="action-btn" onclick="document.getElementById('fileInput').click()">
+            <i class="fa-solid fa-video" style="color: #f02849;"></i>
+            <span>Vídeo</span>
+        </div>
+        <div class="action-btn">
+            <i class="fa-solid fa-pen-nib" style="color: var(--gold);"></i>
+            <span>Escrever</span>
+        </div>
+        
+        <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*">
+        <button class="publish-btn" onclick="publicarPost()">Postar</button>
+    </div>
+</div>
             <div class="post-card">
                 <div class="post-header">
                     <div class="user-avatar" style="background: #222 url('https://via.placeholder.com/40') center/cover;"></div>
