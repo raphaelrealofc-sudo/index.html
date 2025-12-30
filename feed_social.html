@@ -168,6 +168,46 @@
         .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
         .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; outline: none; }
         .chat-send-btn { background: var(--gold); border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; color: #000; }
+        /* Container dos botões de interação */
+.post-interactions {
+    display: flex;
+    gap: 25px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.interaction-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    padding: 6px 0;
+}
+
+.interaction-btn:hover {
+    color: var(--gold);
+}
+
+.interaction-btn i {
+    font-size: 1.1rem;
+}
+
+/* Efeito quando o coração é clicado */
+.interaction-btn .fa-solid.fa-heart {
+    color: var(--gold);
+    filter: drop-shadow(0 0 5px var(--gold-glow));
+}
+        /* Adicione isso se quiser destacar o post do Líder */
+.post-card:last-child {
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+}
     </style>
 </head>
 <body>
@@ -222,23 +262,40 @@
             </div>
         </div>
         
-        <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*">
+      <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*">
         <button class="publish-btn" onclick="publicarPost()">Postar</button>
     </div>
 </div>
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="user-avatar" style="background: #222 url('https://via.placeholder.com/40') center/cover;"></div>
-                    <div class="user-info"><span class="username" style="font-weight:700">RFL•★•LÍDER</span></div>
-                </div>
-                <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
-                <video controls class="post-media">
-                    <source src="seu-video.mp4" type="video/mp4">
-                    Seu navegador não suporta vídeos.
-                </video>
-            </div>
+
+<div class="post-card">
+    <div class="post-header">
+        <div class="user-avatar" style="background: #222 url('https://via.placeholder.com/40') center/cover;"></div>
+        <div class="user-info">
+            <span class="username" style="font-weight:700">RFL•★•LÍDER</span>
         </div>
-    </main>
+    </div>
+    
+    <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
+    
+    <video controls class="post-media">
+        <source src="seu-video.mp4" type="video/mp4">
+        Seu navegador não suporta vídeos.
+    </video>
+
+    <div class="post-interactions">
+        <button class="interaction-btn" onclick="toggleLike(this)">
+            <i class="fa-regular fa-heart"></i> <span>Curtir</span>
+        </button>
+        
+        <button class="interaction-btn" onclick="abrirComentarios()">
+            <i class="fa-regular fa-comment"></i> <span>Comentar</span>
+        </button>
+        
+        <button class="interaction-btn" onclick="compartilharPost()">
+            <i class="fa-regular fa-share-from-square"></i> <span>Compartilhar</span>
+        </button>
+    </div>
+</div></main>
 
     <aside class="chat-sidebar">
         <div class="chat-header"><div class="chat-title">SISTEMA DE TRANSMISSÃO</div></div>
