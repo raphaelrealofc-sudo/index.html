@@ -191,7 +191,10 @@
                 <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
                 <video controls class="post-media"><source src="seu-video.mp4" type="video/mp4"></video>
                 <div class="post-interactions">
-    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span>Curtir</span></button>
+    <button class="interaction-btn" onclick="toggleLike(this)">
+    <i class="fa-regular fa-heart"></i> 
+    <span class="like-count">0</span> Curtidas
+</button>
     <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> <span>Comentar</span></button>
     <button class="interaction-btn" onclick="compartilharPost(this)"><i class="fa-solid fa-share"></i> <span>Compartilhar</span></button>
 </div>
@@ -279,11 +282,22 @@
     }
 
     function toggleLike(btn) {
-        const icon = btn.querySelector('i');
-        icon.classList.toggle('fa-regular'); 
-        icon.classList.toggle('fa-solid');
-        btn.style.color = icon.classList.contains('fa-solid') ? "var(--gold)" : "rgba(255,255,255,0.7)";
+    const icon = btn.querySelector('i');
+    const countSpan = btn.querySelector('.like-count');
+    let count = parseInt(countSpan.innerText);
+
+    icon.classList.toggle('fa-regular'); 
+    icon.classList.toggle('fa-solid');
+
+    if (icon.classList.contains('fa-solid')) {
+        count++;
+        btn.style.color = "var(--gold)";
+    } else {
+        count--;
+        btn.style.color = "rgba(255,255,255,0.7)";
     }
+    countSpan.innerText = count;
+}
 
     // AUTO-AJUSTE TEXTAREA
     document.getElementById("postText").addEventListener("input", function() {
