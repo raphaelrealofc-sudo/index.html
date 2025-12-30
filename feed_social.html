@@ -208,6 +208,47 @@
     border: 1px solid var(--gold);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
 }
+        /* Área de Comentários */
+.comments-section {
+    display: none; /* Começa escondida */
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.comment-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.comment-input-wrapper input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: white;
+    outline: none;
+    font-size: 0.85rem;
+}
+
+.comment-input-wrapper input:focus {
+    border-color: var(--gold);
+}
+
+.send-comment-btn {
+    background: none;
+    border: none;
+    color: var(--gold);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+
+.send-comment-btn:hover {
+    transform: scale(1.2);
+}
     </style>
 </head>
 <body>
@@ -306,6 +347,16 @@
             <input type="text" class="chat-input" id="chatInput" placeholder="Sua mensagem...">
             <button class="chat-send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
+        <div class="comments-section">
+        <div class="comment-input-wrapper">
+            <img src="https://via.placeholder.com/30" style="border-radius: 50%; width: 30px;">
+            <input type="text" placeholder="Escreva um comentário...">
+            <button class="send-comment-btn" onclick="enviarComentario(this)">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+        <div class="comments-list" style="margin-top: 10px; font-size: 0.8rem; color: #aaa;"></div>
+    </div>
     </aside>
 </div>
 
@@ -331,7 +382,44 @@ for (let i = 0; i < tx.length; i++) {
 function OnInput() {
   this.style.height = "auto";
   this.style.height = (this.scrollHeight) + "px";
-}
+
+<script>
+    // 1. Função para mostrar ou esconder a aba de comentários
+    function abrirComentarios(btn) {
+        const postCard = btn.closest('.post-card');
+        const commentSection = postCard.querySelector('.comments-section');
+        
+        if (commentSection.style.display === "block") {
+            commentSection.style.display = "none";
+        } else {
+            commentSection.style.display = "block";
+            commentSection.querySelector('input').focus();
+        }
+    }
+
+    // 2. Função para enviar o comentário e exibir na tela
+    function enviarComentario(btn) {
+        const input = btn.parentElement.querySelector('input');
+        const list = btn.parentElement.nextElementSibling; // Acha a div comments-list
+
+        if (input.value.trim() !== "") {
+            const novoComentario = `
+                <div style="margin-top: 8px; padding: 5px 10px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 5px;">
+                    <strong style="color: var(--gold); font-size: 0.75rem;">RFL•★•REAL:</strong> 
+                    <p style="color: #eee; margin: 2px 0 0 0; font-size: 0.85rem;">${input.value}</p>
+                </div>
+            `;
+            list.insertAdjacentHTML('beforeend', novoComentario);
+            input.value = ""; // Limpa o campo após enviar
+        }
+    }
+    // Detecta se apertou Enter no campo de comentário
+document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && e.target.placeholder === "Escreva um comentário...") {
+        const btn = e.target.parentElement.querySelector('.send-comment-btn');
+        enviarComentario(btn);
+    }
+});
 </script>
 </body>
 </html>
