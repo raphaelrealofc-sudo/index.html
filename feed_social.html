@@ -572,6 +572,32 @@
             showToast('Comentário enviado!', 'fa-comment');
         }
     }
+        function filtrarFeed(categoria, btn) {
+    // 1. Ativa visualmente o botão clicado
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const posts = document.querySelectorAll('.post-card');
+    
+    posts.forEach(post => {
+        switch(categoria) {
+            case 'todos':
+                post.style.display = 'block';
+                break;
+            case 'ordens':
+                // Mostra apenas posts fixados (pinned)
+                post.classList.contains('pinned') ? post.style.display = 'block' : post.style.display = 'none';
+                break;
+            case 'midia':
+                // Mostra apenas posts que têm imagem ou vídeo
+                const temMidia = post.querySelector('img, video, .post-media');
+                temMidia ? post.style.display = 'block' : post.style.display = 'none';
+                break;
+        }
+    });
+
+    showToast(`Filtrando por: ${categoria.toUpperCase()}`, 'fa-filter');
+}
 
 </script>
 </body>
