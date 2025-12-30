@@ -247,7 +247,30 @@
             </div>
         `;
     }
-</script>
+    // Carrega o arquivo externo de boas-vindas
+    fetch('boasvindas.html')
+        .then(response => {
+            if (!response.ok) throw new Error('Erro ao carregar boasvindas.html');
+            return response.text();
+        })
+        .then(data => {
+            document.body.insertAdjacentHTML('afterbegin', data);
+        })
+        .catch(error => console.error('Erro no Sistema:', error));
 
+    // Função para fechar o modal com efeito suave
+    function closeWelcome() {
+        const modal = document.getElementById('welcome-modal');
+        if (modal) {
+            modal.style.transition = "0.6s cubic-bezier(0.4, 0, 0.2, 1)";
+            modal.style.opacity = "0";
+            modal.style.transform = "scale(1.1)";
+            modal.style.filter = "blur(15px)";
+            setTimeout(() => {
+                modal.remove();
+            }, 600);
+        }
+    }
+</script>
 </body>
 </html>
