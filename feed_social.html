@@ -542,6 +542,36 @@
             showToast('Post fixado no topo!', 'fa-thumbtack');
         }
     }
+        // FUNÇÃO PARA ABRIR/FECHAR A SEÇÃO DE COMENTÁRIOS
+    function abrirComentarios(btn) {
+        const postCard = btn.closest('.post-card');
+        const section = postCard.querySelector('.comments-section');
+        // Alterna entre block e none
+        if (section.style.display === "block") {
+            section.style.display = "none";
+        } else {
+            section.style.display = "block";
+        }
+    }
+
+    // FUNÇÃO PARA ENVIAR O COMENTÁRIO
+    function enviarComentario(btn) {
+        const wrapper = btn.parentElement;
+        const input = wrapper.querySelector('input');
+        const list = wrapper.nextElementSibling; // A div .comments-list
+        
+        if (input.value.trim()) {
+            const novoComentario = `
+                <div style="margin-top:8px; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left: 2px solid var(--gold-glow);">
+                    <b style="color:var(--gold); font-size:0.75rem;">RFL•★•REAL:</b>
+                    <p style="margin:2px 0; font-size:0.85rem; color: #ccc;">${input.value}</p>
+                </div>`;
+                
+            list.innerHTML += novoComentario;
+            input.value = "";
+            showToast('Comentário enviado!', 'fa-comment');
+        }
+    }
 
 </script>
 </body>
