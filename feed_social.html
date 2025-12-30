@@ -313,6 +313,31 @@
 @keyframes toastFadeOut {
     to { transform: translateX(100%); opacity: 0; }
 }
+        .chat-tab-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 8px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.chat-tab-btn.active {
+    background: var(--gold-glow);
+    color: var(--gold);
+    border-bottom: 2px solid var(--gold);
+}
+
+.chat-tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
     </style>
 </head>
 <body>
@@ -408,43 +433,54 @@
     </main>
 
     <aside class="chat-sidebar">
-        <div class="online-status-bar">
-    <div class="chat-title" style="padding: 15px 20px 5px 20px; font-size: 0.6rem;">MEMBROS ATIVOS</div>
-    <div class="online-list">
-        <div class="member-wrapper">
-            <div class="member-avatar leader">
-                <img src="https://via.placeholder.com/35" alt="Líder">
-                <div class="status-indicator online"></div>
+    <div class="online-status-bar">
+        <div class="chat-title" style="padding: 15px 20px 5px 20px; font-size: 0.6rem;">MEMBROS ATIVOS</div>
+        <div class="online-list">
+            <div class="member-wrapper">
+                <div class="member-avatar leader">
+                    <img src="https://via.placeholder.com/35" alt="Líder">
+                    <div class="status-indicator online"></div>
+                </div>
+                <span>LÍDER</span>
             </div>
-            <span>LÍDER</span>
-        </div>
-
-        <div class="member-wrapper">
-            <div class="member-avatar">
-                <img src="https://via.placeholder.com/35" alt="Membro">
-                <div class="status-indicator online"></div>
+            <div class="member-wrapper">
+                <div class="member-avatar">
+                    <img src="https://via.placeholder.com/35" alt="Membro">
+                    <div class="status-indicator online"></div>
+                </div>
+                <span>RECRUTA</span>
             </div>
-            <span>RECRUTA</span>
-        </div>
-
-        <div class="member-wrapper">
-            <div class="member-avatar" style="border-color: var(--gold);">
-                <img src="https://via.placeholder.com/35" alt="Você">
-                <div class="status-indicator online pulse"></div>
+            <div class="member-wrapper">
+                <div class="member-avatar" style="border-color: var(--gold);">
+                    <img src="https://via.placeholder.com/35" alt="Você">
+                    <div class="status-indicator online pulse"></div>
+                </div>
+                <span>VOCÊ</span>
             </div>
-            <span>VOCÊ</span>
         </div>
     </div>
-</div>
-        <div class="chat-header"><div class="chat-title">SISTEMA DE TRANSMISSÃO</div></div>
-        <div class="chat-history" id="chatWindow">
-            <div class="chat-msg"><b>[SISTEMA]:</b> Bem-vindo ao canal da Família RFL.</div>
+
+    <div class="chat-header">
+        <div class="chat-title">SISTEMA DE TRANSMISSÃO</div>
+        <div class="chat-tabs" style="display: flex; gap: 5px; margin-top: 10px;">
+            <button class="chat-tab-btn active" onclick="switchChat('global', this)">CHAT GLOBAL</button>
+            <button class="chat-tab-btn" onclick="switchChat('family', this)">CHAT FAMILY</button>
         </div>
-        <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Sua mensagem...">
-            <button class="chat-send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-    </aside>
+    </div>
+
+    <div class="chat-history" id="chatGlobal">
+        <div class="chat-msg"><b>[SISTEMA]:</b> Canal Global operacional.</div>
+    </div>
+    
+    <div class="chat-history" id="chatFamily" style="display: none;">
+        <div class="chat-msg" style="border-left-color: #45bd62;"><b>[FAMÍLIA]:</b> Chat privado da RFL ativo.</div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Sua mensagem...">
+        <button class="chat-send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</aside>
 </div>
     <script>
     // FUNÇÃO NOTIFICAÇÃO (TOAST)
@@ -598,7 +634,49 @@
 
     showToast(`Filtrando por: ${categoria.toUpperCase()}`, 'fa-filter');
 }
+// --- SISTEMA DE CHAT (GLOBAL & FAMILY) ---
+    let currentChat = 'global'; 
 
+    function switchChat(tab, btn) {
+        currentChat = tab;
+        // Atualiza botões
+        document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Alterna janelas
+        if (tab === 'global') {
+            document.getElementById('chatGlobal').style.display = 'flex';
+            document.getElementById('chatFamily').style.display = 'none';
+        } else {
+            document.getElementById('chatGlobal').style.display = 'none';
+            document.getElementById('chatFamily').style.display = 'flex';
+        }
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        if (!input.value.trim()) return;
+
+        const windowId = currentChat === 'global' ? 'chatGlobal' : 'chatFamily';
+        const label = currentChat === 'global' ? '[VOCÊ]' : '[FAMÍLIA]';
+        const color = currentChat === 'global' ? 'var(--gold)' : '#45bd62';
+
+        const msg = `
+            <div class="chat-msg" style="border-left: 2px solid ${color}; background: rgba(255,255,255,0.02); margin-bottom: 5px; padding: 5px 8px;">
+                <b style="color: ${color}; font-size: 0.75rem;">${label}:</b> 
+                <span style="font-size: 0.8rem;">${input.value}</span>
+            </div>`;
+
+        const chatWin = document.getElementById(windowId);
+        chatWin.innerHTML += msg;
+        input.value = '';
+        chatWin.scrollTop = chatWin.scrollHeight;
+    }
+
+    // Adiciona evento de apertar ENTER no chat
+    document.getElementById('chatInput')?.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendMessage();
+    });
 </script>
 </body>
 </html>
