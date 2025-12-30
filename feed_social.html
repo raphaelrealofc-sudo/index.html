@@ -271,15 +271,24 @@
     }
 
     function enviarComentario(btn) {
-        const input = btn.parentElement.querySelector('input');
-        const list = btn.parentElement.nextElementSibling;
-        if (input.value.trim()) {
-            list.innerHTML += `<div style="margin-top:8px; padding:5px 10px; background:rgba(255,255,255,0.03); border-radius:10px;">
+    const input = btn.parentElement.querySelector('input');
+    const list = btn.parentElement.nextElementSibling;
+    
+    if (input.value.trim()) {
+        const novoComentario = `
+            <div style="margin-top:8px; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left: 2px solid rgba(212, 175, 55, 0.3);">
                 <b style="color:var(--gold); font-size:0.75rem;">RFL•★•REAL:</b>
-                <p style="margin:2px 0; font-size:0.85rem;">${input.value}</p></div>`;
-            input.value = "";
-        }
+                <p style="margin:2px 0; font-size:0.85rem; color: #ccc;">${input.value}</p>
+                <button class="comment-like-btn" onclick="toggleLikeComentario(this)">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="c-like-count">0</span>
+                </button>
+            </div>`;
+            
+        list.innerHTML += novoComentario;
+        input.value = "";
     }
+}
 
     function toggleLike(btn) {
     const icon = btn.querySelector('i');
