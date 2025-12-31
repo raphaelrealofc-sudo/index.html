@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abertura | RFL•★•REAL</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
     <style>
         body, html {
             height: 100%;
@@ -12,7 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #0a0a0a; /* Fundo escuro para destacar o social */
+            background: #0a0a0a;
             color: white;
             overflow: hidden;
         }
@@ -20,6 +25,10 @@
         .container {
             text-align: center;
             animation: fadeIn 1.5s ease-out;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
         }
 
         h1 {
@@ -31,34 +40,50 @@
 
         .subtext {
             color: #888;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
 
-        /* Botão com efeito de pulso */
+        /* Campos de Input */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: white;
+            outline: none;
+        }
+
         .btn-social {
-            padding: 18px 50px;
+            width: 100%;
+            padding: 18px;
             font-size: 1.2rem;
             font-weight: bold;
             color: #fff;
-            background: linear-gradient(45deg, #ff0050, #00f2ea); /* Cores vibrantes sociais */
+            background: linear-gradient(45deg, #ff0050, #00f2ea);
             border: none;
             border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
+            cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0, 242, 234, 0.2);
+            margin-top: 10px;
             animation: pulse 2s infinite;
         }
 
         .btn-social:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 0, 80, 0.4);
             filter: brightness(1.2);
+        }
+
+        #status-msg {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            min-height: 20px;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
 
@@ -72,10 +97,77 @@
 
     <div class="container">
         <h1>Conectar</h1>
-        <p class="subtext">Clique abaixo para entrar na rede.</p>
+        <p class="subtext">Identifique-se para acessar a rede.</p>
         
-        <a href="coracao_social.html" class="btn-social">ENTRAR AGORA</a>
+        <input type="email" id="email" placeholder="E-mail de acesso">
+        <input type="password" id="senha" placeholder="Sua senha">
+        
+        <button onclick="realizarLogin()" class="btn-social">ENTRAR AGORA</button>
+        
+        <div id="status-msg"></div>
+
+        <p style="margin-top: 20px; font-size: 0.8rem;">
+            Não tem conta? <a href="registro.html" style="color: #00f2ea; text-decoration: none;">Registre seu aparelho</a>
+        </p>
     </div>
+
+    <script>
+        // CONFIGURAÇÃO DO FIREBASE (Cole as suas chaves aqui)
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "seu-projeto.firebaseapp.com",
+            projectId: "seu-projeto",
+            storageBucket: "seu-projeto.appspot.com",
+            messagingSenderId: "seu-id",
+            appId: "seu-app-id"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        async function realizarLogin() {
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const status = document.getElementById('status-msg');
+
+            status.style.color = "#00f2ea";
+            status.innerText = "Processando segurança...";
+
+            try {
+                // 1. Login no Firebase
+                const userCredential = await auth.signInWithEmailAndPassword(email, senha);
+                const user = userCredential.user;
+
+                // 2. DNA do Aparelho Atual
+                const fingerprintAtual = btoa(navigator.userAgent + window.screen.width + new Date().getTimezoneOffset());
+
+                // 3. Verifica no Banco de Dados
+                const doc = await db.collection("usuarios_vinculados").doc(user.uid).get();
+
+                if (doc.exists) {
+                    const dadosOriginais = doc.data();
+
+                    // 4. Comparação de Hardware
+                    if (dadosOriginais.registro_hardware !== fingerprintAtual) {
+                        status.style.color = "#ff4d6d";
+                        status.innerText = "ACESSO NEGADO: Aparelho desconhecido.";
+                        await auth.signOut();
+                        return;
+                    }
+
+                    status.innerText = "Acesso autorizado! Entrando...";
+                    setTimeout(() => { window.location.href = "coracao_social.html"; }, 1500);
+
+                } else {
+                    status.innerText = "Erro: Vínculo de segurança não encontrado.";
+                }
+            } catch (error) {
+                status.style.color = "#ff4d6d";
+                status.innerText = "Erro: " + error.message;
+            }
+        }
+    </script>
 
 </body>
 </html>
