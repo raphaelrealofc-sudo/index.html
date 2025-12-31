@@ -192,12 +192,19 @@ function excluirPost(id) {
 
         // VERIFICAÇÃO DE LOGIN E INICIALIZAÇÃO
         auth.onAuthStateChanged((user) => {
-            if (user) {
-                carregarFeed(); // Só carrega o feed se estiver logado
-            } else {
-                window.location.href = "abertura.html";
-            }
-        });
+    if (user) {
+        // NOVO: Registra a data de entrada do usuário no banco de dados
+        db.collection("usuarios").doc(user.uid).set({
+            email: user.email,
+            nome: user.email.split('@')[0],
+            desde: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }); // O 'merge' garante que não vai sobrescrever a data toda vez
+
+        carregarFeed(); 
+    } else {
+        window.location.href = "abertura.html";
+    }
+});
 
         function realizarLogout() {
             auth.signOut().then(() => {
