@@ -76,12 +76,9 @@
 
         document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 
-        onAuthStateChanged(auth, (user) => {
+       onAuthStateChanged(auth, (user) => {
             if (user) {
-                authContainer.style.display = "none";
-                userInfo.style.display = "block";
-                displayEmail.innerText = user.email;
-                status.innerText = "Logado com sucesso.";
+                window.location.href = "abertura.html"; 
             } else {
                 authContainer.style.display = "block";
                 userInfo.style.display = "none";
