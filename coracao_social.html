@@ -96,14 +96,17 @@ function carregarFeed() {
                         </span>
                         
                         <span style="cursor:pointer; color:#00f2ea" onclick="abrirComentarios('${id}')">
-                            💬 <b>${post.qtdComentarios || 0}</b> Comentários
+                            💬 <b>${post.qtdComentarios || 0}</b>
                         </span>
 
-                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️ Apagar</span>` : ''}
+                        <span style="cursor:pointer; color:#ffd700" onclick="compartilharPost('${id}')">
+                            🔗 <b>Link</b>
+                        </span>
+
+                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️</span>` : ''}
                     </div>
                 </div>
             `;
-        });
         
         const painelMembros = document.getElementById('membros-count');
         if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
