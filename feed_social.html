@@ -157,16 +157,32 @@
 <div class="app-container">
     <aside class="hierarchy-sidebar">
         <div id="auth-status" style="padding: 15px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 10px; margin: 10px; border: 1px solid rgba(255,215,0,0.1); min-height: 100px;">
-    <span id="auth-text" style="font-size: 0.7rem; color: #888; display: block; margin-bottom: 12px; font-weight: bold; letter-spacing: 1px;">STATUS: VISITANTE</span>
-    <div class="fb-login-button" 
-         data-width="200" 
-         data-size="medium" 
-         data-button-type="continue_with" 
-         data-layout="default" 
-         data-auto-logout-link="true" 
-         data-use-continue-as="true"
-         onlogin="checkLoginStatus();">
+ <div class="auth-panel" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+    
+    <span id="auth-text" style="font-size: 0.7rem; color: #888; display: block; margin-bottom: 15px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">
+        STATUS: VISITANTE
+    </span>
+
+    <div id="login-options" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+        
+        <div class="fb-login-button" 
+             data-width="200" 
+             data-size="medium" 
+             data-button-type="continue_with" 
+             data-layout="default" 
+             data-auto-logout-link="false" 
+             data-use-continue-as="true"
+             onlogin="checkLoginStatus();">
+        </div>
+
+        <button onclick="loginInstagram()" style="width: 200px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity 0.3s;">
+            <i class="fa-brands fa-instagram" style="font-size: 16px;"></i> Continuar com Instagram
+        </button>
     </div>
+
+    <button id="btn-sair" onclick="logoutSistema()" style="display: none; margin-top: 10px; background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; transition: all 0.3s;">
+        <i class="fa-solid fa-right-from-bracket"></i> ENCERRAR SESSÃO OPERACIONAL
+    </button>
 </div>
 
         <div class="pulse-title">
@@ -279,41 +295,73 @@
 
 <script>
     let usuarioLogado = null;
+    const APP_ID_FB = '1989628448247305';
+    const APP_ID_IG = '1188549069564071';
 
     window.fbAsyncInit = function() {
+        // Inicializa com Facebook por padrão
         FB.init({
-            appId: '1989628448247305',
+            appId: APP_ID_FB,
             cookie: true,
             xfbml: true,
             version: 'v18.0'
         });
         FB.getLoginStatus(checkLoginStatus);
+        renderizarMural(); // Carrega os posts salvos ao abrir a página
     };
 
+   
+function loginInstagram() {
+    FB.init({
+        appId: '1188549069564071', 
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0'
+    });
+    FB.login(checkLoginStatus, {scope: 'public_profile'});
+}
+
     function checkLoginStatus(response) {
-        if (response.status === 'connected') {
-            FB.api('/me', {fields: 'name,picture'}, function(userData) {
-                usuarioLogado = userData;
-                document.getElementById('auth-text').innerText = "OPERADOR: " + userData.name.toUpperCase();
-                document.getElementById('auth-text').style.color = "var(--gold)";
-                document.getElementById('creator-img').src = userData.picture.data.url;
-                showToast(`Bem-vindo, ${userData.name}!`, 'fa-user-check');
-            });
-        }
+    if (response && response.status === 'connected') {
+        FB.api('/me', {fields: 'name,picture.type(large)'}, function(userData) {
+            usuarioLogado = userData;
+            
+                       const authText = document.getElementById('auth-text');
+            if(authText) {
+                authText.innerText = "OPERADOR: " + userData.name.toUpperCase();
+                authText.style.color = "var(--gold)";
+            }
+            const creatorImg = document.getElementById('creator-img');
+            if(creatorImg) {
+                creatorImg.src = userData.picture.data.url;
+            }
+
+                      const loginOptions = document.getElementById('login-options');
+            if(loginOptions) loginOptions.style.display = 'none';
+
+                     const btnSair = document.getElementById('btn-sair');
+            if(btnSair) btnSair.style.display = 'inline-block';
+
+            showToast(`Bem-vindo ao Sistema, ${userData.name}!`, 'fa-user-check');
+        });
     }
+}
 
     function verificarAcesso() {
         if (!usuarioLogado) {
-            showToast('🔒 Faça login para interagir!', 'fa-lock');
+            showToast('🔒 Acesse o Sistema para interagir!', 'fa-lock');
             return false;
         }
         return true;
     }
 
     function showToast(msg, icon) {
-        const container = document.querySelector('.notification-container') || document.createElement('div');
-        container.className = 'notification-container';
-        document.body.appendChild(container);
+        let container = document.querySelector('.notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'notification-container';
+            document.body.appendChild(container);
+        }
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
@@ -321,34 +369,68 @@
         setTimeout(() => toast.remove(), 3000);
     }
 
-    function publicarPost() {
-    if (!verificarAcesso()) return;
-    
-    const text = document.getElementById('postText').value;
-    if (!text.trim()) return;
-    
-    // Puxa a foto e o nome de quem está logado para garantir a exibição correta
-    const fotoUsuario = usuarioLogado.picture.data.url;
-    const nomeUsuario = usuarioLogado.name;
+    // --- MURAL OPERACIONAL COM PERSISTÊNCIA ---
 
-    const novoPost = `
-        <div class="post-card">
-            <div class="post-header">
-                <img src="${fotoUsuario}" class="user-avatar">
-                <div style="flex:1; margin-left:10px;"><b>${nomeUsuario}</b></div>
-            </div>
-            <div class="post-content">${text}</div>
-            <div class="post-interactions">
-                <button class="interaction-btn" onclick="toggleLike(this)">
-                    <i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas
-                </button>
-            </div>
-        </div>`;
-    
-    // Insere o post no topo do Mural Operacional
-    document.getElementById('postsContainer').insertAdjacentHTML('afterbegin', novoPost);
-    document.getElementById('postText').value = "";
-}
+    function publicarPost() {
+        if (!verificarAcesso()) return;
+        
+        const textInput = document.getElementById('postText');
+        const text = textInput.value.trim();
+        if (!text) return;
+        
+        const novoPostObj = {
+            id: Date.now(),
+            nome: usuarioLogado.name,
+            foto: usuarioLogado.picture.data.url,
+            texto: text,
+            data: new Date().toLocaleString('pt-BR')
+        };
+
+        // Salva no LocalStorage
+        let postsSalvos = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
+        postsSalvos.unshift(novoPostObj);
+        localStorage.setItem('mural_rfl_data', JSON.stringify(postsSalvos));
+
+        textInput.value = "";
+        renderizarMural(); 
+    }
+
+    function renderizarMural() {
+        const postsSalvos = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
+        const container = document.getElementById('postsContainer');
+        if(!container) return;
+
+        container.innerHTML = ''; 
+        postsSalvos.forEach(post => {
+            const htmlPost = `
+                <div class="post-card">
+                    <div class="post-header">
+                        <img src="${post.foto}" class="user-avatar">
+                        <div style="flex:1; margin-left:10px;">
+                            <b>${post.nome}</b><br>
+                            <small style="font-size: 10px; opacity: 0.6;">${post.data}</small>
+                        </div>
+                        <button onclick="excluirPost(${post.id})" style="background:none; border:none; color:gray; cursor:pointer; font-size:12px;">excluir</button>
+                    </div>
+                    <div class="post-content">${post.texto}</div>
+                    <div class="post-interactions">
+                        <button class="interaction-btn" onclick="toggleLike(this)">
+                            <i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas
+                        </button>
+                    </div>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', htmlPost);
+        });
+    }
+
+    function excluirPost(id) {
+        if (!confirm("Deseja apagar este registro do Mural?")) return;
+        let posts = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
+        posts = posts.filter(p => p.id !== id);
+        localStorage.setItem('mural_rfl_data', JSON.stringify(posts));
+        renderizarMural();
+    }
+
 
     function switchChat(type, btn) {
         document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
@@ -357,19 +439,21 @@
         document.getElementById('chatFamily').style.display = type === 'family' ? 'block' : 'none';
     }
 
-    function filtrarFeed(f, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        showToast("Filtrando conteúdo...", "fa-filter");
-    }
-
     function sendMessage() {
         if (!verificarAcesso()) return;
         const input = document.getElementById('chatInput');
         if (!input.value.trim()) return;
-        const activeChat = document.getElementById('chatGlobal').style.display !== 'none' ? 'chatGlobal' : 'chatFamily';
-        document.getElementById(activeChat).innerHTML += `<div class="chat-msg"><b>${usuarioLogado.name}:</b> ${input.value}</div>`;
+        
+        const activeChatId = document.getElementById('chatGlobal').style.display !== 'none' ? 'chatGlobal' : 'chatFamily';
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-msg';
+        msgDiv.innerHTML = `<b>${usuarioLogado.name}:</b> ${input.value}`;
+        document.getElementById(activeChatId).appendChild(msgDiv);
+        
         input.value = "";
+        
+        const chatBox = document.getElementById(activeChatId);
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function toggleLike(btn) {
@@ -377,23 +461,72 @@
         const countSpan = btn.querySelector('.like-count');
         let count = parseInt(countSpan.innerText);
         const icon = btn.querySelector('i');
+        
         icon.classList.toggle('fa-regular');
         icon.classList.toggle('fa-solid');
-        countSpan.innerText = icon.classList.contains('fa-solid') ? count + 1 : count - 1;
-        btn.style.color = icon.classList.contains('fa-solid') ? "var(--gold)" : "rgba(255,255,255,0.7)";
+        
+        if (icon.classList.contains('fa-solid')) {
+            count++;
+            btn.style.color = "var(--gold)";
+        } else {
+            count--;
+            btn.style.color = "rgba(255,255,255,0.7)";
+        }
+        countSpan.innerText = count;
+    }
+
+    function filtrarFeed(filtro, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast(`Filtrando por: ${filtro}`, "fa-filter");
+       
     }
 
     function togglePin(btn) {
         if (!verificarAcesso()) return;
-        btn.closest('.post-card').classList.toggle('pinned');
+        const card = btn.closest('.post-card');
+        card.classList.toggle('pinned');
+        showToast(card.classList.contains('pinned') ? "Post fixado!" : "Post desfixado", "fa-thumbtack");
     }
-    function verificarAcesso() {
-    if (!usuarioLogado) {
-        showToast('🔒 Acesse o Sistema para postar!', 'fa-lock');
-        return false;
+    
+function logoutSistema() {
+    if (confirm("RFL•★•REAL: Deseja encerrar a sessão operacional e deslogar do sistema?")) {
+        FB.logout(function(response) {
+            usuarioLogado = null;
+            
+            
+            const authText = document.getElementById('auth-text');
+            if(authText) {
+                authText.innerText = "STATUS: VISITANTE";
+                authText.style.color = "#888";
+            }
+            
+           
+            const creatorImg = document.getElementById('creator-img');
+            if(creatorImg) creatorImg.src = "https://via.placeholder.com/40";
+
+            
+            document.getElementById('login-options').style.display = 'flex';
+            document.getElementById('btn-sair').style.display = 'none';
+
+            showToast("Sessão encerrada com segurança!", "fa-shield-halved");
+            
+            
+            setTimeout(() => location.reload(), 1500);
+        });
     }
-    return true;
 }
+
+window.fbAsyncInit = function() {
+    FB.init({
+        appId: '1989628448247305', 
+        cookie: true,
+        xfbml: true,
+        version: 'v18.0'
+    });
+    FB.getLoginStatus(checkLoginStatus);
+    renderizarMural(); 
+};
 </script>
 </body>
 </html>
