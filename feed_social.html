@@ -91,15 +91,15 @@
         }
 
         .post-card { background: var(--surface); border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--border); padding: 15px; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); background: #222;}
         .post-content { padding: 15px 0; font-size: 0.9rem; color: #ccc; }
 
         .chat-sidebar { display: flex; flex-direction: column; background: rgba(0,0,0,0.2); border-left: 1px solid var(--border); }
         .chat-history { flex: 1; overflow-y: auto; padding: 15px; height: 300px; }
         .chat-msg { font-size: 0.8rem; border-left: 2px solid var(--gold); background: rgba(212, 175, 55, 0.05); padding: 5px 8px; margin-bottom: 5px; }
         .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; color: #fff; }
-        .chat-send-btn { background: var(--gold); border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+        .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; color: #fff; outline: none;}
+        .chat-send-btn { background: var(--gold); border: none; padding: 10px; border-radius: 8px; cursor: pointer; color: #000;}
         
         .member-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #333; position: relative; }
         .member-avatar.leader { border-color: var(--gold); }
@@ -178,13 +178,12 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // LOGIN
     window.loginGoogle = async () => {
         try { await signInWithPopup(auth, provider); } 
-        catch (e) { alert("Erro ao conectar!"); }
+        catch (e) { console.error(e); }
     };
 
-    window.logoutSistema = () => { if(confirm("Deseja sair?")) signOut(auth).then(() => location.reload()); };
+    window.logoutSistema = () => { if(confirm("Deseja encerrar a sessão, RFL•★•REAL?")) signOut(auth).then(() => location.reload()); };
 
     onAuthStateChanged(auth, (user) => {
         const authText = document.getElementById('auth-text');
@@ -204,17 +203,18 @@
         }
     });
 
-    // MURAL
     window.publicarPost = async () => {
         const text = document.getElementById('postText').value.trim();
         if (!text || !window.usuarioLogado) return;
-        await addDoc(collection(db, "mural"), {
-            nome: window.usuarioLogado.name,
-            foto: window.usuarioLogado.picture,
-            texto: text,
-            timestamp: serverTimestamp()
-        });
-        document.getElementById('postText').value = "";
+        try {
+            await addDoc(collection(db, "mural"), {
+                nome: window.usuarioLogado.name,
+                foto: window.usuarioLogado.picture,
+                texto: text,
+                timestamp: serverTimestamp()
+            });
+            document.getElementById('postText').value = "";
+        } catch (e) { console.error(e); }
     };
 
     onSnapshot(query(collection(db, "mural"), orderBy("timestamp", "desc")), (snapshot) => {
@@ -223,12 +223,12 @@
         snapshot.forEach((postDoc) => {
             const post = postDoc.data();
             const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
-            const btnDelete = isLeader ? `<i class="fa-solid fa-trash" style="color:red; cursor:pointer;" onclick="window.excluirPost('${postDoc.id}')"></i>` : '';
+            const btnDelete = isLeader ? `<i class="fa-solid fa-trash" style="color:#ff4444; cursor:pointer; font-size:12px;" onclick="window.excluirPost('${postDoc.id}')"></i>` : '';
             
             container.insertAdjacentHTML('beforeend', `
                 <div class="post-card">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div style="display:flex; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:10px;">
                             <img src="${post.foto}" class="user-avatar">
                             <b>${post.nome}</b>
                         </div>
@@ -239,9 +239,8 @@
         });
     });
 
-    window.excluirPost = async (id) => { if(confirm("Apagar post?")) await deleteDoc(doc(db, "mural", id)); };
+    window.excluirPost = async (id) => { if(confirm("LÍDER RFL: Apagar este registro?")) await deleteDoc(doc(db, "mural", id)); };
 
-    // CHAT
     window.sendMessage = async () => {
         const input = document.getElementById('chatInput');
         if (!input.value.trim() || !window.usuarioLogado) return;
@@ -259,14 +258,13 @@
         snapshot.forEach((d) => {
             const m = d.data();
             const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
-            const del = isLeader ? `<span onclick="window.excluirMsg('${d.id}')" style="color:red; cursor:pointer;"> [x]</span>` : '';
+            const del = isLeader ? `<span onclick="window.excluirMsg('${d.id}')" style="color:#ff4444; cursor:pointer; font-size:10px;"> [X]</span>` : '';
             chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg"><b>${m.nome}:</b> ${m.texto} ${del}</div>`);
         });
         chatBox.scrollTop = chatBox.scrollHeight;
     });
 
-    window.excluirMsg = async (id) => { await deleteDoc(doc(db, "chatGlobal", id)); };
-
+    window.excluirMsg = async (id) => { if(confirm("Apagar mensagem?")) await deleteDoc(doc(db, "chatGlobal", id)); };
 </script>
 </body>
 </html>
