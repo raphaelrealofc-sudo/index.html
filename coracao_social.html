@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <script>
+    if (document.referrer === "" || !document.referrer.includes("abertura.html")) {
+        alert("Acesso negado! Por favor, passe pela entrada oficial.");
+        window.location.href = "abertura.html";
+    }
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coração Social | RFL•★•REAL</title>
