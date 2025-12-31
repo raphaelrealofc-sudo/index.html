@@ -10,7 +10,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
     <script>
-        // --- CONFIGURAÇÃO OFICIAL RFL•★•REAL ---
         const firebaseConfig = {
             apiKey: "AIzaSyCnYzszGEiEkiU9TxwT1ONS2HIEluDHSKM",
             authDomain: "siteloginraphael.firebaseapp.com",
@@ -24,10 +23,40 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // CHAVE DO IMGBB (COLE SUA CHAVE ENTRE AS ASPAS)
-        const API_KEY_IMGBB = "SUA_CHAVE_IMGBB_AQUI";
+        const API_KEY_IMGBB = "SUA_CHAVE_IMGBB_AQUI"; // <-- NÃO ESQUEÇA DE COLOCAR SUA CHAVE AQUI
 
-        // --- FUNÇÃO PUBLICAR ---
+        // --- FUNÇÕES DE INTERAÇÃO (PRECISAM VIR ANTES DO FEED) ---
+        function curtirPost(id, curtidasAtuais) {
+            db.collection("posts_sociais").doc(id).update({ curtidas: (curtidasAtuais || 0) + 1 });
+        }
+
+        function abrirComentarios(postId) {
+            const comentario = prompt("RFL•★•REAL, o que você achou desse post?");
+            if (comentario && comentario.trim() !== "") {
+                db.collection("posts_sociais").doc(postId).update({
+                    qtdComentarios: firebase.firestore.FieldValue.increment(1)
+                }).then(() => { alert("Comentário registrado!"); });
+            }
+        }
+
+        function compartilharPost() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("Link da Social Star ★ copiado!");
+            });
+        }
+
+        function excluirPost(id) {
+            if (confirm("RFL•★•REAL, deseja excluir este post?")) {
+                db.collection("posts_sociais").doc(id).delete();
+            }
+        }
+
+        async function verPerfil(emailAutor) {
+            const nome = emailAutor.split('@')[0];
+            alert(`⭐ PERFIL SOCIAL STAR ★\n\nUsuário: @${nome}\nMembro Oficial.`);
+        }
+
+        // --- PUBLICAR ---
         async function publicarPost() {
             const campoTexto = document.getElementById('post-texto');
             const campoFoto = document.getElementById('post-foto');
@@ -72,7 +101,7 @@
             }
         }
 
-        // --- FUNÇÃO CARREGAR FEED ---
+        // --- CARREGAR FEED ---
         function carregarFeed() {
             db.collection("posts_sociais").orderBy("data", "desc")
             .onSnapshot((snapshot) => {
@@ -87,10 +116,11 @@
                     const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
                     const eDono = auth.currentUser && auth.currentUser.email === post.autor;
 
+                    // Usando Crase (`) para evitar erros de aspas
                     feedContainer.innerHTML += `
                         <div class="feed-item">
                             <h4 onclick="verPerfil('${post.autor}')" style="cursor:pointer; color:#00f2ea; margin-bottom: 8px;">@${nomeUsuario}</h4>
-                            <p style="margin-bottom: 12px;">${post.mensagem}</p>
+                            <p style="margin-bottom: 12px; line-height: 1.4;">${post.mensagem}</p>
                             ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
                             <div style="margin-top:15px; display:flex; gap:25px; font-size: 1rem; border-top: 1px solid #222; padding-top: 12px;">
                                 <span style="cursor:pointer; display: flex; align-items: center; gap: 5px;" onclick="curtirPost('${id}', ${post.curtidas || 0})">
@@ -112,38 +142,7 @@
             });
         }
 
-        // --- INTERAÇÕES ---
-        function curtirPost(id, curtidasAtuais) {
-            db.collection("posts_sociais").doc(id).update({ curtidas: (curtidasAtuais || 0) + 1 });
-        }
-
-        function abrirComentarios(postId) {
-            const comentario = prompt("RFL•★•REAL, o que você achou desse post?");
-            if (comentario && comentario.trim() !== "") {
-                db.collection("posts_sociais").doc(postId).update({
-                    qtdComentarios: firebase.firestore.FieldValue.increment(1)
-                }).then(() => { alert("Comentário registrado!"); });
-            }
-        }
-
-        function compartilharPost() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert("Link da Social Star ★ copiado!");
-            });
-        }
-
-        function excluirPost(id) {
-            if (confirm("RFL•★•REAL, deseja excluir este post?")) {
-                db.collection("posts_sociais").doc(id).delete();
-            }
-        }
-
-        async function verPerfil(emailAutor) {
-            const nome = emailAutor.split('@')[0];
-            alert(`⭐ PERFIL SOCIAL STAR ★\n\nUsuário: @${nome}\nMembro Oficial.`);
-        }
-
-        // --- AUTH E LOGOUT ---
+        // --- AUTH ---
         auth.onAuthStateChanged((user) => {
             if (user) {
                 db.collection("usuarios").doc(user.uid).set({
