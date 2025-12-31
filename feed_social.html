@@ -513,8 +513,41 @@
     </div>
 </aside>
 </div>
-    <script>
-    // FUNÇÃO NOTIFICAÇÃO (TOAST)
+   <script>
+    // --- 1. CONEXÃO COM FACEBOOK E CONTROLE DE ACESSO ---
+    let usuarioLogado = null; 
+
+    function verificarAcesso() {
+        if (!usuarioLogado) {
+            showToast('🔒 Faça login para interagir!', 'fa-lock');
+            return false; 
+        }
+        return true; 
+    }
+
+    // Esta função é chamada pelo botão de login
+    function checkLoginStatus(response) {
+        if (response && response.status === 'connected') {
+            FB.api('/me', {fields: 'name,picture'}, function(userData) {
+                usuarioLogado = userData; 
+                const authText = document.getElementById('auth-text');
+                if (authText) {
+                    authText.innerText = "OPERADOR: " + userData.name.toUpperCase();
+                    authText.style.color = "var(--gold)";
+                }
+                showToast(`Bem-vindo, ${userData.name}!`, 'fa-user-check');
+            });
+        } else {
+            usuarioLogado = null;
+            const authText = document.getElementById('auth-text');
+            if (authText) {
+                authText.innerText = "STATUS: VISITANTE";
+                authText.style.color = "#888";
+            }
+        }
+    }
+
+    // --- 2. NOTIFICAÇÕES (TOAST) ---
     function showToast(mensagem, icone = 'fa-check-circle') {
         let container = document.querySelector('.notification-container');
         if (!container) {
@@ -532,35 +565,36 @@
         }, 3000);
     }
 
-    // FUNÇÃO PUBLICAR POST (CORRIGIDA)
+    // --- 3. MURAL OPERACIONAL (POSTAR) ---
     function publicarPost() {
+        if (!verificarAcesso()) return;
+
         const text = document.getElementById('postText').value;
         if (!text.trim()) return;
         
-        // Definição do Horário
         const agora = new Date();
         const horario = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const fotoUrl = usuarioLogado.picture.data.url;
 
         const novoPost = `
             <div class="post-card">
                 <div class="post-header">
-                    <div class="user-avatar"></div>
-                    <div class="user-info">
-                        <b>RFL•★•REAL</b>
+                    <img src="${fotoUrl}" style="width:40px; height:40px; border-radius:50%; border:1px solid var(--gold);">
+                    <div class="user-info" style="margin-left:10px;">
+                        <b>${usuarioLogado.name}</b>
                         <span style="font-size: 0.65rem; color: #555; margin-left: 8px;">enviado às ${horario}</span>
                     </div>
-                    <button class="pin-btn" onclick="togglePin(this)"><i class="fa-solid fa-thumbtack"></i></button>
+                    <button class="pin-btn" onclick="togglePin(this)" style="margin-left:auto; background:none; border:none; color:#444;"><i class="fa-solid fa-thumbtack"></i></button>
                 </div>
-                <div class="post-content">${text}</div>
-                <div class="post-interactions">
-                    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas</button>
-                    <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> Comentar</button>
-                    <button class="interaction-btn" onclick="compartilharPost(this)"><i class="fa-solid fa-share"></i> <span>Compartilhar</span></button>
+                <div class="post-content" style="padding:15px; color:#ccc;">${text}</div>
+                <div class="post-interactions" style="padding:10px; border-top:1px solid rgba(255,255,255,0.05); display:flex; gap:15px;">
+                    <button class="interaction-btn" onclick="toggleLike(this)" style="background:none; border:none; color:#888; cursor:pointer;"><i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas</button>
+                    <button class="interaction-btn" onclick="abrirComentarios(this)" style="background:none; border:none; color:#888; cursor:pointer;"><i class="fa-regular fa-comment"></i> Comentar</button>
                 </div>
-                <div class="comments-section">
-                    <div class="comment-input-wrapper">
-                        <input type="text" placeholder="Escreva um comentário...">
-                        <button class="send-comment-btn" onclick="enviarComentario(this)"><i class="fa-solid fa-paper-plane"></i></button>
+                <div class="comments-section" style="display:none; padding:10px; background:rgba(0,0,0,0.1);">
+                    <div class="comment-input-wrapper" style="display:flex; gap:5px;">
+                        <input type="text" placeholder="Escreva..." style="flex:1; background:#000; border:1px solid #333; color:white; border-radius:15px; padding:5px 10px;">
+                        <button onclick="enviarComentario(this)" style="background:var(--gold); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;"><i class="fa-solid fa-paper-plane" style="font-size:0.8rem;"></i></button>
                     </div>
                     <div class="comments-list" style="margin-top:10px;"></div>
                 </div>
@@ -568,146 +602,61 @@
             
         document.getElementById('postsContainer').insertAdjacentHTML('afterbegin', novoPost);
         document.getElementById('postText').value = "";
-        document.getElementById("postText").style.height = "40px";
-        
         showToast('Missão publicada no Mural!', 'fa-paper-plane');
     }
 
-    // FUNÇÃO CURTIR (COM TOAST)
+    // --- 4. INTERAÇÕES ---
     function toggleLike(btn) {
+        if (!verificarAcesso()) return;
         const icon = btn.querySelector('i');
         const countSpan = btn.querySelector('.like-count');
         let count = parseInt(countSpan.innerText);
-
         icon.classList.toggle('fa-regular'); 
         icon.classList.toggle('fa-solid');
-
         if (icon.classList.contains('fa-solid')) {
             count++;
             btn.style.color = "var(--gold)";
-            showToast('Você curtiu esta publicação!', 'fa-heart');
         } else {
             count--;
-            btn.style.color = "rgba(255,255,255,0.7)";
+            btn.style.color = "#888";
         }
         countSpan.innerText = count;
     }
 
-    // FUNÇÃO FIXAR
-    function togglePin(btn) {
-        const post = btn.closest('.post-card');
-        const container = document.getElementById('postsContainer');
-        
-        document.querySelectorAll('.post-card').forEach(p => { if (p !== post) p.classList.remove('pinned'); });
-        document.querySelectorAll('.pin-btn').forEach(b => { if (b !== btn) b.classList.remove('active'); });
-
-        post.classList.toggle('pinned');
-        btn.classList.toggle('active');
-
-        if (post.classList.contains('pinned')) {
-            container.prepend(post);
-            showToast('Post fixado no topo!', 'fa-thumbtack');
-        }
-    }
-        // FUNÇÃO PARA ABRIR/FECHAR A SEÇÃO DE COMENTÁRIOS
     function abrirComentarios(btn) {
-        const postCard = btn.closest('.post-card');
-        const section = postCard.querySelector('.comments-section');
-        // Alterna entre block e none
-        if (section.style.display === "block") {
-            section.style.display = "none";
-        } else {
-            section.style.display = "block";
-        }
+        const section = btn.closest('.post-card').querySelector('.comments-section');
+        section.style.display = section.style.display === "block" ? "none" : "block";
     }
 
-    // FUNÇÃO PARA ENVIAR O COMENTÁRIO
     function enviarComentario(btn) {
-        const wrapper = btn.parentElement;
-        const input = wrapper.querySelector('input');
-        const list = wrapper.nextElementSibling; // A div .comments-list
-        
+        if (!verificarAcesso()) return;
+        const input = btn.parentElement.querySelector('input');
+        const list = btn.parentElement.nextElementSibling;
         if (input.value.trim()) {
-            const novoComentario = `
-                <div style="margin-top:8px; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:10px; border-left: 2px solid var(--gold-glow);">
-                    <b style="color:var(--gold); font-size:0.75rem;">RFL•★•REAL:</b>
-                    <p style="margin:2px 0; font-size:0.85rem; color: #ccc;">${input.value}</p>
-                </div>`;
-                
-            list.innerHTML += novoComentario;
+            list.innerHTML += `<div style="margin-bottom:5px; font-size:0.8rem;"><b style="color:var(--gold);">${usuarioLogado.name}:</b> ${input.value}</div>`;
             input.value = "";
-            showToast('Comentário enviado!', 'fa-comment');
-        }
-    }
-        function filtrarFeed(categoria, btn) {
-    // 1. Ativa visualmente o botão clicado
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const posts = document.querySelectorAll('.post-card');
-    
-    posts.forEach(post => {
-        switch(categoria) {
-            case 'todos':
-                post.style.display = 'block';
-                break;
-            case 'ordens':
-                // Mostra apenas posts fixados (pinned)
-                post.classList.contains('pinned') ? post.style.display = 'block' : post.style.display = 'none';
-                break;
-            case 'midia':
-                // Mostra apenas posts que têm imagem ou vídeo
-                const temMidia = post.querySelector('img, video, .post-media');
-                temMidia ? post.style.display = 'block' : post.style.display = 'none';
-                break;
-        }
-    });
-
-    showToast(`Filtrando por: ${categoria.toUpperCase()}`, 'fa-filter');
-}
-// --- SISTEMA DE CHAT (GLOBAL & FAMILY) ---
-    let currentChat = 'global'; 
-
-    function switchChat(tab, btn) {
-        currentChat = tab;
-        // Atualiza botões
-        document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Alterna janelas
-        if (tab === 'global') {
-            document.getElementById('chatGlobal').style.display = 'flex';
-            document.getElementById('chatFamily').style.display = 'none';
-        } else {
-            document.getElementById('chatGlobal').style.display = 'none';
-            document.getElementById('chatFamily').style.display = 'flex';
         }
     }
 
+    // --- 5. CHAT E FILTROS ---
     function sendMessage() {
+        if (!verificarAcesso()) return;
         const input = document.getElementById('chatInput');
         if (!input.value.trim()) return;
-
-        const windowId = currentChat === 'global' ? 'chatGlobal' : 'chatFamily';
-        const label = currentChat === 'global' ? '[VOCÊ]' : '[FAMÍLIA]';
-        const color = currentChat === 'global' ? 'var(--gold)' : '#45bd62';
-
-        const msg = `
-            <div class="chat-msg" style="border-left: 2px solid ${color}; background: rgba(255,255,255,0.02); margin-bottom: 5px; padding: 5px 8px;">
-                <b style="color: ${color}; font-size: 0.75rem;">${label}:</b> 
-                <span style="font-size: 0.8rem;">${input.value}</span>
-            </div>`;
-
-        const chatWin = document.getElementById(windowId);
-        chatWin.innerHTML += msg;
+        const windowId = document.getElementById('chatGlobal').style.display !== 'none' ? 'chatGlobal' : 'chatFamily';
+        document.getElementById(windowId).innerHTML += `<div class="chat-msg"><b>${usuarioLogado.name}:</b> ${input.value}</div>`;
         input.value = '';
-        chatWin.scrollTop = chatWin.scrollHeight;
     }
 
-    // Adiciona evento de apertar ENTER no chat
-    document.getElementById('chatInput')?.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') sendMessage();
-    });
+    function togglePin(btn) {
+        if (!verificarAcesso()) return;
+        const post = btn.closest('.post-card');
+        post.classList.toggle('pinned');
+        if (post.classList.contains('pinned')) {
+            document.getElementById('postsContainer').prepend(post);
+            showToast('Post fixado!', 'fa-thumbtack');
+        }
+    }
 </script>
 </body>
 </html>
