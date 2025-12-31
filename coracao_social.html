@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coração Social | RFL•★•REAL</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body {
+            background-color: #121212;
+            color: white;
+            display: grid;
+            grid-template-columns: 250px 1fr 300px; /* Layout em 3 colunas */
+            height: 100vh;
+        }
 
+        /* Menu Lateral (Esquerda) */
+        nav {
+            background-color: #1a1a1a;
+            border-right: 1px solid #333;
+            padding: 20px;
+        }
+
+        nav h2 { color: #ff0050; margin-bottom: 30px; font-size: 1.5rem; }
+        
+        nav ul { list-style: none; }
+        
+        nav ul li {
+            padding: 15px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 5px;
+        }
+
+        nav ul li:hover { background-color: #333; color: #00f2ea; }
+
+        /* Feed Central */
+        main {
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #000;
+        }
+
+        .post-input {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-input textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            resize: none;
+            outline: none;
+        }
+
+        .btn-post {
+            background: linear-gradient(45deg, #ff0050, #00f2ea);
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            float: right;
+            cursor: pointer;
+        }
+
+        .feed-item {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+
+        .feed-item h4 { color: #00f2ea; margin-bottom: 10px; }
+
+        /* Barra Lateral (Direita) */
+        aside {
+            background-color: #1a1a1a;
+            border-left: 1px solid #333;
+            padding: 20px;
+        }
+
+        .trending-box {
+            background: #252525;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .trending-box h3 { margin-bottom: 15px; font-size: 1rem; color: #888; }
+
+        .tag { color: #ff0050; display: block; margin-bottom: 10px; text-decoration: none; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h2>Social Star ★</h2>
+        <ul>
+            <li>🏠 Início</li>
+            <li>🔍 Explorar</li>
+            <li>🔔 Notificações</li>
+            <li>👤 Perfil</li>
+            <li>⚙️ Configurações</li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="post-input">
+            <textarea placeholder="O que está acontecendo no seu coração social?"></textarea>
+            <button class="btn-post">Publicar</button>
+            <div style="clear: both;"></div>
+        </div>
+
+        <div id="feed">
+            <div class="feed-item">
+                <h4>@RFL•★•REAL</h4>
+                <p>Bem-vindos ao coração do site! Este é o nosso novo espaço de interação.</p>
+            </div>
+            <div class="feed-item">
+                <h4>@Admin_Social</h4>
+                <p>A página de abertura foi configurada com sucesso. O sistema está online.</p>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+        <div class="trending-box">
+            <h3>Tendências para você</h3>
+            <a href="#" class="tag">#WebDesign2025</a>
+            <a href="#" class="tag">#SocialHeart</a>
+            <a href="#" class="tag">#CodingLife</a>
+            <a href="#" class="tag">#RFL_REAL</a>
+        </div>
+    </aside>
+
+</body>
+</html>
