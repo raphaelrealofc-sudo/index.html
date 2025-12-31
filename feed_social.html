@@ -311,42 +311,64 @@
     };
 
    
-function loginInstagram() {
+window.fbAsyncInit = function() {
     FB.init({
-        appId: '1188549069564071', 
+        appId: '1667298550907398', // Seu ID oficial ativo
         cookie: true,
         xfbml: true,
         version: 'v18.0'
     });
-    FB.login(checkLoginStatus, {scope: 'public_profile'});
+    
+      FB.getLoginStatus(function(response) {
+        checkLoginStatus(response);
+    });
+    
+    if(typeof renderizarMural === 'function') renderizarMural(); 
+};
+
+
+function loginInstagram() {
+    if (typeof FB !== 'undefined') {
+        FB.login(function(response) {
+            checkLoginStatus(response);
+        }, {
+            scope: 'public_profile',
+            auth_type: 'rerequest' // Força a abertura da janela de login
+        });
+    } else {
+        showToast("Erro: SDK da Meta não carregado.", "fa-triangle-exclamation");
+    }
 }
 
-    function checkLoginStatus(response) {
+// 3. Processamento dos dados do Usuário/Operador
+function checkLoginStatus(response) {
     if (response && response.status === 'connected') {
         FB.api('/me', {fields: 'name,picture.type(large)'}, function(userData) {
             usuarioLogado = userData;
             
-                       const authText = document.getElementById('auth-text');
+            // Atualiza interface para modo OPERADOR
+            const authText = document.getElementById('auth-text');
             if(authText) {
                 authText.innerText = "OPERADOR: " + userData.name.toUpperCase();
                 authText.style.color = "var(--gold)";
             }
+            
             const creatorImg = document.getElementById('creator-img');
             if(creatorImg) {
                 creatorImg.src = userData.picture.data.url;
             }
 
-                      const loginOptions = document.getElementById('login-options');
+            // Oculta opções de login e mostra botão de sair
+            const loginOptions = document.getElementById('login-options');
             if(loginOptions) loginOptions.style.display = 'none';
 
-                     const btnSair = document.getElementById('btn-sair');
+            const btnSair = document.getElementById('btn-sair');
             if(btnSair) btnSair.style.display = 'inline-block';
 
             showToast(`Bem-vindo ao Sistema, ${userData.name}!`, 'fa-user-check');
         });
     }
 }
-
     function verificarAcesso() {
         if (!usuarioLogado) {
             showToast('🔒 Acesse o Sistema para interagir!', 'fa-lock');
