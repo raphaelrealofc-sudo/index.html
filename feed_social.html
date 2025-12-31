@@ -85,540 +85,187 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 15px;
         }
 
-        .media-options { display: flex; gap: 20px; }
-        .action-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; color: rgba(255, 255, 255, 0.7); transition: 0.3s; font-size: 0.9rem; }
-        .action-btn:hover { color: #fff; }
-
         .publish-btn {
             background: var(--gold); color: #000; border: none; padding: 10px 25px;
             border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;
         }
-        .publish-btn:hover { transform: scale(1.05); }
 
-        .post-card { background: var(--surface); border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; }
-        .post-header { padding: 15px; display: flex; align-items: center; gap: 10px; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); background: #222; }
-        .post-content { padding: 0 15px 15px 15px; font-size: 0.9rem; color: #ccc; }
-        .post-media { width: 100%; max-height: 550px; object-fit: contain; background: #000; border-top: 1px solid var(--border); }
-
-        .post-interactions { display: flex; gap: 25px; padding: 12px 15px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-        .interaction-btn { background: transparent; border: none; color: rgba(255,255,255,0.7); cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .interaction-btn:hover { color: var(--gold); }
-
-        .comments-section { display: none; padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--border); }
-        .comment-input-wrapper { display: flex; gap: 10px; align-items: center; }
-        .comment-input-wrapper input {
-            flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 15px; border-radius: 20px; color: white; outline: none;
-        }
+        .post-card { background: var(--surface); border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--border); padding: 15px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); }
+        .post-content { padding: 15px 0; font-size: 0.9rem; color: #ccc; }
 
         .chat-sidebar { display: flex; flex-direction: column; background: rgba(0,0,0,0.2); border-left: 1px solid var(--border); }
-        .chat-header { padding: 20px; border-bottom: 1px solid var(--border); }
-        .chat-title { font-weight: 800; font-size: 0.7rem; letter-spacing: 2px; color: var(--gold); }
-        .chat-history { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; height: 300px; }
-        .chat-msg { font-size: 0.8rem; border-left: 2px solid var(--gold); background: rgba(212, 175, 55, 0.05); padding: 5px 8px; }
-        .chat-msg b { color: var(--gold); }
+        .chat-history { flex: 1; overflow-y: auto; padding: 15px; height: 300px; }
+        .chat-msg { font-size: 0.8rem; border-left: 2px solid var(--gold); background: rgba(212, 175, 55, 0.05); padding: 5px 8px; margin-bottom: 5px; }
         .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
-        .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 12px; border-radius: 8px; color: #fff; outline: none; }
-        .chat-send-btn { background: var(--gold); border: none; padding: 0 15px; border-radius: 8px; cursor: pointer; color: #000; }
-
-        .feed-filters { display: flex; gap: 15px; margin-bottom: 25px; padding: 5px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--border); }
-        .filter-btn { background: transparent; border: none; color: rgba(255, 255, 255, 0.5); padding: 10px 20px; font-weight: 700; font-size: 0.7rem; letter-spacing: 1px; cursor: pointer; transition: 0.3s; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
-        .filter-btn.active { background: rgba(212, 175, 55, 0.1); color: var(--gold); }
+        .chat-input { flex: 1; background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; color: #fff; }
+        .chat-send-btn { background: var(--gold); border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
         
-        .online-status-bar { background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .online-list { display: flex; gap: 15px; padding: 10px 20px; overflow-x: auto; scrollbar-width: none; }
-        .member-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 50px; }
-        .member-wrapper span { font-size: 0.55rem; font-weight: 700; color: #666; text-transform: uppercase; }
-        .member-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #333; position: relative; padding: 2px; }
-        .member-avatar.leader { border-color: var(--gold); box-shadow: 0 0 10px var(--gold-glow); }
-        .member-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .status-indicator { width: 10px; height: 10px; border-radius: 50%; position: absolute; bottom: 0; right: 0; border: 2px solid #121212; }
-        .status-indicator.online { background: #45bd62; }
-        
-        .post-card.pinned { border: 2px solid var(--gold) !important; position: sticky; top: 10px; z-index: 100; box-shadow: 0 0 15px var(--gold-glow); }
-        .pin-btn { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 0.8rem; }
-        .pin-btn.active { color: var(--gold); }
-        
-        .notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: rgba(10, 10, 10, 0.95); border-left: 4px solid var(--gold); color: #fff; padding: 12px 20px; border-radius: 5px; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; animation: toastSlideIn 0.4s ease-out forwards; }
-        @keyframes toastSlideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast.fade-out { animation: toastFadeOut 0.5s ease-in forwards; }
-        @keyframes toastFadeOut { to { transform: translateX(100%); opacity: 0; } }
-
-        .chat-tab-btn { flex: 1; background: rgba(255, 255, 255, 0.05); border: none; color: rgba(255, 255, 255, 0.5); padding: 8px; font-size: 0.6rem; font-weight: 700; cursor: pointer; border-radius: 4px; }
-        .chat-tab-btn.active { background: var(--gold-glow); color: var(--gold); border-bottom: 2px solid var(--gold); }
+        .member-avatar { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #333; position: relative; }
+        .member-avatar.leader { border-color: var(--gold); }
+        .member-avatar img { width: 100%; height: 100%; border-radius: 50%; }
     </style>
 </head>
 <body>
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/pt_BR/sdk.js"></script>
 
 <div class="app-container">
     <aside class="hierarchy-sidebar">
-        <div id="auth-status" style="padding: 15px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 10px; margin: 10px; border: 1px solid rgba(255,215,0,0.1); min-height: 100px;">
-            <div class="auth-panel" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-                <span id="auth-text" style="font-size: 0.7rem; color: #888; display: block; margin-bottom: 15px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">
-                    STATUS: VISITANTE
-                </span>
-
-               <div id="login-options" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
-    <button onclick="loginGoogle()" style="width: 200px; background: white; color: #444; border: 1px solid #ddd; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
-        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="16"> 
-        Acessar como Operador
-    </button>
-</div>
-                    <button onclick="loginInstagram()" style="width: 200px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity 0.3s;">
-                        <i class="fa-brands fa-instagram" style="font-size: 16px;"></i> Continuar com Instagram
-                    </button>
-                </div>
-
-                <button id="btn-sair" onclick="logoutSistema()" style="display: none; margin-top: 10px; background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; transition: all 0.3s;">
-                    <i class="fa-solid fa-right-from-bracket"></i> ENCERRAR SESSÃO OPERACIONAL
+        <div id="auth-status" style="padding: 15px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 10px; margin: 10px; border: 1px solid rgba(255,215,0,0.1);">
+            <span id="auth-text" style="font-size: 0.7rem; color: #888; display: block; margin-bottom: 15px; font-weight: bold; letter-spacing: 2px;">STATUS: VISITANTE</span>
+            <div id="login-options">
+                <button onclick="loginGoogle()" style="width: 100%; background: white; color: #444; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px;">
+                    Acessar como Operador
                 </button>
             </div>
-
-            <div class="pulse-title">
-                <div class="pulse-dot"></div> MENU FAMILY
-            </div>
-
-            <div class="rank-item" onclick="location.href='nossahistoria.html'">
-                <div class="rank-icon"><i class="fa-solid fa-gem"></i></div>
-                <div class="rank-info"><span class="name">Nossa História</span><span class="desc">Legado RFL</span></div>
-            </div>
-
-            <div class="rank-item" onclick="location.href='guiadepontos.html'">
-                <div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div>
-                <div class="rank-info"><span class="name">Guia de Pontos</span><span class="desc">Subir no Rank</span></div>
-            </div>
-
-            <div class="rank-item" onclick="location.href='regras.html'">
-                <div class="rank-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <div class="rank-info"><span class="name">Regras de Elite</span><span class="desc">Conformidade</span></div>
-            </div>
-
-            <div class="rank-item" onclick="location.href='galeria.html'">
-                <div class="rank-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                <div class="rank-info"><span class="name">Edits & Fotos</span><span class="desc">Premium</span></div>
-            </div>
-
-            <div class="rank-item active" onclick="location.href='feed.html'" style="margin-top: 30px; border-left: 2px solid var(--gold);">
-                <div class="rank-icon"><i class="fa-solid fa-gauge-high"></i></div>
-                <div class="rank-info">
-                    <span class="name">Mural Operacional</span>
-                    <span class="desc">Central</span>
-                </div>
-            </div>
+            <button id="btn-sair" onclick="logoutSistema()" style="display: none; width: 100%; background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 11px;">
+                ENCERRAR SESSÃO
+            </button>
         </div>
+
+        <div class="pulse-title"><div class="pulse-dot"></div> MENU FAMILY</div>
+        <div class="rank-item" onclick="alert('História em breve')"><div class="rank-icon"><i class="fa-solid fa-gem"></i></div><div class="rank-info"><span class="name">Nossa História</span><span class="desc">Legado RFL</span></div></div>
+        <div class="rank-item active" style="border-left: 2px solid var(--gold);"><div class="rank-icon"><i class="fa-solid fa-gauge-high"></i></div><div class="rank-info"><span class="name">Mural Operacional</span><span class="desc">Central</span></div></div>
     </aside>
 
     <main class="feed-section">
-        <div class="feed-filters">
-            <button class="filter-btn active" onclick="filtrarFeed('todos', this)">GERAL</button>
-            <button class="filter-btn" onclick="filtrarFeed('ordens', this)"><i class="fa-solid fa-scroll"></i> ORDENS</button>
-            <button class="filter-btn" onclick="filtrarFeed('midia', this)"><i class="fa-solid fa-photo-film"></i> MÍDIA</button>
-        </div>
-
         <div class="post-creator">
             <div class="user-status-input">
                 <img src="https://via.placeholder.com/40" class="user-avatar" id="creator-img">
                 <textarea placeholder="O que você gostaria de fazer hoje, RFL•★•REAL?" id="postText"></textarea>
             </div>
             <div class="post-actions-wrapper">
-                <div class="media-options">
-                    <div class="action-btn" onclick="document.getElementById('fileInput').click()"><i class="fa-solid fa-image" style="color: #45bd62;"></i><span>Foto</span></div>
-                    <div class="action-btn" onclick="document.getElementById('fileInput').click()"><i class="fa-solid fa-video" style="color: #f02849;"></i><span>Vídeo</span></div>
-                </div>
-                <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*">
+                <span></span>
                 <button class="publish-btn" onclick="publicarPost()">Postar</button>
             </div>
         </div>
-
-        <div id="postsContainer">
-            </div>
+        <div id="postsContainer"></div>
     </main>
 
-   <aside class="chat-sidebar">
-    <div class="online-status-bar">
-        <div class="chat-title" style="padding: 15px 20px 5px 20px; font-size: 0.6rem;">RANKING DE ELITE</div>
-        <div class="online-list">
-            <div class="member-wrapper">
-                <div class="member-avatar leader">
-                    <img src="https://via.placeholder.com/35" id="leader-img-rank">
-                    <div class="status-indicator online pulse"></div>
+    <aside class="chat-sidebar">
+        <div style="padding: 20px;">
+            <div class="chat-title" style="color: var(--gold); font-size: 0.7rem; letter-spacing: 2px;">RANKING DE ELITE</div>
+            <div style="display: flex; gap: 15px; margin-top: 15px;">
+                <div class="member-wrapper">
+                    <div class="member-avatar leader"><img src="https://via.placeholder.com/35" id="leader-img-rank"></div>
+                    <span style="font-size: 10px; color: var(--gold);">RFL•★•REAL</span>
                 </div>
-                <span style="color: var(--gold); font-weight: 800; letter-spacing: 1px;">RFL•★•REAL</span>
-            </div>
-
-            <div class="member-wrapper">
-                <div class="member-avatar">
-                    <img src="https://via.placeholder.com/35" style="filter: grayscale(1);">
-                    <div class="status-indicator online"></div>
-                </div>
-                <span style="opacity: 0.6;">OPERADORES</span>
             </div>
         </div>
-    </div>
-
-        <div class="chat-header">
-            <div class="chat-title">SISTEMA DE TRANSMISSÃO</div>
-            <div class="chat-tabs" style="display: flex; gap: 5px; margin-top: 10px;">
-                <button class="chat-tab-btn active" onclick="switchChat('global', this)">GLOBAL</button>
-                <button class="chat-tab-btn" onclick="switchChat('family', this)">FAMILY</button>
-            </div>
-        </div>
-
-        <div class="chat-history" id="chatGlobal">
-            <div class="chat-msg"><b>[SISTEMA]:</b> Canal Global operacional.</div>
-        </div>
-        <div class="chat-history" id="chatFamily" style="display: none;">
-            <div class="chat-msg" style="border-left-color: #45bd62;"><b>[FAMÍLIA]:</b> Chat privado ativo.</div>
-        </div>
-
+        <div class="chat-history" id="chatGlobal"></div>
         <div class="chat-input-area">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Sua mensagem...">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Mensagem...">
             <button class="chat-send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </aside>
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  
-  // IMPORTAÇÃO ATUALIZADA COM O PODER DE EXCLUSÃO RFL
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBOQuzV_2jGwuyjd0TdVkDrk9Auw3MC_HI",
-    authDomain: "rfl-family-system.firebaseapp.com",
-    projectId: "rfl-family-system",
-    storageBucket: "rfl-family-system.firebasestorage.app",
-    messagingSenderId: "724771308632",
-    appId: "1:724771308632:web:2c3544b664c7f4cffab62d"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyBOQuzV_2jGwuyjd0TdVkDrk9Auw3MC_HI",
+        authDomain: "rfl-family-system.firebaseapp.com",
+        projectId: "rfl-family-system",
+        storageBucket: "rfl-family-system.firebasestorage.app",
+        messagingSenderId: "724771308632",
+        appId: "1:724771308632:web:2c3544b664c7f4cffab62d"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  const db = getFirestore(app); // Inicializa o banco de dados
-  const provider = new GoogleAuthProvider();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
 
-  window.loginGoogle = async () => {
-    try {
-      showToast("Conectando ao satélite...", "fa-satellite-dish");
-      await signInWithPopup(auth, provider);
-    } catch (error) { showToast("Falha na conexão!", "fa-triangle-exclamation"); }
-  };
+    // LOGIN
+    window.loginGoogle = async () => {
+        try { await signInWithPopup(auth, provider); } 
+        catch (e) { alert("Erro ao conectar!"); }
+    };
 
-  window.logoutSistema = () => {
-    if(confirm("Deseja encerrar a sessão, RFL•★•REAL?")) {
-      signOut(auth).then(() => location.reload());
-    }
-  };
+    window.logoutSistema = () => { if(confirm("Deseja sair?")) signOut(auth).then(() => location.reload()); };
 
- onAuthStateChanged(auth, (user) => {
-    const authText = document.getElementById('auth-text');
-    const creatorImg = document.getElementById('creator-img');
-    const loginOptions = document.getElementById('login-options');
-    const btnSair = document.getElementById('btn-sair');
-    const leaderRankImg = document.getElementById('leader-img-rank'); // Busca o ID do ranking
-
-    if (user) {
-      window.usuarioLogado = { name: user.displayName, picture: { data: { url: user.photoURL } } };
-      
-      if(authText) { 
-          authText.innerText = "OPERADOR: " + user.displayName.toUpperCase(); 
-          authText.style.color = "var(--gold)"; 
-      }
-      
-      // Sincroniza foto no Mural e no Ranking de Elite
-      if(creatorImg) creatorImg.src = user.photoURL;
-      if(leaderRankImg) leaderRankImg.src = user.photoURL;
-
-      if(loginOptions) loginOptions.style.display = 'none';
-      if(btnSair) btnSair.style.display = 'inline-block';
-    } else {
-      window.usuarioLogado = null;
-    }
-  });
-
-  // --- LÓGICA DO MURAL EM TEMPO REAL ---
-  // --- LÓGICA DO MURAL COM PODER DE EXCLUSÃO RFL ---
-  window.publicarPost = async () => {
-    const textInput = document.getElementById('postText');
-    const text = textInput.value.trim();
-    if (!text || !window.usuarioLogado) return;
-
-    try {
-      await addDoc(collection(db, "mural"), {
-        nome: window.usuarioLogado.name,
-        foto: window.usuarioLogado.picture.data.url,
-        texto: text,
-        timestamp: serverTimestamp()
-      });
-      textInput.value = "";
-    } catch (e) {
-      console.error("Erro ao publicar:", e);
-    }
-  };
-
-  // Carrega os posts e ativa a Lixeira apenas para RFL•★•REAL
-  const qMural = query(collection(db, "mural"), orderBy("timestamp", "desc"));
-  onSnapshot(qMural, (snapshot) => {
-    const container = document.getElementById('postsContainer');
-    if(!container) return;
-    container.innerHTML = '';
-    
-    snapshot.forEach((postDoc) => {
-      const post = postDoc.data();
-      const postId = postDoc.id; // Captura o ID do post
-      
-      // Checa se você é o Líder (Nome contém RFL)
-      const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
-      
-      // Cria o botão de lixeira se for o líder
-      const btnDelete = isLeader ? `<i class="fa-solid fa-trash-can" style="cursor:pointer; color:#ff4444; opacity:0.5; font-size:12px;" onclick="window.excluirPost('${postId}')" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5"></i>` : '';
-
-      container.insertAdjacentHTML('beforeend', `
-        <div class="post-card">
-          <div class="post-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center;">
-                <img src="${post.foto}" class="user-avatar">
-                <div style="flex:1; margin-left:10px;">
-                    <b>${post.nome}</b><br>
-                    <small style="font-size: 8px; opacity: 0.5;">SINCRO RFL</small>
-                </div>
-            </div>
-            ${btnDelete}
-          </div>
-          <div class="post-content">${post.texto}</div>
-        </div>`);
-    });
-  });
-
-  // COMANDO SUPREMO PARA EXCLUIR POST
-  window.excluirPost = async (id) => {
-    if(confirm("LÍDER RFL: Confirmar exclusão deste registro?")) {
-        try {
-            await deleteDoc(doc(db, "mural", id));
-            showToast("Registro neutralizado!", "fa-trash-check");
-        } catch (e) {
-            console.error("Erro ao excluir:", e);
-        }
-    }
-  };
-  // Carrega os posts do Mural automaticamente
-  const qMural = query(collection(db, "mural"), orderBy("timestamp", "desc"));
-  onSnapshot(qMural, (snapshot) => {
-    const container = document.getElementById('postsContainer');
-    if(!container) return;
-    container.innerHTML = '';
-    snapshot.forEach((doc) => {
-      const post = doc.data();
-      container.insertAdjacentHTML('beforeend', `
-        <div class="post-card">
-          <div class="post-header">
-            <img src="${post.foto}" class="user-avatar">
-            <div style="flex:1; margin-left:10px;">
-                <b>${post.nome}</b><br>
-                <small style="font-size: 8px; opacity: 0.5;">SINCRO RFL</small>
-            </div>
-          </div>
-          <div class="post-content">${post.texto}</div>
-        </div>`);
-    });
-  });
-
-  // --- LÓGICA DO CHAT EM TEMPO REAL ---
-// --- LÓGICA DO CHAT COM MODERAÇÃO RFL ---
-  window.sendMessage = async () => {
-    const input = document.getElementById('chatInput');
-    const msg = input.value.trim();
-    if (!msg || !window.usuarioLogado) return;
-
-    await addDoc(collection(db, "chatGlobal"), {
-      nome: window.usuarioLogado.name,
-      texto: msg,
-      timestamp: serverTimestamp()
-    });
-    input.value = '';
-  };
-
-  const qChat = query(collection(db, "chatGlobal"), orderBy("timestamp", "asc"));
-  onSnapshot(qChat, (snapshot) => {
-    const chatBox = document.getElementById('chatGlobal');
-    if(!chatBox) return;
-    chatBox.innerHTML = '';
-    
-    snapshot.forEach((docSnap) => {
-      const m = docSnap.data();
-      const msgId = docSnap.id;
-      
-      // Verifica se é o Líder RFL para liberar o [x] de exclusão
-      const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
-      const delBtn = isLeader ? `<span onclick="window.excluirMsg('${msgId}')" style="cursor:pointer; color:#ff4444; margin-left:8px; font-size:9px; font-weight:bold; vertical-align:middle;">[X]</span>` : '';
-
-      chatBox.insertAdjacentHTML('beforeend', `
-        <div class="chat-msg" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <span><b>${m.nome}:</b> ${m.texto}</span>
-            ${delBtn}
-        </div>`);
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
-  });
-
-  // COMANDO PARA APAGAR MENSAGEM DO CHAT
-  window.excluirMsg = async (id) => {
-    if(confirm("RFL•★•REAL: Deseja apagar esta mensagem do chat?")) {
-        try {
-            await deleteDoc(doc(db, "chatGlobal", id));
-        } catch (e) { console.error("Erro ao apagar msg", e); }
-    }
-  };
-</script>
-    <script>
-    // --- LÓGICA DO MURAL OPERACIONAL ---
-    function publicarPost() {
-        if (!window.usuarioLogado) {
-            showToast("Acesso Negado! Logue com Google primeiro.", "fa-lock");
-            return;
-        }
-
-        const textInput = document.getElementById('postText');
-        const fileInput = document.getElementById('fileInput');
-        const text = textInput.value.trim();
+    onAuthStateChanged(auth, (user) => {
+        const authText = document.getElementById('auth-text');
+        const loginOptions = document.getElementById('login-options');
+        const btnSair = document.getElementById('btn-sair');
         
-        if (!text && !fileInput.files[0]) return;
-
-        const publicar = (mediaData = null, type = null) => {
-            const novoPostObj = {
-                id: Date.now(),
-                nome: window.usuarioLogado.name,
-                foto: window.usuarioLogado.picture.data.url,
-                texto: text,
-                media: mediaData,
-                mediaType: type,
-                data: new Date().toLocaleString('pt-BR'),
-                likes: 0
-            };
-
-            let postsSalvos = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
-            postsSalvos.unshift(novoPostObj);
-            localStorage.setItem('mural_rfl_data', JSON.stringify(postsSalvos));
-
-            textInput.value = "";
-            fileInput.value = "";
-            renderizarMural();
-            showToast("Missão publicada no Mural!", "fa-check-double");
-        };
-
-        if (fileInput.files[0]) {
-            const reader = new FileReader();
-            const file = fileInput.files[0];
-            reader.onload = (e) => publicar(e.target.result, file.type.split('/')[0]);
-            reader.readAsDataURL(file);
+        if (user) {
+            window.usuarioLogado = { name: user.displayName, picture: user.photoURL };
+            authText.innerText = "OPERADOR: " + user.displayName.toUpperCase();
+            authText.style.color = "var(--gold)";
+            document.getElementById('creator-img').src = user.photoURL;
+            document.getElementById('leader-img-rank').src = user.photoURL;
+            loginOptions.style.display = 'none';
+            btnSair.style.display = 'block';
         } else {
-            publicar();
+            window.usuarioLogado = null;
         }
-    }
+    });
 
-    function renderizarMural() {
-        const postsSalvos = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
+    // MURAL
+    window.publicarPost = async () => {
+        const text = document.getElementById('postText').value.trim();
+        if (!text || !window.usuarioLogado) return;
+        await addDoc(collection(db, "mural"), {
+            nome: window.usuarioLogado.name,
+            foto: window.usuarioLogado.picture,
+            texto: text,
+            timestamp: serverTimestamp()
+        });
+        document.getElementById('postText').value = "";
+    };
+
+    onSnapshot(query(collection(db, "mural"), orderBy("timestamp", "desc")), (snapshot) => {
         const container = document.getElementById('postsContainer');
-        if(!container) return;
-
-        container.innerHTML = ''; 
-        postsSalvos.forEach(post => {
-            let mediaHtml = '';
-            if (post.media) {
-                if (post.mediaType === 'image') {
-                    mediaHtml = `<img src="${post.media}" class="post-media">`;
-                } else if (post.mediaType === 'video') {
-                    mediaHtml = `<video src="${post.media}" class="post-media" controls></video>`;
-                }
-            }
-
-            const htmlPost = `
+        container.innerHTML = '';
+        snapshot.forEach((postDoc) => {
+            const post = postDoc.data();
+            const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
+            const btnDelete = isLeader ? `<i class="fa-solid fa-trash" style="color:red; cursor:pointer;" onclick="window.excluirPost('${postDoc.id}')"></i>` : '';
+            
+            container.insertAdjacentHTML('beforeend', `
                 <div class="post-card">
-                    <div class="post-header">
-                        <img src="${post.foto}" class="user-avatar">
-                        <div style="flex:1; margin-left:10px;">
-                            <b>${post.nome}</b><br>
-                            <small style="font-size: 10px; opacity: 0.6;">${post.data}</small>
+                    <div style="display:flex; justify-content:space-between;">
+                        <div style="display:flex; gap:10px;">
+                            <img src="${post.foto}" class="user-avatar">
+                            <b>${post.nome}</b>
                         </div>
+                        ${btnDelete}
                     </div>
                     <div class="post-content">${post.texto}</div>
-                    ${mediaHtml}
-                    <div class="post-interactions">
-                        <button class="interaction-btn" onclick="showToast('Sincronizando curtida...', 'fa-heart')">
-                            <i class="fa-regular fa-heart"></i> <span>${post.likes || 0}</span> Curtidas
-                        </button>
-                    </div>
-                </div>`;
-            container.insertAdjacentHTML('beforeend', htmlPost);
+                </div>`);
         });
-    }
+    });
 
-    // --- LÓGICA DO CHAT ---
-    function sendMessage() {
+    window.excluirPost = async (id) => { if(confirm("Apagar post?")) await deleteDoc(doc(db, "mural", id)); };
+
+    // CHAT
+    window.sendMessage = async () => {
         const input = document.getElementById('chatInput');
-        const msg = input.value.trim();
-        if(!msg || !window.usuarioLogado) return;
-
-        const chatBox = document.getElementById('chatGlobal');
-        const novaMsg = document.createElement('div');
-        novaMsg.className = 'chat-msg';
-        novaMsg.innerHTML = `<b>${window.usuarioLogado.name}:</b> ${msg}`;
-        chatBox.appendChild(novaMsg);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        if (!input.value.trim() || !window.usuarioLogado) return;
+        await addDoc(collection(db, "chatGlobal"), {
+            nome: window.usuarioLogado.name,
+            texto: input.value,
+            timestamp: serverTimestamp()
+        });
         input.value = '';
-    }
+    };
 
-    // --- SISTEMA DE TOAST (NOTIFICAÇÃO) ---
-    function showToast(text, icon) {
-        const container = document.querySelector('.notification-container') || document.createElement('div');
-        if(!document.querySelector('.notification-container')) {
-            container.className = 'notification-container';
-            document.body.appendChild(container);
-        }
-        
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `<i class="fa-solid ${icon}"></i> ${text}`;
-        container.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.classList.add('fade-out');
-            setTimeout(() => toast.remove(), 500);
-        }, 3000);
-    }
+    onSnapshot(query(collection(db, "chatGlobal"), orderBy("timestamp", "asc")), (snapshot) => {
+        const chatBox = document.getElementById('chatGlobal');
+        chatBox.innerHTML = '';
+        snapshot.forEach((d) => {
+            const m = d.data();
+            const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
+            const del = isLeader ? `<span onclick="window.excluirMsg('${d.id}')" style="color:red; cursor:pointer;"> [x]</span>` : '';
+            chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg"><b>${m.nome}:</b> ${m.texto} ${del}</div>`);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
 
-    // Inicializar Mural ao carregar
-    window.onload = renderizarMural;
-        // --- SISTEMA DE NOTIFICAÇÕES DE ELITE RFL ---
-  const showToast = (mensagem, icone = "fa-bell") => {
-    // Cria o elemento do Toast
-    const toast = document.createElement('div');
-    toast.style = `
-      position: fixed; top: 20px; right: 20px; background: var(--card-bg);
-      border-left: 4px solid var(--gold); color: white; padding: 15px 25px;
-      border-radius: 8px; z-index: 10000; display: flex; align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideIn 0.5s ease forwards;
-    `;
-    toast.innerHTML = `<i class="fa-solid ${icone}" style="color: var(--gold); margin-right: 15px;"></i> <span>${mensagem}</span>`;
-    document.body.appendChild(toast);
-
-    // Efeito de brilho na tela (Flash Dourado)
-    const flash = document.createElement('div');
-    flash.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(212,175,55,0.1); z-index:9999; pointer-events:none; animation: pulseFlash 0.5s ease;";
-    document.body.appendChild(flash);
-
-    // Remove após 4 segundos
-    setTimeout(() => { 
-      toast.style.animation = "slideOut 0.5s ease forwards";
-      setTimeout(() => { toast.remove(); flash.remove(); }, 500);
-    }, 4000);
-  };
+    window.excluirMsg = async (id) => { await deleteDoc(doc(db, "chatGlobal", id)); };
 
 </script>
 </body>
