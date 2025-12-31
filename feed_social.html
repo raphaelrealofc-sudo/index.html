@@ -3,267 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RFL | Central de Comando</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+    <title>RFL | Autenticação de Comando</title>
     <style>
-        :root {
-            --gold: #d4af37;
-            --gold-glow: rgba(212, 175, 55, 0.3);
-            --bg: #050505;
-            --surface: #121212;
-            --border: rgba(255,255,255,0.08);
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+        body { 
+            background: #050505; 
+            color: #d4af37; 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
         }
-
-        * { box-sizing: border-box; }
-
-        body, html {
-            margin: 0; padding: 0;
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Layout Principal */
-        .app-container {
-            display: grid;
-            grid-template-columns: 260px 1fr 320px;
-            width: 100%;
-            height: 100vh;
-        }
-
-        /* Sidebar Esquerda */
-        .sidebar {
-            background: rgba(10, 10, 10, 0.95);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .auth-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--gold-glow);
-            border-radius: 12px;
-            padding: 15px;
+        .login-card {
+            background: #121212;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #d4af37;
             text-align: center;
-            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
-
-        #auth-text {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .nav-menu { flex: 1; }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            color: var(--text-dim);
-            text-decoration: none;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            transition: 0.3s;
-            font-size: 0.9rem;
-            border: 1px solid transparent;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(212, 175, 55, 0.05);
-            color: var(--gold);
-            border-color: var(--gold-glow);
-        }
-
-        /* Seção Central (Feed) */
-        .feed-container {
-            overflow-y: auto;
-            padding: 30px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--gold) transparent;
-        }
-
-        .post-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .post-input-wrapper {
-            display: flex;
-            gap: 15px;
-        }
-
-        .post-input-wrapper textarea {
-            background: transparent;
-            border: none;
-            color: #fff;
-            flex: 1;
-            font-size: 1rem;
-            outline: none;
-            resize: none;
-            min-height: 60px;
-        }
-
-        .btn-post {
-            background: var(--gold);
+        button {
+            background: #d4af37;
             color: #000;
             border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            float: right;
-            margin-top: 10px;
-        }
-
-        .card-post {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-        }
-
-        /* Sidebar Direita (Chat/Ranking) */
-        .right-panel {
-            background: rgba(10, 10, 10, 0.95);
-            border-left: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .ranking-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .chat-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            font-size: 0.85rem;
-        }
-
-        .chat-msg {
-            background: rgba(255,255,255,0.02);
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border-left: 3px solid var(--gold);
-        }
-
-        .chat-input-container {
-            padding: 15px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input-container input {
-            flex: 1;
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 8px;
+            padding: 12px 25px;
+            font-weight: bold;
             border-radius: 5px;
-            outline: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
-
-        /* Utilitários */
-        .avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover; }
-        .gold-text { color: var(--gold); }
-        .pulse { animation: pulse-anim 2s infinite; }
-        @keyframes pulse-anim {
-            0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; }
-        }
+        #user-info { display: none; margin-top: 20px; }
+        .avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #d4af37; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="auth-card">
-            <span id="auth-text" class="gold-text">SISTEMA OFFLINE</span>
-            <button id="btn-login" onclick="loginGoogle()" style="width:100%; padding:8px; cursor:pointer;">ACESSAR</button>
-            <button id="btn-sair" onclick="logoutSistema()" style="display:none; width:100%; padding:8px; cursor:pointer; background:rgba(255,0,0,0.1); color:red; border:1px solid red;">SAIR</button>
-        </div>
-
-        <nav class="nav-menu">
-            <a href="index.html" class="nav-item">
-                <i class="fa-solid fa-house"></i> Início
-            </a>
-            <a href="feed_social.html" class="nav-item active">
-                <i class="fa-solid fa-rss"></i> Mural da Família
-            </a>
-            <a href="historia.html" class="nav-item">
-                <i class="fa-solid fa-scroll"></i> Nossa História
-            </a>
-            <a href="membros.html" class="nav-item">
-                <i class="fa-solid fa-users"></i> Operadores
-            </a>
-        </nav>
+    <div class="login-card">
+        <h1>RFL•★•REAL</h1>
+        <p id="status">SISTEMA OFFLINE</p>
         
-        <div style="font-size: 10px; color: #444; text-align: center;">RFL SYSTEM © 2025</div>
-    </aside>
+        <button id="btn-login" onclick="login()">ACESSAR SISTEMA</button>
 
-    <main class="feed-container">
-        <div class="post-box">
-            <div class="post-input-wrapper">
-                <img src="https://via.placeholder.com/40" id="user-img-post" class="avatar">
-                <textarea id="postContent" placeholder="Relate as atividades de hoje, RFL•★•REAL..."></textarea>
-            </div>
-            <button class="btn-post" onclick="criarPost()">Publicar no Mural</button>
-            <div style="clear:both;"></div>
+        <div id="user-info">
+            <img id="user-pic" class="avatar" src="">
+            <p>Bem-vindo, <span id="user-name"></span></p>
+            <button onclick="logout()" style="background: #ff4444; color: white;">SAIR</button>
         </div>
-
-        <div id="mural-posts">
-            </div>
-    </main>
-
-    <aside class="right-panel">
-        <div class="ranking-header">
-            <div style="font-size: 0.7rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 15px;">
-                <i class="fa-solid fa-crown"></i> LIDERANÇA SUPREMA
-            </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img src="https://via.placeholder.com/40" id="leader-img" class="avatar" style="border-width: 2px;">
-                <div>
-                    <div style="font-weight:700; font-size: 0.9rem;">RFL•★•REAL</div>
-                    <div style="font-size: 0.6rem; color: var(--gold);">FUNDADOR</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-area" id="chat-global">
-            </div>
-
-        <div class="chat-input-container">
-            <input type="text" id="chatInput" placeholder="Mensagem rápida...">
-            <button onclick="enviarMensagem()" style="background:var(--gold); border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </div>
-    </aside>
-</div>
+    </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBOQuzV_2jGwuyjd0TdVkDrk9Auw3MC_HI",
@@ -276,78 +67,48 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
-    const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Funções de Autenticação
-    window.loginGoogle = () => signInWithPopup(auth, provider);
-    window.logoutSistema = () => confirm("RFL•★•REAL, deseja encerrar a sessão?") && signOut(auth).then(() => location.reload());
+    // Função de Login
+    window.login = () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                console.log("Logado:", result.user.displayName);
+            })
+            .catch((error) => {
+                console.error("Erro:", error.code);
+                alert("Erro ao logar! Verifique se configurou o e-mail de suporte no console.");
+            });
+    };
 
+    // Função de Sair
+    window.logout = () => {
+        signOut(auth).then(() => {
+            window.location.reload();
+        });
+    };
+
+    // Monitor de Estado
     onAuthStateChanged(auth, (user) => {
-        const authText = document.getElementById('auth-text');
+        const btnLogin = document.getElementById('btn-login');
+        const userInfo = document.getElementById('user-info');
+        const status = document.getElementById('status');
+
         if (user) {
-            window.me = { name: user.displayName, pic: user.photoURL };
-            authText.innerText = "OPERADOR: " + user.displayName.toUpperCase();
-            document.getElementById('btn-login').style.display = 'none';
-            document.getElementById('btn-sair').style.display = 'block';
-            document.getElementById('user-img-post').src = user.photoURL;
-            document.getElementById('leader-img').src = user.photoURL;
+            status.innerText = "SISTEMA ONLINE";
+            status.style.color = "#00ff00";
+            btnLogin.style.display = "none";
+            userInfo.style.display = "block";
+            document.getElementById('user-name').innerText = user.displayName;
+            document.getElementById('user-pic').src = user.photoURL;
         } else {
-            window.me = null;
+            status.innerText = "SISTEMA OFFLINE";
+            status.style.color = "#d4af37";
+            btnLogin.style.display = "block";
+            userInfo.style.display = "none";
         }
     });
-
-    // Mural de Posts
-    window.criarPost = async () => {
-        const text = document.getElementById('postContent').value.trim();
-        if(!text || !window.me) return;
-        await addDoc(collection(db, "mural"), {
-            nome: window.me.name, foto: window.me.pic, texto: text, timestamp: serverTimestamp()
-        });
-        document.getElementById('postContent').value = "";
-    };
-
-    onSnapshot(query(collection(db, "mural"), orderBy("timestamp", "desc")), (snap) => {
-        const cont = document.getElementById('mural-posts');
-        cont.innerHTML = '';
-        snap.forEach(d => {
-            const p = d.data();
-            const isMe = window.me && window.me.name.includes("RFL");
-            const delBtn = isMe ? `<i class="fa-solid fa-trash" style="color:#ff4444; cursor:pointer;" onclick="apagarPost('${d.id}')"></i>` : '';
-            cont.insertAdjacentHTML('beforeend', `
-                <div class="card-post">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <img src="${p.foto}" class="avatar" style="width:30px; height:30px;">
-                            <b style="font-size:0.8rem;">${p.nome}</b>
-                        </div>
-                        ${delBtn}
-                    </div>
-                    <p style="font-size:0.9rem; color:#ccc; margin-top:10px;">${p.texto}</p>
-                </div>`);
-        });
-    });
-
-    window.apagarPost = (id) => confirm("Apagar registro?") && deleteDoc(doc(db, "mural", id));
-
-    // Chat Global
-    window.enviarMensagem = async () => {
-        const inp = document.getElementById('chatInput');
-        if(!inp.value || !window.me) return;
-        await addDoc(collection(db, "chatGlobal"), { nome: window.me.name, texto: inp.value, timestamp: serverTimestamp() });
-        inp.value = "";
-    };
-
-    onSnapshot(query(collection(db, "chatGlobal"), orderBy("timestamp", "asc")), (snap) => {
-        const box = document.getElementById('chat-global');
-        box.innerHTML = '';
-        snap.forEach(d => {
-            const m = d.data();
-            box.insertAdjacentHTML('beforeend', `<div class="chat-msg"><b>${m.nome}:</b> ${m.texto}</div>`);
-        });
-        box.scrollTop = box.scrollHeight;
-    });
-
 </script>
+
 </body>
 </html>
