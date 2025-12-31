@@ -24,10 +24,10 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // CHAVE DO IMGBB PARA FOTOS AUTOMÁTICAS (SUBSTITUA AS ASPAS ABAIXO)
+        // CHAVE DO IMGBB (COLE SUA CHAVE ENTRE AS ASPAS)
         const API_KEY_IMGBB = "SUA_CHAVE_IMGBB_AQUI";
 
-        // --- FUNÇÃO PUBLICAR (IMG PARA IMGBB / DADOS PARA FIREBASE) ---
+        // --- FUNÇÃO PUBLICAR ---
         async function publicarPost() {
             const campoTexto = document.getElementById('post-texto');
             const campoFoto = document.getElementById('post-foto');
@@ -35,6 +35,7 @@
             const foto = campoFoto.files[0];
             const user = auth.currentUser;
 
+            if (!user) { alert("Você precisa estar logado!"); return; }
             if (texto.trim() === "" && !foto) {
                 alert("RFL•★•REAL, escreva algo ou selecione uma foto!");
                 return;
@@ -42,24 +43,17 @@
 
             try {
                 let urlFoto = "";
-
-                // Envio automático para ImgBB se houver foto
                 if (foto) {
                     const formData = new FormData();
                     formData.append("image", foto);
-                    
                     const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY_IMGBB}`, {
                         method: "POST",
                         body: formData
                     });
-                    
                     const data = await response.json();
-                    if (data.success) {
-                        urlFoto = data.data.url;
-                    }
+                    if (data.success) { urlFoto = data.data.url; }
                 }
 
-                // Salva texto e link da foto no Firebase
                 await db.collection("posts_sociais").add({
                     autor: user.email,
                     mensagem: texto,
@@ -72,9 +66,8 @@
                 campoTexto.value = "";
                 campoFoto.value = "";
                 alert("⭐ Publicado com sucesso!");
-
             } catch (error) {
-                console.error("Erro:", error);
+                console.error(error);
                 alert("Erro ao publicar. Verifique sua chave ImgBB!");
             }
         }
@@ -94,42 +87,34 @@
                     const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
                     const eDono = auth.currentUser && auth.currentUser.email === post.autor;
 
-                   feedContainer.innerHTML += `
-    <div class="feed-item" style="background: #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333;">
-        <h4 onclick="verPerfil('${post.autor}')" style="cursor:pointer; color:#00f2ea; margin-bottom: 8px;">@${nomeUsuario}</h4>
-        
-        <p style="margin-bottom: 12px; line-height: 1.4;">${post.mensagem}</p>
-        
-        ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
-        
-        <div style="margin-top:15px; display:flex; gap:25px; font-size: 1rem; border-top: 1px solid #222; padding-top: 12px;">
-            
-            <span style="cursor:pointer; display: flex; align-items: center; gap: 5px;" onclick="curtirPost('${id}', ${post.curtidas || 0})">
-                ❤️ <b style="color: white;">${post.curtidas || 0}</b>
-            </span>
-            
-            <span style="cursor:pointer; color:#00f2ea; display: flex; align-items: center; gap: 5px;" onclick="abrirComentarios('${id}')">
-                💬 <b style="color: white;">${post.qtdComentarios || 0}</b>
-            </span>
-            
-            <span style="cursor:pointer; color:#ffd700; display: flex; align-items: center; gap: 5px;" onclick="compartilharPost()">
-                🔗 <b style="color: white;">Link</b>
-            </span>
-
-            ${eDono ? `<span style="cursor:pointer; color:#ff4d6d; margin-left: auto;" onclick="excluirPost('${id}')">🗑️</span>` : ''}
-        </div>
-    </div>`;
+                    feedContainer.innerHTML += `
+                        <div class="feed-item">
+                            <h4 onclick="verPerfil('${post.autor}')" style="cursor:pointer; color:#00f2ea; margin-bottom: 8px;">@${nomeUsuario}</h4>
+                            <p style="margin-bottom: 12px;">${post.mensagem}</p>
+                            ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
+                            <div style="margin-top:15px; display:flex; gap:25px; font-size: 1rem; border-top: 1px solid #222; padding-top: 12px;">
+                                <span style="cursor:pointer; display: flex; align-items: center; gap: 5px;" onclick="curtirPost('${id}', ${post.curtidas || 0})">
+                                    ❤️ <b style="color: white;">${post.curtidas || 0}</b>
+                                </span>
+                                <span style="cursor:pointer; color:#00f2ea; display: flex; align-items: center; gap: 5px;" onclick="abrirComentarios('${id}')">
+                                    💬 <b style="color: white;">${post.qtdComentarios || 0}</b>
+                                </span>
+                                <span style="cursor:pointer; color:#ffd700; display: flex; align-items: center; gap: 5px;" onclick="compartilharPost()">
+                                    🔗 <b style="color: white;">Link</b>
+                                </span>
+                                ${eDono ? `<span style="cursor:pointer; color:#ff4d6d; margin-left: auto;" onclick="excluirPost('${id}')">🗑️</span>` : ''}
+                            </div>
+                        </div>`;
+                });
                 
                 const painelMembros = document.getElementById('membros-count');
                 if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
             });
         }
 
-        // --- INTERAÇÕES FIREBASE (CURTIR/COMENTAR) ---
+        // --- INTERAÇÕES ---
         function curtirPost(id, curtidasAtuais) {
-            db.collection("posts_sociais").doc(id).update({ 
-                curtidas: (curtidasAtuais || 0) + 1 
-            });
+            db.collection("posts_sociais").doc(id).update({ curtidas: (curtidasAtuais || 0) + 1 });
         }
 
         function abrirComentarios(postId) {
@@ -137,7 +122,7 @@
             if (comentario && comentario.trim() !== "") {
                 db.collection("posts_sociais").doc(postId).update({
                     qtdComentarios: firebase.firestore.FieldValue.increment(1)
-                }).then(() => { alert("Comentário registrado no Firebase!"); });
+                }).then(() => { alert("Comentário registrado!"); });
             }
         }
 
@@ -147,7 +132,18 @@
             });
         }
 
-        // --- LOGOUT E PERFIL ---
+        function excluirPost(id) {
+            if (confirm("RFL•★•REAL, deseja excluir este post?")) {
+                db.collection("posts_sociais").doc(id).delete();
+            }
+        }
+
+        async function verPerfil(emailAutor) {
+            const nome = emailAutor.split('@')[0];
+            alert(`⭐ PERFIL SOCIAL STAR ★\n\nUsuário: @${nome}\nMembro Oficial.`);
+        }
+
+        // --- AUTH E LOGOUT ---
         auth.onAuthStateChanged((user) => {
             if (user) {
                 db.collection("usuarios").doc(user.uid).set({
@@ -191,7 +187,7 @@
             <li>🏠 Início</li>
             <li>🔍 Explorar</li>
             <li>🔔 Notificações</li>
-            <li>👤 Perfil</li>
+            <li onclick="alert('Perfil em desenvolvimento!')">👤 Perfil</li>
             <li style="color: #ff4d6d; margin-top: 20px;" onclick="realizarLogout()">🚪 Sair</li>
         </ul>
     </nav>
