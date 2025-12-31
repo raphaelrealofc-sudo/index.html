@@ -67,20 +67,19 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO DO SEU FIREBASE (COLE AQUI O QUE VOCÊ PEGOU NO CONSOLE)
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "seu-projeto.firebaseapp.com",
-            projectId: "seu-projeto",
-            storageBucket: "seu-projeto.appspot.com",
-            messagingSenderId: "seu-id",
-            appId: "seu-app-id"
-        };
+       
+const firebaseConfig = {
+    apiKey: "AIzaSyCnYzszGEiEkiU9TxwT1ONS2HIEluDHSKM",
+    authDomain: "siteloginraphael.firebaseapp.com",
+    projectId: "siteloginraphael",
+    storageBucket: "siteloginraphael.firebasestorage.app",
+    messagingSenderId: "194238150810",
+    appId: "1:194238150810:web:8dffbb5f42efd7ea8c0723"
+};
 
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
         document.getElementById('btn-registrar').addEventListener('click', async () => {
             const email = document.getElementById('email').value;
