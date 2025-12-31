@@ -231,15 +231,16 @@
 </head>
 <body>
     <nav>
-        <h2>Social Star ★</h2>
-        <ul>
-            <li>🏠 Início</li>
-            <li>🔍 Explorar</li>
-            <li>🔔 Notificações</li>
-            <li onclick="alert('Perfil em desenvolvimento!')">👤 Perfil</li>
-            <li style="color: #ff4d6d; margin-top: 20px;" onclick="realizarLogout()">🚪 Sair</li>
-        </ul>
-    </nav>
+    <h2>Social Star ★</h2>
+    <ul>
+        <li>🏠 Início</li>
+        <li>🔍 Explorar</li>
+        <li>🔔 Notificações</li>
+        <li onclick="mudarFotoPerfil()" style="color: #00f2ea; font-weight: bold;">📸 Mudar Foto</li>
+        <li onclick="alert('Perfil em desenvolvimento!')">👤 Perfil</li>
+        <li style="color: #ff4d6d; margin-top: 20px;" onclick="realizarLogout()">🚪 Sair</li>
+    </ul>
+</nav>
     <main>
         <div class="post-input">
             <textarea id="post-texto" placeholder="O que está acontecendo?"></textarea>
