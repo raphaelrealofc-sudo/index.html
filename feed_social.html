@@ -162,17 +162,12 @@
                     STATUS: VISITANTE
                 </span>
 
-                <div id="login-options" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
-                    <div class="fb-login-button" 
-                         data-width="200" 
-                         data-size="medium" 
-                         data-button-type="continue_with" 
-                         data-layout="default" 
-                         data-auto-logout-link="false" 
-                         data-use-continue-as="true"
-                         onlogin="checkLoginStatus();">
-                    </div>
-
+               <div id="login-options" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+    <button onclick="loginGoogle()" style="width: 200px; background: white; color: #444; border: 1px solid #ddd; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: 0.3s;">
+        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="16"> 
+        Acessar como Operador
+    </button>
+</div>
                     <button onclick="loginInstagram()" style="width: 200px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity 0.3s;">
                         <i class="fa-brands fa-instagram" style="font-size: 16px;"></i> Continuar com Instagram
                     </button>
@@ -243,20 +238,27 @@
             </div>
     </main>
 
-    <aside class="chat-sidebar">
-        <div class="online-status-bar">
-            <div class="chat-title" style="padding: 15px 20px 5px 20px; font-size: 0.6rem;">MEMBROS ATIVOS</div>
-            <div class="online-list">
-                <div class="member-wrapper">
-                    <div class="member-avatar leader"><img src="https://via.placeholder.com/35"><div class="status-indicator online"></div></div>
-                    <span>LÍDER</span>
+   <aside class="chat-sidebar">
+    <div class="online-status-bar">
+        <div class="chat-title" style="padding: 15px 20px 5px 20px; font-size: 0.6rem;">RANKING DE ELITE</div>
+        <div class="online-list">
+            <div class="member-wrapper">
+                <div class="member-avatar leader">
+                    <img src="https://via.placeholder.com/35" id="leader-img-rank">
+                    <div class="status-indicator online pulse"></div>
                 </div>
-                <div class="member-wrapper">
-                    <div class="member-avatar"><img src="https://via.placeholder.com/35"><div class="status-indicator online pulse"></div></div>
-                    <span>VOCÊ</span>
+                <span style="color: var(--gold); font-weight: 800; letter-spacing: 1px;">RFL•★•REAL</span>
+            </div>
+
+            <div class="member-wrapper">
+                <div class="member-avatar">
+                    <img src="https://via.placeholder.com/35" style="filter: grayscale(1);">
+                    <div class="status-indicator online"></div>
                 </div>
+                <span style="opacity: 0.6;">OPERADORES</span>
             </div>
         </div>
+    </div>
 
         <div class="chat-header">
             <div class="chat-title">SISTEMA DE TRANSMISSÃO</div>
@@ -280,108 +282,155 @@
     </aside>
 </div>
 
-<script>
-    let usuarioLogado = null;
-    const APP_ID_OFICIAL = '1667298550907398';
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  // Adicionando o Banco de Dados (Firestore)
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 1. Inicialização Única do Sistema
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId: APP_ID_OFICIAL,
-            cookie: true,
-            xfbml: true,
-            version: 'v18.0'
-        });
-        
-        // Verifica se o operador já está logado ao carregar
-        FB.getLoginStatus(function(response) {
-            checkLoginStatus(response);
-        });
-        
-        renderizarMural();
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOQuzV_2jGwuyjd0TdVkDrk9Auw3MC_HI",
+    authDomain: "rfl-family-system.firebaseapp.com",
+    projectId: "rfl-family-system",
+    storageBucket: "rfl-family-system.firebasestorage.app",
+    messagingSenderId: "724771308632",
+    appId: "1:724771308632:web:2c3544b664c7f4cffab62d"
+  };
 
-    // 2. Função de Login (Botão Instagram)
-    function loginInstagram() {
-        if (typeof FB !== 'undefined') {
-            FB.login(function(response) {
-                checkLoginStatus(response);
-            }, {
-                scope: 'public_profile',
-                auth_type: 'rerequest'
-            });
-        } else {
-            showToast("Erro: SDK da Meta não carregado.", "fa-triangle-exclamation");
-        }
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const db = getFirestore(app); // Inicializa o banco de dados
+  const provider = new GoogleAuthProvider();
+
+  window.loginGoogle = async () => {
+    try {
+      showToast("Conectando ao satélite...", "fa-satellite-dish");
+      await signInWithPopup(auth, provider);
+    } catch (error) { showToast("Falha na conexão!", "fa-triangle-exclamation"); }
+  };
+
+  window.logoutSistema = () => {
+    if(confirm("Deseja encerrar a sessão, RFL•★•REAL?")) {
+      signOut(auth).then(() => location.reload());
     }
+  };
 
-    // 3. Processamento de Dados do Usuário
-    function checkLoginStatus(response) {
-        if (response && response.status === 'connected') {
-            FB.api('/me', {fields: 'name,picture.type(large)'}, function(userData) {
-                usuarioLogado = userData;
-                
-                const authText = document.getElementById('auth-text');
-                if(authText) {
-                    authText.innerText = "OPERADOR: " + userData.name.toUpperCase();
-                    authText.style.color = "var(--gold)";
-                }
-                
-                const creatorImg = document.getElementById('creator-img');
-                if(creatorImg) {
-                    creatorImg.src = userData.picture.data.url;
-                }
+ onAuthStateChanged(auth, (user) => {
+    const authText = document.getElementById('auth-text');
+    const creatorImg = document.getElementById('creator-img');
+    const loginOptions = document.getElementById('login-options');
+    const btnSair = document.getElementById('btn-sair');
+    const leaderRankImg = document.getElementById('leader-img-rank'); // Busca o ID do ranking
 
-                if(document.getElementById('login-options')) document.getElementById('login-options').style.display = 'none';
-                if(document.getElementById('btn-sair')) document.getElementById('btn-sair').style.display = 'inline-block';
+    if (user) {
+      window.usuarioLogado = { name: user.displayName, picture: { data: { url: user.photoURL } } };
+      
+      if(authText) { 
+          authText.innerText = "OPERADOR: " + user.displayName.toUpperCase(); 
+          authText.style.color = "var(--gold)"; 
+      }
+      
+      // Sincroniza foto no Mural e no Ranking de Elite
+      if(creatorImg) creatorImg.src = user.photoURL;
+      if(leaderRankImg) leaderRankImg.src = user.photoURL;
 
-                showToast(`Bem-vindo ao Sistema, ${userData.name}!`, 'fa-user-check');
-            });
-        }
+      if(loginOptions) loginOptions.style.display = 'none';
+      if(btnSair) btnSair.style.display = 'inline-block';
+    } else {
+      window.usuarioLogado = null;
     }
+  });
 
-    function verificarAcesso() {
-        if (!usuarioLogado) {
-            showToast('🔒 Acesse o Sistema para interagir!', 'fa-lock');
-            return false;
-        }
-        return true;
+  // --- LÓGICA DO MURAL EM TEMPO REAL ---
+  window.publicarPost = async () => {
+    const textInput = document.getElementById('postText');
+    const text = textInput.value.trim();
+    if (!text || !window.usuarioLogado) return;
+
+    try {
+      await addDoc(collection(db, "mural"), {
+        nome: window.usuarioLogado.name,
+        foto: window.usuarioLogado.picture.data.url,
+        texto: text,
+        timestamp: serverTimestamp()
+      });
+      textInput.value = "";
+    } catch (e) {
+      console.error("Erro ao publicar:", e);
     }
+  };
 
-    function showToast(msg, icon) {
-        let container = document.querySelector('.notification-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'notification-container';
-            document.body.appendChild(container);
-        }
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
+  // Carrega os posts do Mural automaticamente
+  const qMural = query(collection(db, "mural"), orderBy("timestamp", "desc"));
+  onSnapshot(qMural, (snapshot) => {
+    const container = document.getElementById('postsContainer');
+    if(!container) return;
+    container.innerHTML = '';
+    snapshot.forEach((doc) => {
+      const post = doc.data();
+      container.insertAdjacentHTML('beforeend', `
+        <div class="post-card">
+          <div class="post-header">
+            <img src="${post.foto}" class="user-avatar">
+            <div style="flex:1; margin-left:10px;">
+                <b>${post.nome}</b><br>
+                <small style="font-size: 8px; opacity: 0.5;">SINCRO RFL</small>
+            </div>
+          </div>
+          <div class="post-content">${post.texto}</div>
+        </div>`);
+    });
+  });
 
-   // --- MURAL OPERACIONAL CORRIGIDO ---
+  // --- LÓGICA DO CHAT EM TEMPO REAL ---
+  window.sendMessage = async () => {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg || !window.usuarioLogado) return;
+
+    await addDoc(collection(db, "chatGlobal"), {
+      nome: window.usuarioLogado.name,
+      texto: msg,
+      timestamp: serverTimestamp()
+    });
+    input.value = '';
+  };
+
+  const qChat = query(collection(db, "chatGlobal"), orderBy("timestamp", "asc"));
+  onSnapshot(qChat, (snapshot) => {
+    const chatBox = document.getElementById('chatGlobal');
+    chatBox.innerHTML = '';
+    snapshot.forEach((doc) => {
+      const m = doc.data();
+      chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg"><b>${m.nome}:</b> ${m.texto}</div>`);
+    });
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+</script>
+    <script>
+    // --- LÓGICA DO MURAL OPERACIONAL ---
     function publicarPost() {
-        if (!verificarAcesso()) return;
-        
+        if (!window.usuarioLogado) {
+            showToast("Acesso Negado! Logue com Google primeiro.", "fa-lock");
+            return;
+        }
+
         const textInput = document.getElementById('postText');
         const fileInput = document.getElementById('fileInput');
         const text = textInput.value.trim();
         
-        // Se não tiver texto nem arquivo, não posta
         if (!text && !fileInput.files[0]) return;
-        
+
         const publicar = (mediaData = null, type = null) => {
             const novoPostObj = {
                 id: Date.now(),
-                nome: usuarioLogado.name,
-                foto: usuarioLogado.picture.data.url,
+                nome: window.usuarioLogado.name,
+                foto: window.usuarioLogado.picture.data.url,
                 texto: text,
-                media: mediaData, // Aqui armazena a imagem/vídeo em Base64
+                media: mediaData,
                 mediaType: type,
-                data: new Date().toLocaleString('pt-BR')
+                data: new Date().toLocaleString('pt-BR'),
+                likes: 0
             };
 
             let postsSalvos = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
@@ -389,12 +438,11 @@
             localStorage.setItem('mural_rfl_data', JSON.stringify(postsSalvos));
 
             textInput.value = "";
-            fileInput.value = ""; // Limpa o seletor de arquivos
+            fileInput.value = "";
             renderizarMural();
             showToast("Missão publicada no Mural!", "fa-check-double");
         };
 
-        // Lógica para ler o arquivo caso exista
         if (fileInput.files[0]) {
             const reader = new FileReader();
             const file = fileInput.files[0];
@@ -412,7 +460,6 @@
 
         container.innerHTML = ''; 
         postsSalvos.forEach(post => {
-            // Verifica se tem mídia para exibir
             let mediaHtml = '';
             if (post.media) {
                 if (post.mediaType === 'image') {
@@ -430,99 +477,56 @@
                             <b>${post.nome}</b><br>
                             <small style="font-size: 10px; opacity: 0.6;">${post.data}</small>
                         </div>
-                        <button onclick="excluirPost(${post.id})" style="background:none; border:none; color:gray; cursor:pointer; font-size:12px;">excluir</button>
                     </div>
                     <div class="post-content">${post.texto}</div>
                     ${mediaHtml}
                     <div class="post-interactions">
-                        <button class="interaction-btn" onclick="toggleLike(this)">
-                            <i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas
+                        <button class="interaction-btn" onclick="showToast('Sincronizando curtida...', 'fa-heart')">
+                            <i class="fa-regular fa-heart"></i> <span>${post.likes || 0}</span> Curtidas
                         </button>
                     </div>
                 </div>`;
             container.insertAdjacentHTML('beforeend', htmlPost);
         });
     }
-    function excluirPost(id) {
-        if (!confirm("Deseja apagar este registro do Mural?")) return;
-        let posts = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
-        posts = posts.filter(p => p.id !== id);
-        localStorage.setItem('mural_rfl_data', JSON.stringify(posts));
-        renderizarMural();
-    }
 
+    // --- LÓGICA DO CHAT ---
     function sendMessage() {
-        if (!verificarAcesso()) return;
         const input = document.getElementById('chatInput');
-        if (!input.value.trim()) return;
-        
-        const activeChatId = document.getElementById('chatGlobal').style.display !== 'none' ? 'chatGlobal' : 'chatFamily';
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'chat-msg';
-        msgDiv.innerHTML = `<b>${usuarioLogado.name}:</b> ${input.value}`;
-        document.getElementById(activeChatId).appendChild(msgDiv);
-        
-        input.value = "";
-        const chatBox = document.getElementById(activeChatId);
+        const msg = input.value.trim();
+        if(!msg || !window.usuarioLogado) return;
+
+        const chatBox = document.getElementById('chatGlobal');
+        const novaMsg = document.createElement('div');
+        novaMsg.className = 'chat-msg';
+        novaMsg.innerHTML = `<b>${window.usuarioLogado.name}:</b> ${msg}`;
+        chatBox.appendChild(novaMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
+        input.value = '';
     }
 
-    function switchChat(type, btn) {
-        document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('chatGlobal').style.display = type === 'global' ? 'block' : 'none';
-        document.getElementById('chatFamily').style.display = type === 'family' ? 'block' : 'none';
-    }
-
-    function toggleLike(btn) {
-        if (!verificarAcesso()) return;
-        const countSpan = btn.querySelector('.like-count');
-        let count = parseInt(countSpan.innerText);
-        const icon = btn.querySelector('i');
-        
-        icon.classList.toggle('fa-regular');
-        icon.classList.toggle('fa-solid');
-        
-        if (icon.classList.contains('fa-solid')) {
-            count++;
-            btn.style.color = "var(--gold)";
-        } else {
-            count--;
-            btn.style.color = "rgba(255,255,255,0.7)";
+    // --- SISTEMA DE TOAST (NOTIFICAÇÃO) ---
+    function showToast(text, icon) {
+        const container = document.querySelector('.notification-container') || document.createElement('div');
+        if(!document.querySelector('.notification-container')) {
+            container.className = 'notification-container';
+            document.body.appendChild(container);
         }
-        countSpan.innerText = count;
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fa-solid ${icon}"></i> ${text}`;
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
     }
 
-    function togglePin(btn) {
-        if (!verificarAcesso()) return;
-        const card = btn.closest('.post-card');
-        card.classList.toggle('pinned');
-        showToast(card.classList.contains('pinned') ? "Post fixado!" : "Post desfixado", "fa-thumbtack");
-    }
-
-    function filtrarFeed(filtro, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        showToast(`Filtrando por: ${filtro}`, "fa-filter");
-    }
-
-    function logoutSistema() {
-        if (confirm("RFL•★•REAL: Deseja encerrar a sessão operacional?")) {
-            FB.logout(function(response) {
-                usuarioLogado = null;
-                const authText = document.getElementById('auth-text');
-                if(authText) {
-                    authText.innerText = "STATUS: VISITANTE";
-                    authText.style.color = "#888";
-                }
-                if(document.getElementById('creator-img')) document.getElementById('creator-img').src = "https://via.placeholder.com/40";
-                document.getElementById('login-options').style.display = 'flex';
-                document.getElementById('btn-sair').style.display = 'none';
-                showToast("Sessão encerrada com segurança!", "fa-shield-halved");
-                setTimeout(() => location.reload(), 1500);
-            });
-        }
-    }
+    // Inicializar Mural ao carregar
+    window.onload = renderizarMural;
+</script>
 </script>
 </body>
 </html>
