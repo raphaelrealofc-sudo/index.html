@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
 
     <script>
         // Configuração oficial RFL•★•REAL
@@ -24,264 +25,152 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-      async function publicarPost() {
-    const campoTexto = document.getElementById('post-texto');
-    const campoFoto = document.getElementById('post-foto'); // NOVO: Pega o botão de foto
-    const texto = campoTexto.value;
-    const foto = campoFoto.files[0]; // NOVO: Pega o arquivo da imagem
-    const user = auth.currentUser;
+        // --- FUNÇÃO PUBLICAR ---
+        async function publicarPost() {
+            const campoTexto = document.getElementById('post-texto');
+            const campoFoto = document.getElementById('post-foto');
+            const texto = campoTexto.value;
+            const foto = campoFoto.files[0];
+            const user = auth.currentUser;
 
-    // Agora permite publicar se tiver texto OU se tiver foto
-    if (texto.trim() === "" && !foto) {
-        alert("Escreva algo ou selecione uma foto!");
-        return;
-    }
+            if (texto.trim() === "" && !foto) {
+                alert("Escreva algo ou selecione uma foto!");
+                return;
+            }
 
-    try {
-        let urlFoto = "";
+            try {
+                let urlFoto = "";
+                if (foto) {
+                    const storageRef = firebase.storage().ref(`posts/${Date.now()}_${foto.name}`);
+                    await storageRef.put(foto);
+                    urlFoto = await storageRef.getDownloadURL();
+                }
 
-        // LÓGICA DE FOTO: Se tiver foto, envia para o Storage
-        if (foto) {
-            const storageRef = firebase.storage().ref(`posts/${Date.now()}_${foto.name}`);
-            await storageRef.put(foto);
-            urlFoto = await storageRef.getDownloadURL(); // Gera o link da imagem
+                await db.collection("posts_sociais").add({
+                    autor: user.email,
+                    mensagem: texto,
+                    fotoUrl: urlFoto,
+                    curtidas: 0,
+                    qtdComentarios: 0,
+                    data: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                campoTexto.value = "";
+                campoFoto.value = ""; 
+            } catch (error) {
+                console.error("Erro ao publicar:", error);
+                alert("Erro ao enviar! Verifique o Storage.");
+            }
         }
 
-        // SALVANDO NO BANCO (Com suporte a fotos e comentários)
-        await db.collection("posts_sociais").add({
-            autor: user.email,
-            mensagem: texto,
-            fotoUrl: urlFoto,      // Salva o link da foto do Avakin
-            curtidas: 0,
-            qtdComentarios: 0,     // Prepara para a Opção de Comentários
-            data: firebase.FieldValue.serverTimestamp()
-        });
-
-        // Limpa os campos após o sucesso
-        campoTexto.value = "";
-        campoFoto.value = ""; 
-    } catch (error) {
-        console.error("Erro ao publicar:", error);
-        alert("Erro ao enviar! Verifique se o 'Storage' está ativado no Firebase.");
-    }
-}
-
-        // --- VERSÃO ATUALIZADA PARA CURTIR, EXCLUIR E CONTAR MEMBROS ---
-function carregarFeed() {
-    db.collection("posts_sociais").orderBy("data", "desc")
-    .onSnapshot((snapshot) => {
-        const feedContainer = document.getElementById('feed');
-        feedContainer.innerHTML = ""; 
-        
-        const autoresUnicos = new Set();
-
-        snapshot.forEach((doc) => {
-            const post = doc.data();
-            const id = doc.id;
-            autoresUnicos.add(post.autor);
-            
-            const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
-            const eDono = auth.currentUser && auth.currentUser.email === post.autor;
-
-            feedContainer.innerHTML += `
-                <div class="feed-item">
-                    <h4>@${nomeUsuario}</h4>
-                    <p>${post.mensagem}</p>
-                    
-                    ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
-
-                    <div style="margin-top:12px; display:flex; gap:20px; font-size: 0.9rem;">
-                        <span style="cursor:pointer" onclick="curtirPost('${id}', ${post.curtidas || 0})">
-                            ❤️ <b>${post.curtidas || 0}</b>
-                        </span>
-                        
-                        <span style="cursor:pointer; color:#00f2ea" onclick="abrirComentarios('${id}')">
-                            💬 <b>${post.qtdComentarios || 0}</b>
-                        </span>
-
-                        <span style="cursor:pointer; color:#ffd700" onclick="compartilharPost('${id}')">
-                            🔗 <b>Link</b>
-                        </span>
-
-                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️</span>` : ''}
-                    </div>
-                </div>
-            `;
-        
-        const painelMembros = document.getElementById('membros-count');
-        if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
-    });
-}
+        // --- FUNÇÃO CARREGAR FEED ---
         function carregarFeed() {
-    db.collection("posts_sociais").orderBy("data", "desc")
-    .onSnapshot((snapshot) => {
-        const feedContainer = document.getElementById('feed');
-        feedContainer.innerHTML = ""; 
-        
-        const autoresUnicos = new Set();
+            db.collection("posts_sociais").orderBy("data", "desc")
+            .onSnapshot((snapshot) => {
+                const feedContainer = document.getElementById('feed');
+                feedContainer.innerHTML = ""; 
+                const autoresUnicos = new Set();
 
-        snapshot.forEach((doc) => {
-            const post = doc.data();
-            const id = doc.id;
-            autoresUnicos.add(post.autor);
-            
-            const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
-            const eDono = auth.currentUser && auth.currentUser.email === post.autor;
+                snapshot.forEach((doc) => {
+                    const post = doc.data();
+                    const id = doc.id;
+                    autoresUnicos.add(post.autor);
+                    const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
+                    const eDono = auth.currentUser && auth.currentUser.email === post.autor;
 
-            feedContainer.innerHTML += `
-                <div class="feed-item">
-                    <h4>@${nomeUsuario}</h4>
-                    <p>${post.mensagem}</p>
-                    
-                    ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
+                    feedContainer.innerHTML += `
+                        <div class="feed-item">
+                            <h4 onclick="verPerfil('${post.autor}')" style="cursor:pointer; color:#00f2ea;">@${nomeUsuario}</h4>
+                            <p>${post.mensagem}</p>
+                            ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
+                            <div style="margin-top:12px; display:flex; gap:20px; font-size: 0.9rem;">
+                                <span style="cursor:pointer" onclick="curtirPost('${id}', ${post.curtidas || 0})">❤️ <b>${post.curtidas || 0}</b></span>
+                                <span style="cursor:pointer; color:#00f2ea" onclick="abrirComentarios('${id}')">💬 <b>${post.qtdComentarios || 0}</b></span>
+                                <span style="cursor:pointer; color:#ffd700" onclick="compartilharPost()">🔗 <b>Link</b></span>
+                                ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️</span>` : ''}
+                            </div>
+                        </div>`;
+                });
+                
+                const painelMembros = document.getElementById('membros-count');
+                if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
+            });
+        }
 
-                    <div style="margin-top:12px; display:flex; gap:20px; font-size: 0.9rem;">
-                        <span style="cursor:pointer" onclick="curtirPost('${id}', ${post.curtidas || 0})">
-                            ❤️ <b>${post.curtidas || 0}</b>
-                        </span>
-                        
-                        <span style="cursor:pointer; color:#00f2ea" onclick="abrirComentarios('${id}')">
-                            💬 <b>${post.qtdComentarios || 0}</b> Comentários
-                        </span>
+        // --- FUNÇÕES DE INTERAÇÃO ---
+        function curtirPost(id, curtidasAtuais) {
+            db.collection("posts_sociais").doc(id).update({ curtidas: (curtidasAtuais || 0) + 1 });
+        }
 
-                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️ Apagar</span>` : ''}
-                    </div>
-                </div>
-            `;
-        });
-        
-        const painelMembros = document.getElementById('membros-count');
-        if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
-    });
-} // <--- A função carregarFeed termina aqui
+        function abrirComentarios(postId) {
+            const comentario = prompt("RFL•★•REAL, o que você achou desse post?");
+            if (comentario && comentario.trim() !== "") {
+                db.collection("posts_sociais").doc(postId).update({
+                    qtdComentarios: firebase.firestore.FieldValue.increment(1)
+                }).then(() => { alert("Comentário registrado!"); });
+            }
+        }
 
-// FUNÇÃO DE COMENTÁRIOS (Lado de fora)
-function abrirComentarios(postId) {
-    const comentario = prompt("RFL•★•REAL, o que você achou desse post?");
-    
-    if (comentario && comentario.trim() !== "") {
-        db.collection("posts_sociais").doc(postId).update({
-            qtdComentarios: firebase.firestore.FieldValue.increment(1)
-        }).then(() => {
-            alert("Comentário registrado!");
-        }).catch((error) => {
-            console.error("Erro ao comentar:", error);
-        });
-    }
-}
-        
-        // Atualiza o contador de membros no Aside
-        const painelMembros = document.getElementById('membros-count');
-        if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
-    });
-}
+        function compartilharPost() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("RFL•★•REAL, link copiado! Divulgue a rede!");
+            });
+        }
 
-// ADICIONE ESTAS FUNÇÕES LOGO ABAIXO TAMBÉM:
+        async function verPerfil(emailAutor) {
+            const snapshot = await db.collection("usuarios").where("email", "==", emailAutor).get();
+            if (!snapshot.empty) {
+                const dados = snapshot.docs[0].data();
+                const dataEntrada = dados.desde ? dados.desde.toDate().toLocaleDateString('pt-BR') : "31/12/2025";
+                alert(`⭐ PERFIL SOCIAL STAR ★\n\nUsuário: @${dados.nome}\nAtivo desde: ${dataEntrada}\n\nEste é um membro oficial!`);
+            }
+        }
 
-function curtirPost(id, curtidasAtuais) {
-    db.collection("posts_sociais").doc(id).update({
-        curtidas: (curtidasAtuais || 0) + 1
-    });
-}
+        function excluirPost(id) {
+            if (confirm("RFL•★•REAL, deseja mesmo apagar?")) {
+                db.collection("posts_sociais").doc(id).delete();
+            }
+        }
 
-function excluirPost(id) {
-    if (confirm("RFL•★•REAL, deseja mesmo apagar este post?")) {
-        db.collection("posts_sociais").doc(id).delete();
-    }
-}
-
-        // VERIFICAÇÃO DE LOGIN E INICIALIZAÇÃO
+        // --- INICIALIZAÇÃO ---
         auth.onAuthStateChanged((user) => {
-    if (user) {
-        // NOVO: Registra a data de entrada do usuário no banco de dados
-        db.collection("usuarios").doc(user.uid).set({
-            email: user.email,
-            nome: user.email.split('@')[0],
-            desde: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }); // O 'merge' garante que não vai sobrescrever a data toda vez
-
-        carregarFeed(); 
-    } else {
-        window.location.href = "abertura.html";
-    }
-});
+            if (user) {
+                db.collection("usuarios").doc(user.uid).set({
+                    email: user.email,
+                    nome: user.email.split('@')[0],
+                    desde: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                carregarFeed();
+            } else {
+                window.location.href = "abertura.html";
+            }
+        });
 
         function realizarLogout() {
-            auth.signOut().then(() => {
-                window.location.href = "abertura.html";
-            });
+            auth.signOut().then(() => { window.location.href = "abertura.html"; });
         }
     </script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body {
-            background-color: #121212;
-            color: white;
-            display: grid;
-            grid-template-columns: 250px 1fr 300px; 
-            height: 100vh;
-        }
+        body { background-color: #121212; color: white; display: grid; grid-template-columns: 250px 1fr 300px; height: 100vh; }
         nav { background-color: #1a1a1a; border-right: 1px solid #333; padding: 20px; }
         nav h2 { color: #ff0050; margin-bottom: 30px; font-size: 1.5rem; }
         nav ul { list-style: none; }
-        nav ul li {
-            padding: 15px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-bottom: 5px;
-        }
+        nav ul li { padding: 15px 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-bottom: 5px; }
         nav ul li:hover { background-color: #333; color: #00f2ea; }
         .btn-sair { color: #ff4d6d; margin-top: 20px; border: 1px solid #444; }
-        .btn-sair:hover { background: #ff4d6d !important; color: white !important; }
-
         main { overflow-y: auto; padding: 20px; background-color: #000; }
-        .post-input {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #333;
-        }
-        .post-input textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.1rem;
-            resize: none;
-            outline: none;
-            min-height: 80px;
-        }
-        .btn-post {
-            background: linear-gradient(45deg, #ff0050, #00f2ea);
-            border: none;
-            padding: 10px 25px;
-            color: white;
-            border-radius: 20px;
-            font-weight: bold;
-            float: right;
-            cursor: pointer;
-        }
-        .feed-item {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            border: 1px solid #333;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .feed-item h4 { color: #00f2ea; margin-bottom: 10px; }
+        .post-input { background: #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; }
+        .post-input textarea { width: 100%; background: transparent; border: none; color: white; font-size: 1.1rem; resize: none; outline: none; min-height: 80px; }
+        .btn-post { background: linear-gradient(45deg, #ff0050, #00f2ea); border: none; padding: 10px 25px; color: white; border-radius: 20px; font-weight: bold; float: right; cursor: pointer; }
+        .feed-item { background: #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
         aside { background-color: #1a1a1a; border-left: 1px solid #333; padding: 20px; }
         .trending-box { background: #252525; padding: 15px; border-radius: 10px; }
-        .trending-box h3 { margin-bottom: 15px; font-size: 1rem; color: #888; }
         .tag { color: #ff0050; display: block; margin-bottom: 10px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
-
     <nav>
         <h2>Social Star ★</h2>
         <ul>
@@ -289,38 +178,27 @@ function excluirPost(id) {
             <li>🔍 Explorar</li>
             <li>🔔 Notificações</li>
             <li>👤 Perfil</li>
-            <li>⚙️ Configurações</li>
-            <li class="btn-sair" onclick="realizarLogout()">🚪 Sair da Rede</li>
+            <li class="btn-sair" onclick="realizarLogout()">🚪 Sair</li>
         </ul>
     </nav>
-
     <main>
-    <div class="post-input">
-        <textarea id="post-texto" placeholder="O que está acontecendo no seu coração social?"></textarea>
-        
-        <input type="file" id="post-foto" accept="image/*" style="margin-top: 10px; color: #888; display: block; font-size: 0.8rem;">
-        
-        <button class="btn-post" onclick="publicarPost()">Publicar</button>
-        <div style="clear: both;"></div>
-    </div>
-
-    <div id="feed"></div>
-</main>
-
-   <aside>
-    <div class="trending-box">
-        <h3>Comunidade</h3>
-        
-        <p id="membros-count" style="color: #00f2ea; font-weight: bold; margin-bottom: 15px;">Calculando comunidade...</p>
-        
-        <hr style="border: 0.1px solid #333; margin-bottom: 15px;">
-
-        <h3>Tendências para você</h3>
-        <a href="#" class="tag">#RFL_REAL</a>
-        <a href="#" class="tag">#WebDesign2025</a>
-        <a href="#" class="tag">#SocialHeart</a>
-    </div>
-</aside>
-
+        <div class="post-input">
+            <textarea id="post-texto" placeholder="O que está acontecendo?"></textarea>
+            <input type="file" id="post-foto" accept="image/*" style="margin-top: 10px; color: #888;">
+            <button class="btn-post" onclick="publicarPost()">Publicar</button>
+            <div style="clear: both;"></div>
+        </div>
+        <div id="feed"></div>
+    </main>
+    <aside>
+        <div class="trending-box">
+            <h3>Comunidade</h3>
+            <p id="membros-count" style="color: #00f2ea; font-weight: bold; margin-bottom: 15px;">Calculando...</p>
+            <hr style="border: 0.1px solid #333; margin-bottom: 15px;">
+            <h3>Tendências</h3>
+            <a href="#" class="tag">#RFL_REAL</a>
+            <a href="#" class="tag">#SocialStar2026</a>
+        </div>
+    </aside>
 </body>
 </html>
