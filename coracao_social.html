@@ -24,49 +24,82 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- FUNÇÃO PARA PUBLICAR NO BANCO ---
-        async function publicarPost() {
-            const campoTexto = document.getElementById('post-texto');
-            const texto = campoTexto.value;
-            const user = auth.currentUser;
+      async function publicarPost() {
+    const campoTexto = document.getElementById('post-texto');
+    const texto = campoTexto.value;
+    const user = auth.currentUser;
 
-            if (texto.trim() === "") {
-                alert("Escreva algo antes de publicar!");
-                return;
-            }
+    if (texto.trim() === "") {
+        alert("Escreva algo antes de publicar!");
+        return;
+    }
 
-            try {
-                await db.collection("posts_sociais").add({
-                    autor: user.email,
-                    mensagem: texto,
-                    data: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                campoTexto.value = ""; // Limpa a caixa de texto
-            } catch (error) {
-                console.error("Erro ao publicar:", error);
-            }
-        }
+    try {
+        await db.collection("posts_sociais").add({
+            autor: user.email,
+            mensagem: texto,
+            curtidas: 0, // NOVO: Inicia o contador de likes
+            data: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        campoTexto.value = ""; 
+    } catch (error) {
+        console.error("Erro ao publicar:", error);
+    }
+}
 
-        // --- FUNÇÃO PARA CARREGAR O FEED AUTOMÁTICO ---
-        function carregarFeed() {
-            db.collection("posts_sociais").orderBy("data", "desc")
-            .onSnapshot((snapshot) => {
-                const feedContainer = document.getElementById('feed');
-                feedContainer.innerHTML = ""; // Limpa posts antigos
+        // --- VERSÃO ATUALIZADA PARA CURTIR, EXCLUIR E CONTAR MEMBROS ---
+function carregarFeed() {
+    db.collection("posts_sociais").orderBy("data", "desc")
+    .onSnapshot((snapshot) => {
+        const feedContainer = document.getElementById('feed');
+        feedContainer.innerHTML = ""; 
+        
+        const autoresUnicos = new Set(); //
 
-                snapshot.forEach((doc) => {
-                    const post = doc.data();
-                    const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
-                    
-                    feedContainer.innerHTML += `
-                        <div class="feed-item">
-                            <h4>@${nomeUsuario}</h4>
-                            <p>${post.mensagem}</p>
-                        </div>
-                    `;
-                });
-            });
-        }
+        snapshot.forEach((doc) => {
+            const post = doc.data();
+            const id = doc.id; // ID necessário para curtir/excluir
+            autoresUnicos.add(post.autor);
+            
+            const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
+            
+            // Verifica se você é o dono para mostrar a lixeira
+            const eDono = auth.currentUser && auth.currentUser.email === post.autor;
+
+            feedContainer.innerHTML += `
+                <div class="feed-item">
+                    <h4>@${nomeUsuario}</h4>
+                    <p>${post.mensagem}</p>
+                    <div style="margin-top:10px; display:flex; gap:15px; font-size: 0.9rem;">
+                        <span style="cursor:pointer" onclick="curtirPost('${id}', ${post.curtidas || 0})">
+                            ❤️ <b>${post.curtidas || 0}</b>
+                        </span>
+                        
+                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️ Excluir</span>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Atualiza o contador de membros no Aside
+        const painelMembros = document.getElementById('membros-count');
+        if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
+    });
+}
+
+// ADICIONE ESTAS FUNÇÕES LOGO ABAIXO TAMBÉM:
+
+function curtirPost(id, curtidasAtuais) {
+    db.collection("posts_sociais").doc(id).update({
+        curtidas: (curtidasAtuais || 0) + 1
+    });
+}
+
+function excluirPost(id) {
+    if (confirm("RFL•★•REAL, deseja mesmo apagar este post?")) {
+        db.collection("posts_sociais").doc(id).delete();
+    }
+}
 
         // VERIFICAÇÃO DE LOGIN E INICIALIZAÇÃO
         auth.onAuthStateChanged((user) => {
