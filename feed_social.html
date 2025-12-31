@@ -285,8 +285,9 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  // Adicionando o Banco de Dados (Firestore)
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  
+  // IMPORTAÇÃO ATUALIZADA COM O PODER DE EXCLUSÃO RFL
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBOQuzV_2jGwuyjd0TdVkDrk9Auw3MC_HI",
@@ -342,6 +343,7 @@
   });
 
   // --- LÓGICA DO MURAL EM TEMPO REAL ---
+  // --- LÓGICA DO MURAL COM PODER DE EXCLUSÃO RFL ---
   window.publicarPost = async () => {
     const textInput = document.getElementById('postText');
     const text = textInput.value.trim();
@@ -360,6 +362,51 @@
     }
   };
 
+  // Carrega os posts e ativa a Lixeira apenas para RFL•★•REAL
+  const qMural = query(collection(db, "mural"), orderBy("timestamp", "desc"));
+  onSnapshot(qMural, (snapshot) => {
+    const container = document.getElementById('postsContainer');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    snapshot.forEach((postDoc) => {
+      const post = postDoc.data();
+      const postId = postDoc.id; // Captura o ID do post
+      
+      // Checa se você é o Líder (Nome contém RFL)
+      const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
+      
+      // Cria o botão de lixeira se for o líder
+      const btnDelete = isLeader ? `<i class="fa-solid fa-trash-can" style="cursor:pointer; color:#ff4444; opacity:0.5; font-size:12px;" onclick="window.excluirPost('${postId}')" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5"></i>` : '';
+
+      container.insertAdjacentHTML('beforeend', `
+        <div class="post-card">
+          <div class="post-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center;">
+                <img src="${post.foto}" class="user-avatar">
+                <div style="flex:1; margin-left:10px;">
+                    <b>${post.nome}</b><br>
+                    <small style="font-size: 8px; opacity: 0.5;">SINCRO RFL</small>
+                </div>
+            </div>
+            ${btnDelete}
+          </div>
+          <div class="post-content">${post.texto}</div>
+        </div>`);
+    });
+  });
+
+  // COMANDO SUPREMO PARA EXCLUIR POST
+  window.excluirPost = async (id) => {
+    if(confirm("LÍDER RFL: Confirmar exclusão deste registro?")) {
+        try {
+            await deleteDoc(doc(db, "mural", id));
+            showToast("Registro neutralizado!", "fa-trash-check");
+        } catch (e) {
+            console.error("Erro ao excluir:", e);
+        }
+    }
+  };
   // Carrega os posts do Mural automaticamente
   const qMural = query(collection(db, "mural"), orderBy("timestamp", "desc"));
   onSnapshot(qMural, (snapshot) => {
@@ -383,6 +430,7 @@
   });
 
   // --- LÓGICA DO CHAT EM TEMPO REAL ---
+// --- LÓGICA DO CHAT COM MODERAÇÃO RFL ---
   window.sendMessage = async () => {
     const input = document.getElementById('chatInput');
     const msg = input.value.trim();
@@ -399,13 +447,34 @@
   const qChat = query(collection(db, "chatGlobal"), orderBy("timestamp", "asc"));
   onSnapshot(qChat, (snapshot) => {
     const chatBox = document.getElementById('chatGlobal');
+    if(!chatBox) return;
     chatBox.innerHTML = '';
-    snapshot.forEach((doc) => {
-      const m = doc.data();
-      chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg"><b>${m.nome}:</b> ${m.texto}</div>`);
+    
+    snapshot.forEach((docSnap) => {
+      const m = docSnap.data();
+      const msgId = docSnap.id;
+      
+      // Verifica se é o Líder RFL para liberar o [x] de exclusão
+      const isLeader = window.usuarioLogado && window.usuarioLogado.name.toUpperCase().includes("RFL");
+      const delBtn = isLeader ? `<span onclick="window.excluirMsg('${msgId}')" style="cursor:pointer; color:#ff4444; margin-left:8px; font-size:9px; font-weight:bold; vertical-align:middle;">[X]</span>` : '';
+
+      chatBox.insertAdjacentHTML('beforeend', `
+        <div class="chat-msg" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span><b>${m.nome}:</b> ${m.texto}</span>
+            ${delBtn}
+        </div>`);
     });
     chatBox.scrollTop = chatBox.scrollHeight;
   });
+
+  // COMANDO PARA APAGAR MENSAGEM DO CHAT
+  window.excluirMsg = async (id) => {
+    if(confirm("RFL•★•REAL: Deseja apagar esta mensagem do chat?")) {
+        try {
+            await deleteDoc(doc(db, "chatGlobal", id));
+        } catch (e) { console.error("Erro ao apagar msg", e); }
+    }
+  };
 </script>
     <script>
     // --- LÓGICA DO MURAL OPERACIONAL ---
@@ -526,7 +595,31 @@
 
     // Inicializar Mural ao carregar
     window.onload = renderizarMural;
-</script>
+        // --- SISTEMA DE NOTIFICAÇÕES DE ELITE RFL ---
+  const showToast = (mensagem, icone = "fa-bell") => {
+    // Cria o elemento do Toast
+    const toast = document.createElement('div');
+    toast.style = `
+      position: fixed; top: 20px; right: 20px; background: var(--card-bg);
+      border-left: 4px solid var(--gold); color: white; padding: 15px 25px;
+      border-radius: 8px; z-index: 10000; display: flex; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideIn 0.5s ease forwards;
+    `;
+    toast.innerHTML = `<i class="fa-solid ${icone}" style="color: var(--gold); margin-right: 15px;"></i> <span>${mensagem}</span>`;
+    document.body.appendChild(toast);
+
+    // Efeito de brilho na tela (Flash Dourado)
+    const flash = document.createElement('div');
+    flash.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(212,175,55,0.1); z-index:9999; pointer-events:none; animation: pulseFlash 0.5s ease;";
+    document.body.appendChild(flash);
+
+    // Remove após 4 segundos
+    setTimeout(() => { 
+      toast.style.animation = "slideOut 0.5s ease forwards";
+      setTimeout(() => { toast.remove(); flash.remove(); }, 500);
+    }, 4000);
+  };
+
 </script>
 </body>
 </html>
