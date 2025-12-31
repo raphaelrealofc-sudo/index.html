@@ -109,6 +109,63 @@ function carregarFeed() {
         if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
     });
 }
+        function carregarFeed() {
+    db.collection("posts_sociais").orderBy("data", "desc")
+    .onSnapshot((snapshot) => {
+        const feedContainer = document.getElementById('feed');
+        feedContainer.innerHTML = ""; 
+        
+        const autoresUnicos = new Set();
+
+        snapshot.forEach((doc) => {
+            const post = doc.data();
+            const id = doc.id;
+            autoresUnicos.add(post.autor);
+            
+            const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
+            const eDono = auth.currentUser && auth.currentUser.email === post.autor;
+
+            feedContainer.innerHTML += `
+                <div class="feed-item">
+                    <h4>@${nomeUsuario}</h4>
+                    <p>${post.mensagem}</p>
+                    
+                    ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
+
+                    <div style="margin-top:12px; display:flex; gap:20px; font-size: 0.9rem;">
+                        <span style="cursor:pointer" onclick="curtirPost('${id}', ${post.curtidas || 0})">
+                            ❤️ <b>${post.curtidas || 0}</b>
+                        </span>
+                        
+                        <span style="cursor:pointer; color:#00f2ea" onclick="abrirComentarios('${id}')">
+                            💬 <b>${post.qtdComentarios || 0}</b> Comentários
+                        </span>
+
+                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d" onclick="excluirPost('${id}')">🗑️ Apagar</span>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        
+        const painelMembros = document.getElementById('membros-count');
+        if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
+    });
+} // <--- A função carregarFeed termina aqui
+
+// FUNÇÃO DE COMENTÁRIOS (Lado de fora)
+function abrirComentarios(postId) {
+    const comentario = prompt("RFL•★•REAL, o que você achou desse post?");
+    
+    if (comentario && comentario.trim() !== "") {
+        db.collection("posts_sociais").doc(postId).update({
+            qtdComentarios: firebase.firestore.FieldValue.increment(1)
+        }).then(() => {
+            alert("Comentário registrado!");
+        }).catch((error) => {
+            console.error("Erro ao comentar:", error);
+        });
+    }
+}
         
         // Atualiza o contador de membros no Aside
         const painelMembros = document.getElementById('membros-count');
