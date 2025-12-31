@@ -157,63 +157,62 @@
 <div class="app-container">
     <aside class="hierarchy-sidebar">
         <div id="auth-status" style="padding: 15px; text-align: center; background: rgba(255,255,255,0.02); border-radius: 10px; margin: 10px; border: 1px solid rgba(255,215,0,0.1); min-height: 100px;">
- <div class="auth-panel" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-    
-    <span id="auth-text" style="font-size: 0.7rem; color: #888; display: block; margin-bottom: 15px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">
-        STATUS: VISITANTE
-    </span>
+            <div class="auth-panel" style="text-align: center; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+                <span id="auth-text" style="font-size: 0.7rem; color: #888; display: block; margin-bottom: 15px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase;">
+                    STATUS: VISITANTE
+                </span>
 
-    <div id="login-options" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
-        
-        <div class="fb-login-button" 
-             data-width="200" 
-             data-size="medium" 
-             data-button-type="continue_with" 
-             data-layout="default" 
-             data-auto-logout-link="false" 
-             data-use-continue-as="true"
-             onlogin="checkLoginStatus();">
-        </div>
+                <div id="login-options" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+                    <div class="fb-login-button" 
+                         data-width="200" 
+                         data-size="medium" 
+                         data-button-type="continue_with" 
+                         data-layout="default" 
+                         data-auto-logout-link="false" 
+                         data-use-continue-as="true"
+                         onlogin="checkLoginStatus();">
+                    </div>
 
-        <button onclick="loginInstagram()" style="width: 200px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity 0.3s;">
-            <i class="fa-brands fa-instagram" style="font-size: 16px;"></i> Continuar com Instagram
-        </button>
-    </div>
+                    <button onclick="loginInstagram()" style="width: 200px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity 0.3s;">
+                        <i class="fa-brands fa-instagram" style="font-size: 16px;"></i> Continuar com Instagram
+                    </button>
+                </div>
 
-    <button id="btn-sair" onclick="logoutSistema()" style="display: none; margin-top: 10px; background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; transition: all 0.3s;">
-        <i class="fa-solid fa-right-from-bracket"></i> ENCERRAR SESSÃO OPERACIONAL
-    </button>
-</div>
+                <button id="btn-sair" onclick="logoutSistema()" style="display: none; margin-top: 10px; background: rgba(255, 77, 77, 0.1); border: 1px solid #ff4d4d; color: #ff4d4d; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; transition: all 0.3s;">
+                    <i class="fa-solid fa-right-from-bracket"></i> ENCERRAR SESSÃO OPERACIONAL
+                </button>
+            </div>
 
-        <div class="pulse-title">
-            <div class="pulse-dot"></div> MENU FAMILY
-        </div>
+            <div class="pulse-title">
+                <div class="pulse-dot"></div> MENU FAMILY
+            </div>
 
-        <div class="rank-item" onclick="location.href='nossahistoria.html'">
-            <div class="rank-icon"><i class="fa-solid fa-gem"></i></div>
-            <div class="rank-info"><span class="name">Nossa História</span><span class="desc">Legado RFL</span></div>
-        </div>
+            <div class="rank-item" onclick="location.href='nossahistoria.html'">
+                <div class="rank-icon"><i class="fa-solid fa-gem"></i></div>
+                <div class="rank-info"><span class="name">Nossa História</span><span class="desc">Legado RFL</span></div>
+            </div>
 
-        <div class="rank-item" onclick="location.href='guiadepontos.html'">
-            <div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div>
-            <div class="rank-info"><span class="name">Guia de Pontos</span><span class="desc">Subir no Rank</span></div>
-        </div>
+            <div class="rank-item" onclick="location.href='guiadepontos.html'">
+                <div class="rank-icon"><i class="fa-solid fa-crosshairs"></i></div>
+                <div class="rank-info"><span class="name">Guia de Pontos</span><span class="desc">Subir no Rank</span></div>
+            </div>
 
-        <div class="rank-item" onclick="location.href='regras.html'">
-            <div class="rank-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="rank-info"><span class="name">Regras de Elite</span><span class="desc">Conformidade</span></div>
-        </div>
+            <div class="rank-item" onclick="location.href='regras.html'">
+                <div class="rank-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="rank-info"><span class="name">Regras de Elite</span><span class="desc">Conformidade</span></div>
+            </div>
 
-        <div class="rank-item" onclick="location.href='galeria.html'">
-            <div class="rank-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <div class="rank-info"><span class="name">Edits & Fotos</span><span class="desc">Premium</span></div>
-        </div>
+            <div class="rank-item" onclick="location.href='galeria.html'">
+                <div class="rank-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div class="rank-info"><span class="name">Edits & Fotos</span><span class="desc">Premium</span></div>
+            </div>
 
-        <div class="rank-item active" onclick="location.href='feed.html'" style="margin-top: 30px; border-left: 2px solid var(--gold);">
-            <div class="rank-icon"><i class="fa-solid fa-gauge-high"></i></div>
-            <div class="rank-info">
-                <span class="name">Mural Operacional</span>
-                <span class="desc">Central</span>
+            <div class="rank-item active" onclick="location.href='feed.html'" style="margin-top: 30px; border-left: 2px solid var(--gold);">
+                <div class="rank-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                <div class="rank-info">
+                    <span class="name">Mural Operacional</span>
+                    <span class="desc">Central</span>
+                </div>
             </div>
         </div>
     </aside>
@@ -241,19 +240,7 @@
         </div>
 
         <div id="postsContainer">
-            <div class="post-card" style="border: 1px solid var(--gold);">
-                <div class="post-header">
-                    <div class="user-avatar"></div>
-                    <div style="flex: 1;"><b>RFL•★•REAL</b></div>
-                    <button class="pin-btn" onclick="togglePin(this)"><i class="fa-solid fa-thumbtack"></i></button>
-                </div>
-                <div class="post-content">Demonstração oficial do Legado RFL. 🔥</div>
-                <div class="post-interactions">
-                    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas</button>
-                    <button class="interaction-btn" onclick="abrirComentarios(this)"><i class="fa-regular fa-comment"></i> Comentar</button>
-                </div>
             </div>
-        </div>
     </main>
 
     <aside class="chat-sidebar">
@@ -295,80 +282,64 @@
 
 <script>
     let usuarioLogado = null;
-    const APP_ID_FB = ;
-    const APP_ID_IG = '1667298550907398';
+    const APP_ID_OFICIAL = '1667298550907398';
 
+    // 1. Inicialização Única do Sistema
     window.fbAsyncInit = function() {
-        // Inicializa com Facebook por padrão
         FB.init({
-            appId: APP_ID_FB,
+            appId: APP_ID_OFICIAL,
             cookie: true,
             xfbml: true,
             version: 'v18.0'
         });
-        FB.getLoginStatus(checkLoginStatus);
-        renderizarMural(); // Carrega os posts salvos ao abrir a página
+        
+        // Verifica se o operador já está logado ao carregar
+        FB.getLoginStatus(function(response) {
+            checkLoginStatus(response);
+        });
+        
+        renderizarMural();
     };
 
-   
-window.fbAsyncInit = function() {
-    FB.init({
-        appId: '1667298550907398', // Seu ID oficial ativo
-        cookie: true,
-        xfbml: true,
-        version: 'v18.0'
-    });
-    
-      FB.getLoginStatus(function(response) {
-        checkLoginStatus(response);
-    });
-    
-    if(typeof renderizarMural === 'function') renderizarMural(); 
-};
-
-
-function loginInstagram() {
-    if (typeof FB !== 'undefined') {
-        FB.login(function(response) {
-            checkLoginStatus(response);
-        }, {
-            scope: 'public_profile',
-            auth_type: 'rerequest' // Força a abertura da janela de login
-        });
-    } else {
-        showToast("Erro: SDK da Meta não carregado.", "fa-triangle-exclamation");
+    // 2. Função de Login (Botão Instagram)
+    function loginInstagram() {
+        if (typeof FB !== 'undefined') {
+            FB.login(function(response) {
+                checkLoginStatus(response);
+            }, {
+                scope: 'public_profile',
+                auth_type: 'rerequest'
+            });
+        } else {
+            showToast("Erro: SDK da Meta não carregado.", "fa-triangle-exclamation");
+        }
     }
-}
 
-// 3. Processamento dos dados do Usuário/Operador
-function checkLoginStatus(response) {
-    if (response && response.status === 'connected') {
-        FB.api('/me', {fields: 'name,picture.type(large)'}, function(userData) {
-            usuarioLogado = userData;
-            
-            // Atualiza interface para modo OPERADOR
-            const authText = document.getElementById('auth-text');
-            if(authText) {
-                authText.innerText = "OPERADOR: " + userData.name.toUpperCase();
-                authText.style.color = "var(--gold)";
-            }
-            
-            const creatorImg = document.getElementById('creator-img');
-            if(creatorImg) {
-                creatorImg.src = userData.picture.data.url;
-            }
+    // 3. Processamento de Dados do Usuário
+    function checkLoginStatus(response) {
+        if (response && response.status === 'connected') {
+            FB.api('/me', {fields: 'name,picture.type(large)'}, function(userData) {
+                usuarioLogado = userData;
+                
+                const authText = document.getElementById('auth-text');
+                if(authText) {
+                    authText.innerText = "OPERADOR: " + userData.name.toUpperCase();
+                    authText.style.color = "var(--gold)";
+                }
+                
+                const creatorImg = document.getElementById('creator-img');
+                if(creatorImg) {
+                    creatorImg.src = userData.picture.data.url;
+                }
 
-            // Oculta opções de login e mostra botão de sair
-            const loginOptions = document.getElementById('login-options');
-            if(loginOptions) loginOptions.style.display = 'none';
+                if(document.getElementById('login-options')) document.getElementById('login-options').style.display = 'none';
+                if(document.getElementById('btn-sair')) document.getElementById('btn-sair').style.display = 'inline-block';
 
-            const btnSair = document.getElementById('btn-sair');
-            if(btnSair) btnSair.style.display = 'inline-block';
-
-            showToast(`Bem-vindo ao Sistema, ${userData.name}!`, 'fa-user-check');
-        });
+                showToast(`Bem-vindo ao Sistema, ${userData.name}!`, 'fa-user-check');
+            });
+        }
     }
-}
+
     function verificarAcesso() {
         if (!usuarioLogado) {
             showToast('🔒 Acesse o Sistema para interagir!', 'fa-lock');
@@ -391,8 +362,7 @@ function checkLoginStatus(response) {
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // --- MURAL OPERACIONAL COM PERSISTÊNCIA ---
-
+    // --- MURAL OPERACIONAL ---
     function publicarPost() {
         if (!verificarAcesso()) return;
         
@@ -408,7 +378,6 @@ function checkLoginStatus(response) {
             data: new Date().toLocaleString('pt-BR')
         };
 
-        // Salva no LocalStorage
         let postsSalvos = JSON.parse(localStorage.getItem('mural_rfl_data')) || [];
         postsSalvos.unshift(novoPostObj);
         localStorage.setItem('mural_rfl_data', JSON.stringify(postsSalvos));
@@ -453,14 +422,6 @@ function checkLoginStatus(response) {
         renderizarMural();
     }
 
-
-    function switchChat(type, btn) {
-        document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('chatGlobal').style.display = type === 'global' ? 'block' : 'none';
-        document.getElementById('chatFamily').style.display = type === 'family' ? 'block' : 'none';
-    }
-
     function sendMessage() {
         if (!verificarAcesso()) return;
         const input = document.getElementById('chatInput');
@@ -473,9 +434,15 @@ function checkLoginStatus(response) {
         document.getElementById(activeChatId).appendChild(msgDiv);
         
         input.value = "";
-        
         const chatBox = document.getElementById(activeChatId);
         chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function switchChat(type, btn) {
+        document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('chatGlobal').style.display = type === 'global' ? 'block' : 'none';
+        document.getElementById('chatFamily').style.display = type === 'family' ? 'block' : 'none';
     }
 
     function toggleLike(btn) {
@@ -497,58 +464,36 @@ function checkLoginStatus(response) {
         countSpan.innerText = count;
     }
 
-    function filtrarFeed(filtro, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        showToast(`Filtrando por: ${filtro}`, "fa-filter");
-       
-    }
-
     function togglePin(btn) {
         if (!verificarAcesso()) return;
         const card = btn.closest('.post-card');
         card.classList.toggle('pinned');
         showToast(card.classList.contains('pinned') ? "Post fixado!" : "Post desfixado", "fa-thumbtack");
     }
-    
-function logoutSistema() {
-    if (confirm("RFL•★•REAL: Deseja encerrar a sessão operacional e deslogar do sistema?")) {
-        FB.logout(function(response) {
-            usuarioLogado = null;
-            
-            
-            const authText = document.getElementById('auth-text');
-            if(authText) {
-                authText.innerText = "STATUS: VISITANTE";
-                authText.style.color = "#888";
-            }
-            
-           
-            const creatorImg = document.getElementById('creator-img');
-            if(creatorImg) creatorImg.src = "https://via.placeholder.com/40";
 
-            
-            document.getElementById('login-options').style.display = 'flex';
-            document.getElementById('btn-sair').style.display = 'none';
-
-            showToast("Sessão encerrada com segurança!", "fa-shield-halved");
-            
-            
-            setTimeout(() => location.reload(), 1500);
-        });
+    function filtrarFeed(filtro, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast(`Filtrando por: ${filtro}`, "fa-filter");
     }
-}
 
-window.fbAsyncInit = function() {
-    FB.init({
-        appId: '1989628448247305', 
-        cookie: true,
-        xfbml: true,
-        version: 'v18.0'
-    });
-    FB.getLoginStatus(checkLoginStatus);
-    renderizarMural(); 
-};
+    function logoutSistema() {
+        if (confirm("RFL•★•REAL: Deseja encerrar a sessão operacional?")) {
+            FB.logout(function(response) {
+                usuarioLogado = null;
+                const authText = document.getElementById('auth-text');
+                if(authText) {
+                    authText.innerText = "STATUS: VISITANTE";
+                    authText.style.color = "#888";
+                }
+                if(document.getElementById('creator-img')) document.getElementById('creator-img').src = "https://via.placeholder.com/40";
+                document.getElementById('login-options').style.display = 'flex';
+                document.getElementById('btn-sair').style.display = 'none';
+                showToast("Sessão encerrada com segurança!", "fa-shield-halved");
+                setTimeout(() => location.reload(), 1500);
+            });
+        }
+    }
 </script>
 </body>
 </html>
