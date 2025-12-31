@@ -322,24 +322,33 @@
     }
 
     function publicarPost() {
-        if (!verificarAcesso()) return;
-        const text = document.getElementById('postText').value;
-        if (!text.trim()) return;
-        
-        const novoPost = `
-            <div class="post-card">
-                <div class="post-header">
-                    <img src="${usuarioLogado.picture.data.url}" class="user-avatar">
-                    <div style="flex:1; margin-left:10px;"><b>${usuarioLogado.name}</b></div>
-                </div>
-                <div class="post-content">${text}</div>
-                <div class="post-interactions">
-                    <button class="interaction-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas</button>
-                </div>
-            </div>`;
-        document.getElementById('postsContainer').insertAdjacentHTML('afterbegin', novoPost);
-        document.getElementById('postText').value = "";
-    }
+    if (!verificarAcesso()) return;
+    
+    const text = document.getElementById('postText').value;
+    if (!text.trim()) return;
+    
+    // Puxa a foto e o nome de quem está logado para garantir a exibição correta
+    const fotoUsuario = usuarioLogado.picture.data.url;
+    const nomeUsuario = usuarioLogado.name;
+
+    const novoPost = `
+        <div class="post-card">
+            <div class="post-header">
+                <img src="${fotoUsuario}" class="user-avatar">
+                <div style="flex:1; margin-left:10px;"><b>${nomeUsuario}</b></div>
+            </div>
+            <div class="post-content">${text}</div>
+            <div class="post-interactions">
+                <button class="interaction-btn" onclick="toggleLike(this)">
+                    <i class="fa-regular fa-heart"></i> <span class="like-count">0</span> Curtidas
+                </button>
+            </div>
+        </div>`;
+    
+    // Insere o post no topo do Mural Operacional
+    document.getElementById('postsContainer').insertAdjacentHTML('afterbegin', novoPost);
+    document.getElementById('postText').value = "";
+}
 
     function switchChat(type, btn) {
         document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active'));
@@ -378,6 +387,13 @@
         if (!verificarAcesso()) return;
         btn.closest('.post-card').classList.toggle('pinned');
     }
+    function verificarAcesso() {
+    if (!usuarioLogado) {
+        showToast('🔒 Acesse o Sistema para postar!', 'fa-lock');
+        return false;
+    }
+    return true;
+}
 </script>
 </body>
 </html>
