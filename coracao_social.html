@@ -58,89 +58,103 @@
 
         // --- PUBLICAR ---
         async function publicarPost() {
-            const campoTexto = document.getElementById('post-texto');
-            const campoFoto = document.getElementById('post-foto');
-            const texto = campoTexto.value;
-            const foto = campoFoto.files[0];
-            const user = auth.currentUser;
+    const campoTexto = document.getElementById('post-texto');
+    const campoFoto = document.getElementById('post-foto');
+    const texto = campoTexto.value;
+    const foto = campoFoto.files[0];
+    const user = auth.currentUser;
 
-            if (!user) { alert("Você precisa estar logado!"); return; }
-            if (texto.trim() === "" && !foto) {
-                alert("RFL•★•REAL, escreva algo ou selecione uma foto!");
-                return;
-            }
+    if (!user) { alert("Você precisa estar logado!"); return; }
+    if (texto.trim() === "" && !foto) {
+        alert("RFL•★•REAL, escreva algo ou selecione uma foto!");
+        return;
+    }
 
-            try {
-                let urlFoto = "";
-                if (foto) {
-                    const formData = new FormData();
-                    formData.append("image", foto);
-                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY_IMGBB}`, {
-                        method: "POST",
-                        body: formData
-                    });
-                    const data = await response.json();
-                    if (data.success) { urlFoto = data.data.url; }
-                }
+    try {
+        // --- NOVIDADE 1: Pega a foto de perfil do autor ---
+        const userDoc = await db.collection("usuarios").doc(user.uid).get();
+        const fotoPerfilAutor = userDoc.exists ? userDoc.data().fotoPerfil : ""; 
 
-                await db.collection("posts_sociais").add({
-                    autor: user.email,
-                    mensagem: texto,
-                    fotoUrl: urlFoto,
-                    curtidas: 0,
-                    qtdComentarios: 0,
-                    data: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                campoTexto.value = "";
-                campoFoto.value = "";
-                alert("⭐ Publicado com sucesso!");
-            } catch (error) {
-                console.error(error);
-                alert("Erro ao publicar. Verifique sua chave ImgBB!");
-            }
-        }
-
-        // --- CARREGAR FEED ---
-        function carregarFeed() {
-            db.collection("posts_sociais").orderBy("data", "desc")
-            .onSnapshot((snapshot) => {
-                const feedContainer = document.getElementById('feed');
-                feedContainer.innerHTML = ""; 
-                const autoresUnicos = new Set();
-
-                snapshot.forEach((doc) => {
-                    const post = doc.data();
-                    const id = doc.id;
-                    autoresUnicos.add(post.autor);
-                    const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
-                    const eDono = auth.currentUser && auth.currentUser.email === post.autor;
-
-                    // Usando Crase (`) para evitar erros de aspas
-                    feedContainer.innerHTML += `
-                        <div class="feed-item">
-                            <h4 onclick="verPerfil('${post.autor}')" style="cursor:pointer; color:#00f2ea; margin-bottom: 8px;">@${nomeUsuario}</h4>
-                            <p style="margin-bottom: 12px; line-height: 1.4;">${post.mensagem}</p>
-                            ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
-                            <div style="margin-top:15px; display:flex; gap:25px; font-size: 1rem; border-top: 1px solid #222; padding-top: 12px;">
-                                <span style="cursor:pointer; display: flex; align-items: center; gap: 5px;" onclick="curtirPost('${id}', ${post.curtidas || 0})">
-                                    ❤️ <b style="color: white;">${post.curtidas || 0}</b>
-                                </span>
-                                <span style="cursor:pointer; color:#00f2ea; display: flex; align-items: center; gap: 5px;" onclick="abrirComentarios('${id}')">
-                                    💬 <b style="color: white;">${post.qtdComentarios || 0}</b>
-                                </span>
-                                <span style="cursor:pointer; color:#ffd700; display: flex; align-items: center; gap: 5px;" onclick="compartilharPost()">
-                                    🔗 <b style="color: white;">Link</b>
-                                </span>
-                                ${eDono ? `<span style="cursor:pointer; color:#ff4d6d; margin-left: auto;" onclick="excluirPost('${id}')">🗑️</span>` : ''}
-                            </div>
-                        </div>`;
-                });
-                
-                const painelMembros = document.getElementById('membros-count');
-                if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
+        let urlFoto = "";
+        if (foto) {
+            const formData = new FormData();
+            formData.append("image", foto);
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY_IMGBB}`, {
+                method: "POST",
+                body: formData
             });
+            const data = await response.json();
+            if (data.success) { urlFoto = data.data.url; }
         }
+
+        await db.collection("posts_sociais").add({
+            autor: user.email,
+            autorFoto: fotoPerfilAutor, // --- NOVIDADE 2: Salva a foto do autor no post ---
+            mensagem: texto,
+            fotoUrl: urlFoto,
+            curtidas: 0,
+            qtdComentarios: 0,
+            data: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        campoTexto.value = "";
+        campoFoto.value = "";
+        alert("⭐ Publicado com sucesso!");
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao publicar.");
+    }
+}
+        // --- CARREGAR FEED ---
+       function carregarFeed() {
+    db.collection("posts_sociais").orderBy("data", "desc")
+    .onSnapshot((snapshot) => {
+        const feedContainer = document.getElementById('feed');
+        feedContainer.innerHTML = ""; 
+        const autoresUnicos = new Set();
+
+        snapshot.forEach((doc) => {
+            const post = doc.data();
+            const id = doc.id;
+            autoresUnicos.add(post.autor);
+            const nomeUsuario = post.autor ? post.autor.split('@')[0] : "Membro";
+            const eDono = auth.currentUser && auth.currentUser.email === post.autor;
+
+            // Foto padrão caso o usuário não tenha foto ainda
+            const fotoPadrao = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+            feedContainer.innerHTML += `
+                <div class="feed-item" style="background:#1a1a1a; padding:20px; border-radius:15px; margin-bottom:15px; border:1px solid #333;">
+                    
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <img src="${post.autorFoto || fotoPadrao}" 
+                             style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #00f2ea;">
+                        <h4 onclick="verPerfil('${post.autor}')" style="cursor:pointer; color:#00f2ea;">@${nomeUsuario}</h4>
+                    </div>
+
+                    <p style="margin-bottom: 12px; line-height: 1.4; color: white;">${post.mensagem || ""}</p>
+                    
+                    ${post.fotoUrl ? `<img src="${post.fotoUrl}" style="width:100%; border-radius:10px; margin-top:10px; border: 1px solid #333; display: block;">` : ''}
+                    
+                    <div style="margin-top:15px; display:flex; gap:25px; font-size: 1rem; border-top: 1px solid #222; padding-top: 12px;">
+                        <span style="cursor:pointer; display: flex; align-items: center; gap: 5px;" onclick="curtirPost('${id}', ${post.curtidas || 0})">
+                            ❤️ <b style="color: white;">${post.curtidas || 0}</b>
+                        </span>
+                        <span style="cursor:pointer; color:#00f2ea; display: flex; align-items: center; gap: 5px;" onclick="abrirComentarios('${id}')">
+                            💬 <b style="color: white;">${post.qtdComentarios || 0}</b>
+                        </span>
+                        <span style="cursor:pointer; color:#ffd700; display: flex; align-items: center; gap: 5px;" onclick="compartilharPost()">
+                            🔗 <b style="color: white;">Link</b>
+                        </span>
+                        ${eDono ? `<span style="cursor:pointer; color:#ff4d6d; margin-left: auto;" onclick="excluirPost('${id}')">🗑️</span>` : ''}
+                    </div>
+                </div>`;
+        });
+        
+        const painelMembros = document.getElementById('membros-count');
+        if (painelMembros) painelMembros.innerText = autoresUnicos.size + " Membros ativos";
+    });
+}
 
         // --- AUTH ---
         auth.onAuthStateChanged((user) => {
@@ -159,6 +173,42 @@
         function realizarLogout() {
             auth.signOut().then(() => { window.location.href = "abertura.html"; });
         }
+        async function mudarFotoPerfil() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    
+    input.onchange = async (e) => {
+        const foto = e.target.files[0];
+        const user = auth.currentUser;
+        
+        if (!foto || !user) return;
+
+        try {
+            const formData = new FormData();
+            formData.append("image", foto);
+            
+            // Faz o upload para o ImgBB
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY_IMGBB}`, {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                // Salva a URL da foto no documento do usuário
+                await db.collection("usuarios").doc(user.uid).update({
+                    fotoPerfil: data.data.url
+                });
+                alert("Foto de perfil atualizada com sucesso!");
+            }
+        } catch (error) {
+            console.error("Erro ao mudar foto:", error);
+            alert("Erro ao carregar a foto.");
+        }
+    };
+    input.click();
+}
     </script>
 
     <style>
