@@ -57,7 +57,7 @@
         }
 
         // --- PUBLICAR ---
-        async function publicarPost() {
+       async function publicarPost() {
     const campoTexto = document.getElementById('post-texto');
     const campoFoto = document.getElementById('post-foto');
     const texto = campoTexto.value;
@@ -78,7 +78,6 @@
 
     try {
         // 3. Busca Segura da Foto de Perfil
-        // Usamos try/catch interno para evitar que a falta de foto trave o post
         const userDoc = await db.collection("usuarios").doc(user.uid).get();
         let fotoPerfilAutor = "";
         
@@ -91,34 +90,27 @@
         if (fotoArquivo) {
             const formData = new FormData();
             formData.append("image", fotoArquivo);
-            
-           // --- TRECHO CORRIGIDO COM A SUA CHAVE ---
-if (campoFoto.files[0]) {
-    const formData = new FormData();
-    formData.append("image", campoFoto.files[0]);
 
-    // Usando a sua chave diretamente no link para evitar erros de variável
-    const response = await fetch("https://api.imgbb.com/1/upload?key=ede86576a675116955921d850f5cd7e3", {
-        method: "POST",
-        body: formData
-    });
+            const response = await fetch("https://api.imgbb.com/1/upload?key=ede86576a675116955921d850f5cd7e3", {
+                method: "POST",
+                body: formData
+            });
 
-    const data = await response.json();
+            const data = await response.json();
 
-    if (data.success) {
-        urlFotoPost = data.data.url; // Aqui o link da imagem é gerado com sucesso!
-    } else {
-        // Caso a chave expire ou o ImgBB recuse, ele cai aqui
-        throw new Error("Falha no upload da imagem. Verifique a chave ImgBB.");
-    }
-}
+            if (data.success) {
+                urlFotoPost = data.data.url; 
+            } else {
+                throw new Error("Falha no upload da imagem. Verifique a chave ImgBB.");
+            }
+        }
 
         // 5. Gravação no Firebase Firestore
         await db.collection("posts_sociais").add({
             autor: user.email,
-            autorFoto: fotoPerfilAutor, // Salva o link da foto de perfil no post
+            autorFoto: fotoPerfilAutor, 
             mensagem: texto,
-            fotoUrl: urlFotoPost, // Salva o link da foto do post vindo do ImgBB
+            fotoUrl: urlFotoPost, 
             curtidas: 0,
             qtdComentarios: 0,
             data: firebase.firestore.FieldValue.serverTimestamp()
@@ -129,12 +121,14 @@ if (campoFoto.files[0]) {
         campoFoto.value = "";
         alert("⭐ Publicado com sucesso!");
 
+        // 7. Atualizar Feed (Opcional: se você tiver essa função)
+        if (typeof carregarFeed === "function") carregarFeed();
+
     } catch (error) {
         console.error("Erro detalhado:", error);
         alert("Erro ao publicar: " + error.message);
     }
-}
-        // --- CARREGAR FEED ---
+}      // --- CARREGAR FEED ---
        function carregarFeed() {
     db.collection("posts_sociais").orderBy("data", "desc")
     .onSnapshot((snapshot) => {
