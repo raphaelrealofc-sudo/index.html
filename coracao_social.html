@@ -301,7 +301,7 @@
             <div style="clear: both;"></div>
         </div>
         <div id="feed"></div>
-    </main>
+ 
     <aside>
         <div class="trending-box">
             <h3>Comunidade</h3>
@@ -312,5 +312,22 @@
             <a href="#" class="tag">#SocialStar2026</a>
         </div>
     </aside>
+        <div id="btn-abrir-chat" onclick="toggleChat()">
+        💬 ChatGlobal/ChatFamily
+    </div>
+
+    <div id="janela-chat" style="display: none;">
+        <div class="chat-header">
+            <span>ChatGlobal/ChatFamily</span>
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✖</button>
+        </div>
+        <div id="mensagens-chat"></div>
+        <div class="chat-input-area">
+            <input type="text" id="input-msg-chat" placeholder="Digite uma mensagem..." onkeypress="if(event.key === 'Enter') enviarMensagemChat()">
+            <button onclick="enviarMensagemChat()">🚀</button>
+        </div>
+    </div>
+
 </body>
 </html>
+
