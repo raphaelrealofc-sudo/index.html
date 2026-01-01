@@ -203,17 +203,23 @@
         💬 ChatGlobal/ChatFamily
     </div>
 
-    <div id="janela-chat" style="display: none;">
-        <div class="chat-header">
-            <span>ChatGlobal/ChatFamily</span>
-            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✖</button>
-        </div>
-        <div id="mensagens-chat"></div>
-        <div class="chat-input-area">
-            <input type="text" id="input-msg-chat" placeholder="Digite uma mensagem..." onkeypress="if(event.key === 'Enter') enviarMensagemChat()">
-            <button onclick="enviarMensagemChat()">🚀</button>
+       <div id="janela-chat" style="display: none;">
+    <div class="chat-header">
+        <span>ChatGlobal/ChatFamily</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="btn-limpar-chat" onclick="limparChatTotal()" style="display:none; background:none; border:none; color:#ff4d6d; cursor:pointer; font-size: 1.1rem;" title="Limpar Chat">🗑️</button>
+            
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer; font-size: 1.2rem;">✖</button>
         </div>
     </div>
+    
+    <div id="mensagens-chat"></div>
+    
+    <div class="chat-input-area">
+        <input type="text" id="input-msg-chat" placeholder="Digite uma mensagem..." onkeypress="if(event.key === 'Enter') enviarMensagemChat()">
+        <button onclick="enviarMensagemChat()">🚀</button>
+    </div>
+</div>
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCnYzszGEiEkiU9TxwT1ONS2HIEluDHSKM",
