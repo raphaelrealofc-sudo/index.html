@@ -37,7 +37,7 @@
 
         /* Estilo do Chat */
         #btn-abrir-chat { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #ff0050, #00f2ea); padding: 12px 22px; border-radius: 30px; cursor: pointer; font-weight: bold; color: white; z-index: 9999; }
-        #janela-chat { position: fixed; bottom: 85px; right: 20px; width: 320px; height: 450px; background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: flex; flex-direction: column; z-index: 10001; box-shadow: 0 10px 40px rgba(0,0,0,0.8); overflow: hidden; }
+        #janela-chat { position: fixed; bottom: 85px; right: 20px; width: 320px; height: 450px; background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: none; flex-direction: column; z-index: 10001; box-shadow: 0 10px 40px rgba(0,0,0,0.8); overflow: hidden; }
         .chat-header { background: #222; padding: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid #333; color: #00f2ea; }
         #mensagens-chat { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #121212; }
         .msg-item { background: #252525; padding: 8px 12px; border-radius: 10px; font-size: 0.9rem; color: #eee; }
@@ -69,7 +69,7 @@
     <aside>
         <div class="trending-box">
             <h3>Comunidade</h3>
-            <p id="membros-count" style="color: #00f2ea; font-weight: bold; margin-bottom: 15px;">Carregando...</p>
+            <p id="membros-count" style="color: #00f2ea; font-weight: bold; margin-bottom: 15px;">Aguardando sinal...</p>
             <hr style="border: 0.1px solid #333; margin-bottom: 15px;">
             <h3>Tendências</h3>
             <a href="#" class="tag">#RFL_REAL</a>
@@ -78,7 +78,7 @@
     </aside>
 
     <div id="btn-abrir-chat" onclick="toggleChat()">💬 Chat Global</div>
-    <div id="janela-chat" style="display: none;">
+    <div id="janela-chat">
         <div class="chat-header">
             <span>ChatGlobal</span>
             <button onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">✖</button>
@@ -104,15 +104,16 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- MONITOR DE AUTENTICAÇÃO ---
+        // --- MONITOR DE AUTENTICAÇÃO (DIRECIONAMENTO REMOVIDO) ---
         auth.onAuthStateChanged((user) => {
+            carregarFeed();
+            atualizarContagemMembros();
+            ouvirMensagensChat();
+            
             if (user) {
-                console.log("Usuário logado:", user.email);
-                carregarFeed();
-                atualizarContagemMembros();
-                ouvirMensagensChat();
+                console.log("Status: Conectado como " + user.email);
             } else {
-                window.location.href = "login.html"; // Mude para o nome do seu arquivo de login
+                console.log("Status: Navegando em modo visitante.");
             }
         });
 
@@ -122,6 +123,7 @@
             const fotoArquivo = document.getElementById('post-foto').files[0];
             const user = auth.currentUser;
 
+            if (!user) { alert("RFL•★•REAL, você precisa estar logado para postar."); return; }
             if (!texto.trim() && !fotoArquivo) return;
 
             try {
@@ -138,7 +140,6 @@
                     autor: user.email,
                     mensagem: texto,
                     fotoUrl: urlFotoPost,
-                    curtidas: 0,
                     data: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
@@ -155,8 +156,8 @@
                     const p = doc.data();
                     feed.innerHTML += `
                         <div class="feed-item">
-                            <h4 style="color:#00f2ea; margin-bottom:10px;">@${p.autor.split('@')[0]}</h4>
-                            <p>${p.mensagem}</p>
+                            <h4 style="color:#00f2ea; margin-bottom:10px;">@${p.autor ? p.autor.split('@')[0] : 'anônimo'}</h4>
+                            <p>${p.mensagem || ""}</p>
                             ${p.fotoUrl ? `<img src="${p.fotoUrl}">` : ""}
                         </div>`;
                 });
@@ -166,15 +167,17 @@
         // --- FUNÇÕES DO CHAT ---
         function toggleChat() {
             const chat = document.getElementById('janela-chat');
-            chat.style.display = (chat.style.display === "none") ? "flex" : "none";
+            chat.style.display = (chat.style.display === "flex") ? "none" : "flex";
         }
 
         async function enviarMensagemChat() {
             const input = document.getElementById('input-msg-chat');
-            if (!input.value.trim()) return;
+            const user = auth.currentUser;
+            if (!input.value.trim() || !user) return;
+            
             await db.collection("chat_global").add({
                 texto: input.value,
-                autor: auth.currentUser.email.split('@')[0],
+                autor: user.email.split('@')[0],
                 data: firebase.firestore.FieldValue.serverTimestamp()
             });
             input.value = "";
@@ -192,7 +195,11 @@
             });
         }
 
-        function realizarLogout() { auth.signOut(); }
+        function realizarLogout() { 
+            auth.signOut().then(() => {
+                alert("Sessão encerrada.");
+            });
+        }
 
         function atualizarContagemMembros() {
             db.collection("usuarios").get().then(snap => {
