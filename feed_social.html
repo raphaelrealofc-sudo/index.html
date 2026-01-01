@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Star - Feed Social ★</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos específicos para o Coração do Site */
+        body {
+            margin: 0;
+            padding-top: 70px; /* Espaço para o menu fixo */
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid #ffd700;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .feed-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .create-post {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            resize: none;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        .post-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffd700;
+            transition: 0.3s;
+        }
+
+        .post-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .user-info {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .btn-star {
+            background: linear-gradient(45deg, #ffd700, #f59e0b);
+            color: #020617;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <h2 style="color: #ffd700; margin: 0;">Social Star ★</h2>
+        <span style="color: #94a3b8;">Empresa: <strong>RFL•★•REAL</strong></span>
+    </nav>
+
+    <main class="feed-container">
+        <section class="create-post">
+            <textarea id="inputPost" placeholder="O que está brilhando agora?"></textarea>
+            <div style="text-align: right;">
+                <button class="btn-star" onclick="publicarEstrela()">Postar Estrela</button>
+            </div>
+        </section>
+
+        <div id="feedDinâmico">
+            <div class="post-card">
+                <div class="user-info">⭐ RFL•★•REAL (Admin)</div>
+                <div class="content">Seja bem-vindo ao feed_social.html! Este é o início da sua jornada estelar.</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function publicarEstrela() {
+            const texto = document.getElementById('inputPost').value;
+            if (texto.trim() === "") return;
+
+            const feed = document.getElementById('feedDinâmico');
+            const novoCard = document.createElement('div');
+            novoCard.className = 'post-card';
+            
+            novoCard.innerHTML = `
+                <div class="user-info">⭐ Novo Usuário</div>
+                <div class="content">${texto}</div>
+            `;
+
+            feed.prepend(novoCard);
+            document.getElementById('inputPost').value = "";
+        }
+    </script>
+</body>
+</html>
