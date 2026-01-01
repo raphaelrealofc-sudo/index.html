@@ -231,6 +231,15 @@
     };
     input.click();
 }
+        function atualizarContagemMembros() {
+    db.collection("usuarios").get().then((snapshot) => {
+        const total = snapshot.size; // Pega o total de documentos na coleção 'usuarios'
+        const painelMembros = document.getElementById('membros-count');
+        if (painelMembros) {
+            painelMembros.innerText = total + (total === 1 ? " Membro cadastrado" : " Membros cadastrados");
+        }
+    }).catch(erro => console.error("Erro ao contar membros:", erro));
+}
     </script>
 
     <style>
