@@ -517,10 +517,9 @@ function ouvirMensagensChat() {
         snapshot.forEach((doc) => {
             const m = doc.data();
             
-            // Define quem recebe o destaque de Dono
-            const ehDono = (m.autor === "raphael" || m.autor === "RFL•★•REAL"); 
-            m.autor === "raphael.btc.virtual" 
-            m.autor === "raphael.btc.virtual"
+           // Define quem recebe o destaque de Dono (Coroa e Cor Dourada)
+            const ehDono = (m.autor === "raphael" || m.autor === "RFL•★•REAL" || m.autor === "raphael.btc.virtual"); 
+
             // Lógica para formatar a hora (Ex: 14:05)
             let horaFormatada = "";
             if (m.data) {
@@ -528,6 +527,7 @@ function ouvirMensagensChat() {
                 horaFormatada = d.getHours().toString().padStart(2, '0') + ":" + 
                                 d.getMinutes().toString().padStart(2, '0');
             }
+           
 
             const corNome = ehDono ? "#ffd700" : "#00f2ea"; 
             const coroa = ehDono ? "👑 " : "";
