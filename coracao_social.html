@@ -57,85 +57,36 @@
         }
 
         // --- PUBLICAR ---
-       async function publicarPost() {
+       // --- FUNÇÃO DE PUBLICAR COMPLETA ---
+async function publicarPost() {
     const campoTexto = document.getElementById('post-texto');
     const campoFoto = document.getElementById('post-foto');
     const texto = campoTexto.value;
     const fotoArquivo = campoFoto.files[0];
     const user = auth.currentUser;
 
+    // 1. Verifica se está logado
     if (!user) { 
         alert("Você precisa estar logado!"); 
         return; 
     }
 
-   
-
-} 
-
-function toggleChat() {
-    const chat = document.getElementById('janela-chat');
-    
-  
-    if (chat.style.display === "none" || chat.style.display === "") {
-        chat.style.display = "flex";
-        console.log("Chat Aberto"); 
-        ouvirMensagensChat();
-    } else {
-        chat.style.display = "none";
-        console.log("Chat Fechado");
-    }
-}
-
-async function enviarMensagemChat() {
-    const input = document.getElementById('input-msg-chat');
-    const user = auth.currentUser;
-    
-    if (!input.value.trim() || !user) return;
-
-    try {
-        await db.collection("chat_global").add({
-            texto: input.value,
-            autor: user.email.split('@')[0], 
-            data: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        input.value = ""; // Limpa o campo após enviar
-    } catch (error) {
-        console.error("Erro ao enviar mensagem:", error);
-    }
-}
-
-function ouvirMensagensChat() {
-    db.collection("chat_global").orderBy("data", "asc").limitToLast(20)
-    .onSnapshot((snapshot) => {
-        const chatDiv = document.getElementById('mensagens-chat');
-        chatDiv.innerHTML = "";
-        snapshot.forEach((doc) => {
-            const m = doc.data();
-            chatDiv.innerHTML += `
-                <div class="msg-item">
-                    <b style="color:#00f2ea;">${m.autor}:</b> ${m.texto}
-                </div>`;
-        });
-        chatDiv.scrollTop = chatDiv.scrollHeight; // Rola sempre para a última mensagem
-    });
-}
-
-        if (texto.trim() === "" && !fotoArquivo) {
+    // 2. Verifica se tem conteúdo para postar
+    if (texto.trim() === "" && !fotoArquivo) {
         alert("RFL•★•REAL, escreva algo ou selecione uma foto!");
         return;
     }
 
     try {
-       
+        // 3. Busca a foto de perfil do autor
         const userDoc = await db.collection("usuarios").doc(user.uid).get();
         let fotoPerfilAutor = "";
-        
         if (userDoc.exists && userDoc.data().fotoPerfil) {
             fotoPerfilAutor = userDoc.data().fotoPerfil;
         }
 
-                let urlFotoPost = "";
+        // 4. Upload da foto do POST (se houver uma)
+        let urlFotoPost = "";
         if (fotoArquivo) {
             const formData = new FormData();
             formData.append("image", fotoArquivo);
@@ -146,11 +97,10 @@ function ouvirMensagensChat() {
             });
 
             const data = await response.json();
-
             if (data.success) {
                 urlFotoPost = data.data.url; 
             } else {
-                throw new Error("Falha no upload da imagem. Verifique a chave ImgBB.");
+                throw new Error("Falha no upload da imagem.");
             }
         }
 
@@ -170,14 +120,15 @@ function ouvirMensagensChat() {
         campoFoto.value = "";
         alert("⭐ Publicado com sucesso!");
 
-        // 7. Atualizar Feed (Opcional: se você tiver essa função)
+        // 7. Atualizar Feed
         if (typeof carregarFeed === "function") carregarFeed();
 
     } catch (error) {
         console.error("Erro detalhado:", error);
         alert("Erro ao publicar: " + error.message);
     }
-}      // --- CARREGAR FEED ---
+} 
+
        function carregarFeed() {
     db.collection("posts_sociais").orderBy("data", "desc")
     .onSnapshot((snapshot) => {
