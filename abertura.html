@@ -142,30 +142,36 @@ const db = firebase.firestore();
                 // 2. DNA do Aparelho Atual
                 const fingerprintAtual = btoa(navigator.userAgent + window.screen.width + new Date().getTimezoneOffset());
 
-                // 3. Verifica no Banco de Dados
+              // 3. Verifica no Banco de Dados (Social Star ★ Security)
                 const doc = await db.collection("usuarios_vinculados").doc(user.uid).get();
 
                 if (doc.exists) {
-                    const dadosOriginais = doc.data();
+                    const dados = doc.data();
+                    // Criamos uma lista de aparelhos autorizados
+                    const aparelhosAutorizados = dados.aparelhos || [dados.registro_hardware];
 
-                    // 4. Comparação de Hardware
-                    if (dadosOriginais.registro_hardware !== fingerprintAtual) {
+                    // 4. Nova Comparação Inteligente
+                    if (!aparelhosAutorizados.includes(fingerprintAtual)) {
                         status.style.color = "#ff4d6d";
-                        status.innerText = "ACESSO NEGADO: Aparelho desconhecido.";
+                        status.innerText = "ACESSO NEGADO: Este aparelho não está vinculado.";
                         await auth.signOut();
                         return;
                     }
 
-                    status.innerText = "Acesso autorizado! Entrando...";
-                   setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
+                    status.innerText = "Aparelho reconhecido! Entrando...";
+                    setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
 
                 } else {
-                    status.innerText = "Erro: Vínculo de segurança não encontrado.";
+                    // Se não existir vínculo, cria o primeiro com o aparelho atual
+                    await db.collection("usuarios_vinculados").doc(user.uid).set({
+                        registro_hardware: fingerprintAtual,
+                        aparelhos: [fingerprintAtual],
+                        email: email,
+                        data_vinculo: new Date().toLocaleString()
+                    });
+                    status.innerText = "Aparelho vinculado com sucesso! Entrando...";
+                    setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
                 }
-            } catch (error) {
-                status.style.color = "#ff4d6d";
-                status.innerText = "Erro: " + error.message;
-            }
         }
     </script>
 
