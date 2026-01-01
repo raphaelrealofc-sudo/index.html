@@ -126,53 +126,63 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-        async function realizarLogin() {
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
-            const status = document.getElementById('status-msg');
+       async function realizarLogin() {
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+    const status = document.getElementById('status-msg');
 
-            status.style.color = "#00f2ea";
-            status.innerText = "Processando segurança...";
+    status.style.color = "#00f2ea";
+    status.innerText = "Processando segurança...";
 
-            try {
-                // 1. Login no Firebase
-                const userCredential = await auth.signInWithEmailAndPassword(email, senha);
-                const user = userCredential.user;
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, senha);
+        const user = userCredential.user;
 
-                // 2. DNA do Aparelho Atual
-                const fingerprintAtual = btoa(navigator.userAgent + window.screen.width + new Date().getTimezoneOffset());
+        // Gera o "DNA" do aparelho atual (PC ou Celular)
+        const fingerprintAtual = btoa(navigator.userAgent + window.screen.width + new Date().getTimezoneOffset());
 
-              // 3. Verifica no Banco de Dados (Social Star ★ Security)
-                const doc = await db.collection("usuarios_vinculados").doc(user.uid).get();
+        const docRef = db.collection("usuarios_vinculados").doc(user.uid);
+        const doc = await docRef.get();
 
-                if (doc.exists) {
-                    const dados = doc.data();
-                    // Criamos uma lista de aparelhos autorizados
-                    const aparelhosAutorizados = dados.aparelhos || [dados.registro_hardware];
+        if (doc.exists) {
+            const dados = doc.data();
+            const aparelhosAutorizados = dados.aparelhos || [dados.registro_hardware];
 
-                    // 4. Nova Comparação Inteligente
-                    if (!aparelhosAutorizados.includes(fingerprintAtual)) {
-                        status.style.color = "#ff4d6d";
-                        status.innerText = "ACESSO NEGADO: Este aparelho não está vinculado.";
-                        await auth.signOut();
-                        return;
-                    }
-
-                    status.innerText = "Aparelho reconhecido! Entrando...";
-                    setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
-
-                } else {
-                    // Se não existir vínculo, cria o primeiro com o aparelho atual
-                    await db.collection("usuarios_vinculados").doc(user.uid).set({
-                        registro_hardware: fingerprintAtual,
-                        aparelhos: [fingerprintAtual],
-                        email: email,
-                        data_vinculo: new Date().toLocaleString()
+            // VERIFICAÇÃO ESPECIAL: Se for o seu e-mail, ele autoriza o novo aparelho automaticamente
+            if (email === "raphael.btc.virtual@gmail.com") { // COLOQUE SEU E-MAIL REAL AQUI
+                if (!aparelhosAutorizados.includes(fingerprintAtual)) {
+                    await docRef.update({
+                        aparelhos: firebase.firestore.FieldValue.arrayUnion(fingerprintAtual)
                     });
-                    status.innerText = "Aparelho vinculado com sucesso! Entrando...";
-                    setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
+                    console.log("Novo aparelho (Celular) vinculado com sucesso!");
                 }
+            } else if (!aparelhosAutorizados.includes(fingerprintAtual)) {
+                // Para outros usuários, o bloqueio continua rígido
+                status.style.color = "#ff4d6d";
+                status.innerText = "ACESSO NEGADO: Aparelho desconhecido.";
+                await auth.signOut();
+                return;
+            }
+
+            status.innerText = "Acesso autorizado! Entrando...";
+            setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
+
+        } else {
+            // Primeiro vínculo (quando o usuário não tem nenhum registro)
+            await docRef.set({
+                registro_hardware: fingerprintAtual,
+                aparelhos: [fingerprintAtual],
+                email: email,
+                data_vinculo: new Date().toLocaleString()
+            });
+            status.innerText = "Aparelho vinculado! Bem-vindo.";
+            setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
         }
+    } catch (error) {
+        status.style.color = "#ff4d6d";
+        status.innerText = "Erro: " + error.message;
+    }
+}
     </script>
 
 </body>
