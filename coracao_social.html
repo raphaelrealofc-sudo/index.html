@@ -468,7 +468,13 @@ function toggleChat() {
 async function enviarMensagemChat() {
     const input = document.getElementById('input-msg-chat');
     const user = auth.currentUser;
-    if (!input.value.trim() || !user) return;
+    
+    if (!input.value.trim()) return;
+    
+    if (!user) {
+        alert("RFL•★•REAL, você não está logado no Firebase!");
+        return;
+    }
 
     try {
         await db.collection("chat_global").add({
@@ -476,9 +482,9 @@ async function enviarMensagemChat() {
             autor: user.email.split('@')[0], 
             data: firebase.firestore.FieldValue.serverTimestamp()
         });
-        input.value = ""; // Limpa o campo após enviar
+        input.value = "";
     } catch (error) {
-        console.error("Erro no chat:", error);
+        alert("Erro no Firebase: " + error.message);
     }
 }
 
