@@ -493,15 +493,20 @@ function ouvirMensagensChat() {
     .onSnapshot((snapshot) => {
         const chatDiv = document.getElementById('mensagens-chat');
         chatDiv.innerHTML = "";
-        snapshot.forEach((doc) => {
-            const m = doc.data();
-            chatDiv.innerHTML += `
-                <div class="msg-item">
-                    <b style="color:#00f2ea;">${m.autor}:</b> ${m.texto}
-                </div>`;
-        });
-        chatDiv.scrollTop = chatDiv.scrollHeight; // Rola o chat para baixo
-    });
+      snapshot.forEach((doc) => {
+    const m = doc.data();
+    
+        const ehDono = (m.autor === "raphael" || m.autor === "RFL•★•REAL"); 
+    
+        const corNome = ehDono ? "#ffd700" : "#00f2ea"; 
+    const coroa = ehDono ? "👑 " : "";
+
+    chatDiv.innerHTML += `
+        <div class="msg-item" style="${ehDono ? 'border-left: 3px solid #ffd700; background: #2a2a10;' : ''}">
+            <b style="color:${corNome};">${coroa}${m.autor}:</b> ${m.texto}
+        </div>`;
+});
+chatDiv.scrollTop = chatDiv.scrollHeight;
 }
   
     </script>
