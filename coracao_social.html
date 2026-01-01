@@ -266,6 +266,19 @@
         aside { background-color: #1a1a1a; border-left: 1px solid #333; padding: 20px; }
         .trending-box { background: #252525; padding: 15px; border-radius: 10px; }
         .tag { color: #ff0050; display: block; margin-bottom: 10px; text-decoration: none; font-weight: bold; }
+        /* Configuração para as fotos postadas no Feed */
+.feed-item img {
+    width: 100%;            /* Ocupa toda a largura do post no celular */
+    max-width: 600px;       /* No PC, ela não vai passar de 600px (tamanho elegante) */
+    height: auto;           /* Mantém a proporção da foto sem achatar */
+    max-height: 500px;      /* Impede que fotos muito altas (verticais) empurrem o feed demais */
+    display: block;         /* Remove espaços extras abaixo da imagem */
+    margin: 15px auto;      /* Centraliza a foto e dá um espaço do texto */
+    border-radius: 12px;    /* Arredonda as bordas para combinar com seu layout */
+    object-fit: contain;    /* Garante que a imagem inteira apareça sem cortes */
+    background: #000;       /* Se a foto for menor que o espaço, o fundo fica preto */
+    border: 1px solid #333; /* Uma borda sutil para separar do fundo */
+}
     </style>
 </head>
 <body>
