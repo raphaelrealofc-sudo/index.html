@@ -172,6 +172,27 @@
     max-width: 100%;
     display: block;
 }
+        /* ESTILO DA BOLINHA DE NOTIFICAÇÃO */
+#notificacao-chat {
+    position: absolute;
+    top: -5px;          /* Faz a bolinha ficar um pouco para fora do botão */
+    right: -2px;        /* Alinha no canto direito do botão */
+    width: 14px;
+    height: 14px;
+    background-color: #ff0000; /* Cor vermelha */
+    border-radius: 50%;        /* Deixa redonda */
+    border: 2px solid white;   /* Borda branca para destacar no fundo escuro */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    animation: pulsar-notif 1.5s infinite; /* Faz ela ficar piscando */
+    z-index: 1001;             /* Garante que fique na frente de tudo */
+}
+
+/* ANIMAÇÃO PARA A BOLINHA PISCAR */
+@keyframes pulsar-notif {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
     </style>
 </head>
 <body>
