@@ -69,26 +69,24 @@
         return; 
     }
 
-    // ... (Aqui continua o seu código de upload para o ImgBB e gravação no Firebase) ...
+   
 
-} // <--- ESTA CHAVE FECHA O PUBLICARPOST. COLE O CHAT ABAIXO DELA:
+} 
 
-// 1. Função para Abrir e Fechar o Chat
 function toggleChat() {
     const chat = document.getElementById('janela-chat');
     
-    // Se a janela estiver invisível (display none ou vazio), ela abre
+  
     if (chat.style.display === "none" || chat.style.display === "") {
         chat.style.display = "flex";
         console.log("Chat Aberto"); 
-        ouvirMensagensChat(); // Inicia a escuta em tempo real do Firebase
+        ouvirMensagensChat();
     } else {
         chat.style.display = "none";
         console.log("Chat Fechado");
     }
 }
 
-// 2. Função para Enviar Mensagem no Chat
 async function enviarMensagemChat() {
     const input = document.getElementById('input-msg-chat');
     const user = auth.currentUser;
@@ -107,7 +105,6 @@ async function enviarMensagemChat() {
     }
 }
 
-// 3. Função para Ler as Mensagens (Snapshot em Tempo Real)
 function ouvirMensagensChat() {
     db.collection("chat_global").orderBy("data", "asc").limitToLast(20)
     .onSnapshot((snapshot) => {
@@ -124,14 +121,13 @@ function ouvirMensagensChat() {
     });
 }
 
-    // 2. Validação de Conteúdo Vazio
-    if (texto.trim() === "" && !fotoArquivo) {
+        if (texto.trim() === "" && !fotoArquivo) {
         alert("RFL•★•REAL, escreva algo ou selecione uma foto!");
         return;
     }
 
     try {
-        // 3. Busca Segura da Foto de Perfil
+       
         const userDoc = await db.collection("usuarios").doc(user.uid).get();
         let fotoPerfilAutor = "";
         
@@ -139,8 +135,7 @@ function ouvirMensagensChat() {
             fotoPerfilAutor = userDoc.data().fotoPerfil;
         }
 
-        // 4. Upload para o ImgBB (Se houver foto no post)
-        let urlFotoPost = "";
+                let urlFotoPost = "";
         if (fotoArquivo) {
             const formData = new FormData();
             formData.append("image", fotoArquivo);
