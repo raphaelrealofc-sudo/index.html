@@ -106,10 +106,12 @@
       .chat-input-area {
     padding: 10px;
     display: flex;
-    align-items: center; /* Centraliza verticalmente o input e o botão */
+    align-items: center;
     gap: 10px;
     background: #1a1a1a;
     border-top: 1px solid #333;
+    position: relative;
+    z-index: 10005; 
 }
 
 #input-msg-chat {
@@ -130,13 +132,14 @@
 .chat-input-area button {
     background: none;
     border: none;
-    font-size: 1.5rem; /* Aumentei o tamanho do foguete para facilitar o clique */
+    font-size: 1.5rem;
     cursor: pointer;
     transition: 0.2s;
-    padding: 5px; /* Cria uma área invisível maior ao redor do ícone para clicar melhor */
+    padding: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: auto; 
 }
 
 .chat-input-area button:hover {
