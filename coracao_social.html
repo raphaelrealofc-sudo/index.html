@@ -492,22 +492,40 @@ function ouvirMensagensChat() {
     db.collection("chat_global").orderBy("data", "asc").limitToLast(30)
     .onSnapshot((snapshot) => {
         const chatDiv = document.getElementById('mensagens-chat');
-        chatDiv.innerHTML = "";
-      snapshot.forEach((doc) => {
-    const m = doc.data();
-    
-        const ehDono = (m.autor === "raphael" || m.autor === "RFL•★•REAL"); 
-    
-        const corNome = ehDono ? "#ffd700" : "#00f2ea"; 
-    const coroa = ehDono ? "👑 " : "";
+        if (!chatDiv) return; // Segurança caso a div não exista
+        
+        chatDiv.innerHTML = ""; // Limpa o chat para recarregar as mensagens atualizadas
 
-    chatDiv.innerHTML += `
-        <div class="msg-item" style="${ehDono ? 'border-left: 3px solid #ffd700; background: #2a2a10;' : ''}">
-            <b style="color:${corNome};">${coroa}${m.autor}:</b> ${m.texto}
-        </div>`;
-});
-chatDiv.scrollTop = chatDiv.scrollHeight;
-});
+        snapshot.forEach((doc) => {
+            const m = doc.data();
+            
+            // Define quem recebe o destaque de Dono
+            const ehDono = (m.autor === "raphael" || m.autor === "RFL•★•REAL"); 
+            
+            // Lógica para formatar a hora (Ex: 14:05)
+            let horaFormatada = "";
+            if (m.data) {
+                const d = m.data.toDate();
+                horaFormatada = d.getHours().toString().padStart(2, '0') + ":" + 
+                                d.getMinutes().toString().padStart(2, '0');
+            }
+
+            const corNome = ehDono ? "#ffd700" : "#00f2ea"; 
+            const coroa = ehDono ? "👑 " : "";
+
+            // Monta o balão de mensagem com o novo estilo
+            chatDiv.innerHTML += `
+                <div class="msg-item" style="${ehDono ? 'border-left: 3px solid #ffd700; background: #2a2a10;' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px;">
+                        <b style="color:${corNome};">${coroa}${m.autor}:</b>
+                        <small style="color: #666; font-size: 0.7rem;">${horaFormatada}</small>
+                    </div>
+                    <div style="margin-top: 4px;">${m.texto}</div>
+                </div>`;
+        });
+
+        chatDiv.scrollTop = chatDiv.scrollHeight; // Sempre rola para a última mensagem
+    });
 }
   
     </script>
