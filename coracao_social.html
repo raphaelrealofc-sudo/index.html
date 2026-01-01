@@ -248,6 +248,50 @@ async function publicarPost() {
         }
     }).catch(erro => console.error("Erro ao contar:", erro));
 }
+        // --- ADICIONE ISSO AQUI NO FINAL DO SEU SCRIPT ATUAL ---
+
+function toggleChat() {
+    const chat = document.getElementById('janela-chat');
+    if (chat.style.display === "none" || chat.style.display === "") {
+        chat.style.display = "flex";
+        ouvirMensagensChat(); // Ativa a escuta de mensagens ao abrir
+    } else {
+        chat.style.display = "none";
+    }
+}
+
+async function enviarMensagemChat() {
+    const input = document.getElementById('input-msg-chat');
+    const user = auth.currentUser;
+    if (!input.value.trim() || !user) return;
+
+    try {
+        await db.collection("chat_global").add({
+            texto: input.value,
+            autor: user.email.split('@')[0], 
+            data: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value = ""; // Limpa o campo após enviar
+    } catch (error) {
+        console.error("Erro no chat:", error);
+    }
+}
+
+function ouvirMensagensChat() {
+    db.collection("chat_global").orderBy("data", "asc").limitToLast(30)
+    .onSnapshot((snapshot) => {
+        const chatDiv = document.getElementById('mensagens-chat');
+        chatDiv.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const m = doc.data();
+            chatDiv.innerHTML += `
+                <div class="msg-item">
+                    <b style="color:#00f2ea;">${m.autor}:</b> ${m.texto}
+                </div>`;
+        });
+        chatDiv.scrollTop = chatDiv.scrollHeight; // Rola o chat para baixo
+    });
+}
     </script>
 
     <style>
@@ -412,6 +456,7 @@ async function publicarPost() {
             <div style="clear: both;"></div>
         </div>
         <div id="feed"></div>
+        </main>
  
     <aside>
         <div class="trending-box">
