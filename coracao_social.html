@@ -266,6 +266,117 @@
         aside { background-color: #1a1a1a; border-left: 1px solid #333; padding: 20px; }
         .trending-box { background: #252525; padding: 15px; border-radius: 10px; }
         .tag { color: #ff0050; display: block; margin-bottom: 10px; text-decoration: none; font-weight: bold; }
+        /* ... outros estilos ... */
+
+        .tag { 
+            color: #ff0050; 
+            display: block; 
+            margin-bottom: 10px; 
+            text-decoration: none; 
+            font-weight: bold; 
+        }
+
+        /* --- COLE AQUI ABAIXO --- */
+
+        #btn-abrir-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff0050, #00f2ea);
+            padding: 12px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 242, 234, 0.4);
+            z-index: 9999;
+            transition: transform 0.2s;
+        }
+
+        #btn-abrir-chat:hover {
+            transform: scale(1.05);
+        }
+
+        #janela-chat {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            width: 320px;
+            height: 450px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            z-index: 9999;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #222;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            color: #00f2ea;
+            font-weight: bold;
+        }
+
+        #mensagens-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #121212;
+        }
+
+        .msg-item {
+            background: #252525;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #eee;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+
+        .chat-input-area {
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+        }
+
+        #input-msg-chat {
+            flex: 1;
+            background: #000;
+            border: 1px solid #444;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        #input-msg-chat:focus {
+            border-color: #00f2ea;
+        }
+
+        .chat-input-area button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .chat-input-area button:hover {
+            transform: scale(1.2);
+        }
         /* Configuração para as fotos postadas no Feed */
 .feed-item img {
     width: 100%;            /* Ocupa toda a largura do post no celular */
