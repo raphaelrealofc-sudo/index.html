@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Star - By RFL•★•REAL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-card">
+        <h1>Social Star ★</h1>
+        <div class="company-name">Uma Rede RFL•★•REAL</div>
+        
+        <form>
+            <input type="text" placeholder="Nome de usuário ou e-mail">
+            <input type="password" placeholder="Sua senha secreta">
+            <br><br>
+            <button type="button">Entrar na Galáxia</button>
+        </form>
+    </div>
+</body>
+</html>
