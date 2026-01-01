@@ -122,23 +122,30 @@ const firebaseConfig = {
     appId: "1:194238150810:web:8dffbb5f42efd7ea8c0723"
 };
 
-firebase.initializeApp(firebaseConfig);
+// Inicializa apenas se não houver um app rodando
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-       async function realizarLogin() {
-    const email = document.getElementById('email').value;
+async function realizarLogin() {
+    const email = document.getElementById('email').value.trim();
     const senha = document.getElementById('senha').value;
     const status = document.getElementById('status-msg');
 
     status.style.color = "#00f2ea";
-    status.innerText = "Processando segurança...";
+    status.innerText = "Validando acesso...";
 
     try {
+        // CORREÇÃO: Garante que não há nenhuma sessão ou tentativa de registro travada
+        if (auth.currentUser) { await auth.signOut(); }
+
+        // 1. Tenta apenas o Login
         const userCredential = await auth.signInWithEmailAndPassword(email, senha);
         const user = userCredential.user;
 
-        // Gera o "DNA" do aparelho atual (PC ou Celular)
+        // 2. DNA do Aparelho Atual
         const fingerprintAtual = btoa(navigator.userAgent + window.screen.width + new Date().getTimezoneOffset());
 
         const docRef = db.collection("usuarios_vinculados").doc(user.uid);
@@ -148,27 +155,27 @@ const db = firebase.firestore();
             const dados = doc.data();
             const aparelhosAutorizados = dados.aparelhos || [dados.registro_hardware];
 
-            // VERIFICAÇÃO ESPECIAL: Se for o seu e-mail, ele autoriza o novo aparelho automaticamente
-            if (email === "raphael.btc.virtual@gmail.com") { // COLOQUE SEU E-MAIL REAL AQUI
+            // VERIFICAÇÃO ADMINISTRADOR: RFL•★•REAL
+            if (email === "raphael.btc.virtual@gmail.com") { 
                 if (!aparelhosAutorizados.includes(fingerprintAtual)) {
                     await docRef.update({
                         aparelhos: firebase.firestore.FieldValue.arrayUnion(fingerprintAtual)
                     });
-                    console.log("Novo aparelho (Celular) vinculado com sucesso!");
+                    console.log("Social Star ★: Novo hardware vinculado com sucesso.");
                 }
-            } else if (!aparelhosAutorizados.includes(fingerprintAtual)) {
-                // Para outros usuários, o bloqueio continua rígido
+            } 
+            else if (!aparelhosAutorizados.includes(fingerprintAtual)) {
                 status.style.color = "#ff4d6d";
                 status.innerText = "ACESSO NEGADO: Aparelho desconhecido.";
                 await auth.signOut();
                 return;
             }
 
-            status.innerText = "Acesso autorizado! Entrando...";
-            setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
+            status.innerText = "Reconhecido! Entrando...";
+            setTimeout(() => { window.location.href = "apresentacao.html"; }, 1000);
 
         } else {
-            // Primeiro vínculo (quando o usuário não tem nenhum registro)
+            // Cria o primeiro vínculo se não existir
             await docRef.set({
                 registro_hardware: fingerprintAtual,
                 aparelhos: [fingerprintAtual],
@@ -176,11 +183,18 @@ const db = firebase.firestore();
                 data_vinculo: new Date().toLocaleString()
             });
             status.innerText = "Aparelho vinculado! Bem-vindo.";
-            setTimeout(() => { window.location.href = "apresentacao.html"; }, 1500);
+            setTimeout(() => { window.location.href = "apresentacao.html"; }, 1000);
         }
     } catch (error) {
         status.style.color = "#ff4d6d";
-        status.innerText = "Erro: " + error.message;
+        // Tradução de erros comuns
+        if (error.code === 'auth/email-already-in-use') {
+            status.innerText = "Erro: Este e-mail já está em uso (tente apenas entrar).";
+        } else if (error.code === 'auth/wrong-password') {
+            status.innerText = "Senha incorreta.";
+        } else {
+            status.innerText = "Erro: " + error.message;
+        }
     }
 }
     </script>
