@@ -64,11 +64,65 @@
     const fotoArquivo = campoFoto.files[0];
     const user = auth.currentUser;
 
-    // 1. Verificação de Usuário
     if (!user) { 
         alert("Você precisa estar logado!"); 
         return; 
     }
+
+    // ... (Aqui continua o seu código de upload para o ImgBB e gravação no Firebase) ...
+
+} // <--- ESTA CHAVE FECHA O PUBLICARPOST. COLE O CHAT ABAIXO DELA:
+
+// 1. Função para Abrir e Fechar o Chat
+function toggleChat() {
+    const chat = document.getElementById('janela-chat');
+    
+    // Se a janela estiver invisível (display none ou vazio), ela abre
+    if (chat.style.display === "none" || chat.style.display === "") {
+        chat.style.display = "flex";
+        console.log("Chat Aberto"); 
+        ouvirMensagensChat(); // Inicia a escuta em tempo real do Firebase
+    } else {
+        chat.style.display = "none";
+        console.log("Chat Fechado");
+    }
+}
+
+// 2. Função para Enviar Mensagem no Chat
+async function enviarMensagemChat() {
+    const input = document.getElementById('input-msg-chat');
+    const user = auth.currentUser;
+    
+    if (!input.value.trim() || !user) return;
+
+    try {
+        await db.collection("chat_global").add({
+            texto: input.value,
+            autor: user.email.split('@')[0], 
+            data: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value = ""; // Limpa o campo após enviar
+    } catch (error) {
+        console.error("Erro ao enviar mensagem:", error);
+    }
+}
+
+// 3. Função para Ler as Mensagens (Snapshot em Tempo Real)
+function ouvirMensagensChat() {
+    db.collection("chat_global").orderBy("data", "asc").limitToLast(20)
+    .onSnapshot((snapshot) => {
+        const chatDiv = document.getElementById('mensagens-chat');
+        chatDiv.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const m = doc.data();
+            chatDiv.innerHTML += `
+                <div class="msg-item">
+                    <b style="color:#00f2ea;">${m.autor}:</b> ${m.texto}
+                </div>`;
+        });
+        chatDiv.scrollTop = chatDiv.scrollHeight; // Rola sempre para a última mensagem
+    });
+}
 
     // 2. Validação de Conteúdo Vazio
     if (texto.trim() === "" && !fotoArquivo) {
