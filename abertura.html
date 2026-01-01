@@ -122,7 +122,6 @@ const firebaseConfig = {
     appId: "1:194238150810:web:8dffbb5f42efd7ea8c0723"
 };
 
-// Inicializa apenas se não houver um app rodando
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -130,22 +129,27 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 async function realizarLogin() {
+    // 1. Previne que o formulário recarregue a página e dispare outros scripts
+    if (event) event.preventDefault();
+
     const email = document.getElementById('email').value.trim();
     const senha = document.getElementById('senha').value;
     const status = document.getElementById('status-msg');
 
     status.style.color = "#00f2ea";
-    status.innerText = "Validando acesso...";
+    status.innerText = "Limpando sessões e validando...";
 
     try {
-        // CORREÇÃO: Garante que não há nenhuma sessão ou tentativa de registro travada
-        if (auth.currentUser) { await auth.signOut(); }
+        // 2. Mata qualquer tentativa de registro ou login fantasma
+        if (auth.currentUser) {
+            await auth.signOut();
+        }
 
-        // 1. Tenta apenas o Login
+        // 3. Tenta APENAS o Login (Sign In)
         const userCredential = await auth.signInWithEmailAndPassword(email, senha);
         const user = userCredential.user;
 
-        // 2. DNA do Aparelho Atual
+        // 4. DNA do Aparelho (Gerando digital única)
         const fingerprintAtual = btoa(navigator.userAgent + window.screen.width + new Date().getTimezoneOffset());
 
         const docRef = db.collection("usuarios_vinculados").doc(user.uid);
@@ -155,43 +159,41 @@ async function realizarLogin() {
             const dados = doc.data();
             const aparelhosAutorizados = dados.aparelhos || [dados.registro_hardware];
 
-            // VERIFICAÇÃO ADMINISTRADOR: RFL•★•REAL
+            // Vínculo automático para você: RFL•★•REAL
             if (email === "raphael.btc.virtual@gmail.com") { 
                 if (!aparelhosAutorizados.includes(fingerprintAtual)) {
                     await docRef.update({
                         aparelhos: firebase.firestore.FieldValue.arrayUnion(fingerprintAtual)
                     });
-                    console.log("Social Star ★: Novo hardware vinculado com sucesso.");
                 }
             } 
             else if (!aparelhosAutorizados.includes(fingerprintAtual)) {
                 status.style.color = "#ff4d6d";
-                status.innerText = "ACESSO NEGADO: Aparelho desconhecido.";
+                status.innerText = "ACESSO NEGADO: Aparelho não autorizado.";
                 await auth.signOut();
                 return;
             }
 
-            status.innerText = "Reconhecido! Entrando...";
+            status.innerText = "Acesso autorizado! Entrando...";
             setTimeout(() => { window.location.href = "apresentacao.html"; }, 1000);
 
         } else {
-            // Cria o primeiro vínculo se não existir
+            // Se não houver documento, cria o primeiro vínculo
             await docRef.set({
                 registro_hardware: fingerprintAtual,
                 aparelhos: [fingerprintAtual],
                 email: email,
                 data_vinculo: new Date().toLocaleString()
             });
-            status.innerText = "Aparelho vinculado! Bem-vindo.";
+            status.innerText = "Aparelho vinculado! Entrando...";
             setTimeout(() => { window.location.href = "apresentacao.html"; }, 1000);
         }
     } catch (error) {
         status.style.color = "#ff4d6d";
-        // Tradução de erros comuns
+        // Se o erro de "email em uso" persistir, o Firebase está detectando
+        // uma tentativa de cadastro vinda de outro lugar.
         if (error.code === 'auth/email-already-in-use') {
-            status.innerText = "Erro: Este e-mail já está em uso (tente apenas entrar).";
-        } else if (error.code === 'auth/wrong-password') {
-            status.innerText = "Senha incorreta.";
+            status.innerText = "Conflito detectado: Use apenas o botão Entrar.";
         } else {
             status.innerText = "Erro: " + error.message;
         }
