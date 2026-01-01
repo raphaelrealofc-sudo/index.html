@@ -103,39 +103,46 @@
             word-wrap: break-word;
         }
 
-        .chat-input-area {
-            padding: 10px;
-            display: flex;
-            gap: 8px;
-            background: #1a1a1a;
-            border-top: 1px solid #333;
-        }
+      .chat-input-area {
+    padding: 10px;
+    display: flex;
+    align-items: center; /* Centraliza verticalmente o input e o botão */
+    gap: 10px;
+    background: #1a1a1a;
+    border-top: 1px solid #333;
+}
 
-        #input-msg-chat {
-            flex: 1;
-            background: #000;
-            border: 1px solid #444;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            outline: none;
-        }
+#input-msg-chat {
+    flex: 1;
+    background: #000;
+    border: 1px solid #444;
+    color: white;
+    padding: 10px 15px; /* Aumentei um pouco o preenchimento */
+    border-radius: 20px;
+    outline: none;
+    min-width: 0; /* Evita que o input empurre o botão para fora */
+}
 
-        #input-msg-chat:focus {
-            border-color: #00f2ea;
-        }
+#input-msg-chat:focus {
+    border-color: #00f2ea;
+}
 
-        .chat-input-area button {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.chat-input-area button {
+    background: none;
+    border: none;
+    font-size: 1.5rem; /* Aumentei o tamanho do foguete para facilitar o clique */
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 5px; /* Cria uma área invisível maior ao redor do ícone para clicar melhor */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .chat-input-area button:hover {
-            transform: scale(1.2);
-        }
+.chat-input-area button:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px #00f2ea); /* Adiciona um brilho ao passar o mouse */
+}
         /* Configuração para as fotos postadas no Feed */
 .feed-item img {
     width: 100%;            /* Ocupa toda a largura do post no celular */
