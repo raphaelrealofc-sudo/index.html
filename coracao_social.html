@@ -179,18 +179,25 @@
 }
 
         // --- AUTH ---
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                db.collection("usuarios").doc(user.uid).set({
-                    email: user.email,
-                    nome: user.email.split('@')[0],
-                    desde: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true });
-                carregarFeed();
-            } else {
-                window.location.href = "abertura.html";
-            }
-        });
+       auth.onAuthStateChanged((user) => {
+    if (user) {
+       
+        db.collection("usuarios").doc(user.uid).set({
+            email: user.email,
+            nome: user.email.split('@')[0],
+           
+            desde: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+       
+        carregarFeed();             // Carrega os posts
+        atualizarContagemMembros();  // <--- NOVA FUNÇÃO ADICIONADA AQUI
+        
+    } else {
+        // Se não estiver logado, volta para a tela de abertura
+        window.location.href = "abertura.html";
+    }
+});
 
         function realizarLogout() {
             auth.signOut().then(() => { window.location.href = "abertura.html"; });
@@ -231,14 +238,14 @@
     };
     input.click();
 }
-        function atualizarContagemMembros() {
+     function atualizarContagemMembros() {
     db.collection("usuarios").get().then((snapshot) => {
-        const total = snapshot.size; // Pega o total de documentos na coleção 'usuarios'
+        const total = snapshot.size; 
         const painelMembros = document.getElementById('membros-count');
         if (painelMembros) {
             painelMembros.innerText = total + (total === 1 ? " Membro cadastrado" : " Membros cadastrados");
         }
-    }).catch(erro => console.error("Erro ao contar membros:", erro));
+    }).catch(erro => console.error("Erro ao contar:", erro));
 }
     </script>
 
