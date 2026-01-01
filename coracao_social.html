@@ -474,13 +474,23 @@ async function publicarPost() {
 }
         // --- ADICIONE ISSO AQUI NO FINAL DO SEU SCRIPT ATUAL ---
 
+let chatAberto = false; // Variável importante para o controle
+
 function toggleChat() {
     const chat = document.getElementById('janela-chat');
+    const notif = document.getElementById('notificacao-chat'); // Pega a bolinha
+
     if (chat.style.display === "none" || chat.style.display === "") {
         chat.style.display = "flex";
-        ouvirMensagensChat(); // Ativa a escuta de mensagens ao abrir
+        chatAberto = true; // Agora o sistema sabe que você está lendo
+        
+        // Se a bolinha estiver lá, ela some ao abrir
+        if (notif) notif.style.display = "none"; 
+        
+        ouvirMensagensChat(); 
     } else {
         chat.style.display = "none";
+        chatAberto = false; // Chat fechado, pronto para notificar de novo
     }
 }
 
